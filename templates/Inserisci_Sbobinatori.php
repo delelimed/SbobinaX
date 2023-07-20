@@ -200,6 +200,26 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <?php
+                        $active_menu = 'Account';
+                        $page_name = 'Account.php';
+                        ?>
+                        <li class="nav-item">
+                            <a href="../templates/Account.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
 
 
                         <li class="nav-item"> <!-- impostazioni -->
@@ -404,6 +424,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form action="../req/register_sobinator.php" method="post">
+                            <?php if (isset($_GET['status'])) { ?>
+                                <div class="alert alert-success" role="alert">
+                                    <?php echo $_GET['status']; ?>
+                                </div>
+                            <?php } ?>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="Nome">Nome</label>
@@ -419,6 +444,12 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <label for="Matricola">Matricola</label>
                                     <input type="number" class="form-control" id="Matricola" name="Matricola" placeholder="Inserisci la matricola">
                                 </div>
+                                <?php
+                                $query = "SELECT * FROM `insegnamenti`";
+                                $result = $conn->query($query);
+                                $risultati = $result->fetch_all(MYSQLI_ASSOC);
+                                $conn->close();
+                                ?>
 
                                 <div class="form-group">
                                     <label for="Password">Password</label>
@@ -428,12 +459,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <!-- Select multiple-->
                                     <div class="form-group" data-select2-id="43">
                                         <label>Seleziona gli insegnamenti per cui si richiede la partecipazione</label>
-                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
-                                            <option data-select2-id="33">Alabama</option>
-
+                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli insegnamenti" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                                            <?php foreach ($risultati as $row): ?>
+                                                <option data-select2-id="<?php echo $row['id']; ?>"><?php echo $row['materia']; ?></option>
+                                            <?php endforeach; ?>
                                         </select>
 
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label"><strong>Estendere diritti di Superutente?</strong>
+                                            Questa persona avrà la possibilità di gestire la parte amministrativa delle sbobine.
+                                        La scelta è IRREVOCABILE, salvo modifica manuale in phpmyadmin</label>
+                                    </div>
+
+                                    <!-- Input nascosto per memorizzare il valore "admin" -->
+                                    <input type="hidden" id="adminInput" name="admin" value="0">
+
                                 </div>
 
                             </div>
@@ -513,6 +555,21 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             //Initialize Select2 Elements
             $('.select2').select2()
         })
+
+        $(document).ready(function() {
+            // Intercepisci il cambiamento dello stato della casella di controllo
+            $(".form-check-input").on("change", function() {
+                // Seleziona l'input nascosto
+                var adminInput = $("#adminInput");
+
+                // Imposta il valore dell'input nascosto in base alla selezione della casella di controllo
+                if ($(this).is(":checked")) {
+                    adminInput.val("1");
+                } else {
+                    adminInput.val("0");
+                }
+            });
+        });
 
     </script>
     </body>

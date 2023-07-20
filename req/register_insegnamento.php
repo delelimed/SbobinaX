@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("s", $insegnamento);
 
     if ($stmt->execute()) {
-        header("Location: ../templates/Inserisci_Insegnamento.php");
+        $em = "Insegnamento Registrato con Successo!";
+        header("Location: ../templates/Inserisci_Insegnamento.php?status=$em");
         exit();
     } else {
         echo "Errore durante la registrazione.";

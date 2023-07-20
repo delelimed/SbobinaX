@@ -180,6 +180,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    $active_menu = 'Account';
+                    $page_name = 'Account.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Account.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
+                                <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                <p>
+                                    Account Utente
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                <p>
+                                    Account Utente
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
 
 
                     <li class="nav-item"> <!-- impostazioni -->

@@ -23,6 +23,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
+
+
     </head>
     <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -177,6 +179,26 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <i class="fa fa-folder-open nav-icon" aria-hidden="true"></i>
                                     <p>
                                         Visualizza Sbobine
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                        <?php
+                        $active_menu = 'Account';
+                        $page_name = 'Account.php';
+                        ?>
+                        <li class="nav-item">
+                            <a href="../templates/Account.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
                                     </p>
                                 <?php endif; ?>
                             </a>
@@ -424,9 +446,51 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                 <tr>
                                                     <td><?php echo $row['id']; ?></td>
                                                     <td><?php echo $row['materia']; ?></td>
+                                                    <td>
+                                                        <!-- Riga extra per ospitare i pulsanti Modifica ed Elimina -->
+                                                        <div class="btn-group" role="group" aria-label="Azioni">
+                                                            <!-- Pulsante Modifica -->
+                                                            <button class="btn btn-primary btn-modifica" data-id="<?php echo $row['id']; ?>">Modifica</button>
+
+                                                            <!-- Pulsante Elimina -->
+                                                            <button class="btn btn-danger btn-elimina" data-id="<?php echo $row['id']; ?>">Elimina</button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
+                                                <!-- Finestra modale per la modifica della materia -->
+                                                <div class="modal fade" id="modificaMateriaModal" tabindex="-1" role="dialog" aria-labelledby="modificaMateriaModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modificaMateriaModalLabel">Modifica Materia</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Form per la modifica della materia -->
+                                                                <form id="formModificaMateria">
+                                                                    <input type="hidden" id="idRiga" name="id" value="">
+                                                                    <div class="form-group">
+                                                                        <label for="materia">Materia</label>
+                                                                        <input type="text" class="form-control" id="materia" name="materia" value="" required>
+                                                                    </div>
+                                                                </form>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                                                                <button type="button" class="btn btn-primary" id="btnConfermaModificaMateria">Conferma</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
                                             <?php endforeach; ?>
                                             </tbody>
+
+
                                         </table>
                                     </div>
                                     <!-- /.card-body -->
@@ -479,6 +543,101 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script src="../assets/dist/js/adminlte.min.js"></script>
     </body>
     </html>
+    <script>
+        // Aggiungi un gestore di eventi per il pulsante "Modifica"
+        document.querySelectorAll('.btn-modifica').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Ottieni l'ID dalla riga associata al pulsante
+                var idRiga = this.getAttribute('data-id');
+
+                // Ottieni il nome della materia dalla riga associata al pulsante
+                var materia = this.closest('tr').querySelector('td:nth-child(2)').innerText;
+
+                // Imposta l'ID e il valore della materia nel form per la modifica
+                document.getElementById('idRiga').value = idRiga;
+                document.getElementById('materia').value = materia;
+
+                // Apri la finestra modale per la modifica della materia
+                $('#modificaMateriaModal').modal('show');
+            });
+        });
+
+        // Aggiungi un gestore di eventi per il pulsante "Conferma" nella finestra modale
+        document.getElementById('btnConfermaModificaMateria').addEventListener('click', function () {
+            // Chiudi la finestra modale per la modifica della materia
+            $('#modificaMateriaModal').modal('hide');
+
+            // Ottieni l'ID della riga da modificare dal form per la modifica
+            var idRiga = document.getElementById('idRiga').value;
+
+            // Ottieni il nuovo valore della materia dal campo di input
+            var nuovaMateria = document.getElementById('materia').value;
+
+            // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
+            fetch('../req/modifica_materia.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + encodeURIComponent(idRiga) + '&materia=' + encodeURIComponent(nuovaMateria),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                    if (data.success) {
+                        alert(data.message);
+                        // Esegui eventuali azioni aggiuntive dopo la modifica
+                        // ...
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore durante la richiesta di modifica:', error);
+                    alert('Si è verificato un errore durante la modifica della materia.');
+                });
+        });
+        // Aggiungi un gestore di eventi per il pulsante "Elimina"
+        document.querySelectorAll('.btn-elimina').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Ottieni l'ID dalla riga associata al pulsante
+                var idRiga = this.getAttribute('data-id');
+
+                // Apri la finestra modale di conferma per l'eliminazione
+                if (confirm('Sei sicuro di voler eliminare questa materia?')) {
+                    // Esegui l'azione di eliminazione utilizzando l'API Fetch per inviare i dati al server
+                    fetch('../req/elimina_materia.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=' + encodeURIComponent(idRiga),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                            if (data.success) {
+                                alert(data.message);
+                                // Esegui eventuali azioni aggiuntive dopo l'eliminazione
+                                // ...
+                                // Aggiorna la pagina o rimuovi la riga dalla tabella
+                                location.reload(); // Aggiorna la pagina per mostrare i dati aggiornati
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Errore durante la richiesta di eliminazione:', error);
+                            alert('Si è verificato un errore durante l\'eliminazione della materia.');
+                        });
+                }
+            });
+        });
+    </script>
+
+
+
+
 
     <?php
 }else{

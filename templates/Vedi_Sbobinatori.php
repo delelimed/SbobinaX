@@ -181,6 +181,26 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <?php
+                        $active_menu = 'Account';
+                        $page_name = 'Account.php';
+                        ?>
+                        <li class="nav-item">
+                            <a href="../templates/Account.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                    <p>
+                                        Account Utente
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
 
 
                         <li class="nav-item"> <!-- impostazioni -->
@@ -432,10 +452,83 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                         <td><?php echo $row['nome']; ?></td>
                                                         <td><?php echo $row['cognome']; ?></td>
                                                         <td><?php echo $row['malus']; ?></td>
+                                                        <td><!-- Qui mostra il numero di sbobinate --></td>
+                                                        <td><!-- Qui mostra il numero di revisionate --></td>
+                                                        <td>
+                                                            <!-- Pulsante Modifica -->
+                                                            <button class="btn btn-primary btn-modifica" data-id="<?php echo $row['id']; ?>">Modifica</button>
+
+                                                            <!-- Pulsante Elimina -->
+                                                            <button class="btn btn-danger btn-elimina" data-id="<?php echo $row['id']; ?>">Elimina</button>
+                                                        </td>
+                                                        <!-- Finestra modale per la modifica della riga -->
+                                                        <div class="modal fade" id="modificaModal" tabindex="-1" role="dialog" aria-labelledby="modificaModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modificaModalLabel">Modifica Riga</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <!-- Form per la modifica della riga -->
+                                                                        <form id="formModifica">
+                                                                            <input type="hidden" id="idRiga" name="id" value="">
+                                                                            <div class="form-group">
+                                                                                <label for="matricola">Matricola</label>
+                                                                                <input type="text" class="form-control" id="matricola" name="matricola" required>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="nome">Nome</label>
+                                                                                <input type="text" class="form-control" id="nome" name="nome" required>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cognome">Cognome</label>
+                                                                                <input type="text" class="form-control" id="cognome" name="cognome" required>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="malus">Malus</label>
+                                                                                <p id="malusValue"></p>
+                                                                                <button type="button" class="btn btn-primary btn-incrementa-malus">Incrementa Malus</button>
+                                                                            </div>
+                                                                        </form>
+
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                                                                        <button type="button" class="btn btn-primary" id="btnConfermaModifica">Conferma</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Finestra modale di conferma per l'eliminazione della riga -->
+                                                        <div class="modal fade" id="confermaEliminazioneModal" tabindex="-1" role="dialog" aria-labelledby="confermaEliminazioneModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="confermaEliminazioneModalLabel">Conferma Eliminazione Riga</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>Sei sicuro di voler eliminare questa riga?</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                                                                        <button type="button" class="btn btn-danger" id="btnConfermaEliminazione">Conferma Eliminazione</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </tr>
                                                 <?php endforeach; ?>
                                                 </tbody>
                                             </table>
+
                                         </div>
                                         <!-- /.card-body -->
                                     </div>
@@ -487,6 +580,136 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script src="../assets/dist/js/adminlte.min.js"></script>
     </body>
     </html>
+    <script>
+        // Codice JavaScript per gestire l'incremento del malus e visualizzarne il valore
+        document.querySelectorAll('.btn-modifica').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Ottieni l'ID dalla riga associata al pulsante
+                var idRiga = this.getAttribute('data-id');
+
+                // Ottieni i dati della riga associata al pulsante (es. matricola, nome, cognome, malus, ecc.) e imposta i valori nel form per la modifica
+                var matricola = this.closest('tr').querySelector('td:nth-child(2)').innerText;
+                var nome = this.closest('tr').querySelector('td:nth-child(3)').innerText;
+                var cognome = this.closest('tr').querySelector('td:nth-child(4)').innerText;
+                var malus = this.closest('tr').querySelector('td:nth-child(5)').innerText;
+
+                // Imposta i valori nel form di modifica
+                document.getElementById('idRiga').value = idRiga;
+                document.getElementById('matricola').value = matricola;
+                document.getElementById('nome').value = nome;
+                document.getElementById('cognome').value = cognome;
+                document.getElementById('malusValue').textContent = malus; // Imposta il valore del malus nel paragrafo
+
+                // Apri la finestra modale per la modifica
+                $('#modificaModal').modal('show');
+            });
+        });
+
+        // Codice JavaScript per gestire l'incremento del malus
+        document.querySelector('.btn-incrementa-malus').addEventListener('click', function () {
+            var malusValue = document.getElementById('malusValue');
+            var malus = parseInt(malusValue.textContent); // Ottieni il valore corrente del malus dal paragrafo
+
+            // Incrementa il malus di 1
+            malus++;
+
+            // Aggiorna il valore del malus mostrato nel paragrafo
+            malusValue.textContent = malus;
+        });
+
+
+        // Aggiungi un gestore di eventi per il pulsante "Elimina"
+        document.querySelectorAll('.btn-elimina').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Ottieni l'ID dalla riga associata al pulsante
+                var idRiga = this.getAttribute('data-id');
+
+                // Apri la finestra modale di conferma per l'eliminazione
+                if (confirm('Sei sicuro di voler eliminare questa riga?')) {
+                    // Esegui l'azione di eliminazione utilizzando l'API Fetch per inviare i dati al server
+                    fetch('../req/elimina_sbobinatore.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=' + encodeURIComponent(idRiga),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                            if (data.success) {
+                                alert(data.message);
+                                // Aggiorna la pagina o rimuovi la riga dalla tabella
+                                location.reload(); // Aggiorna la pagina per mostrare i dati aggiornati
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Errore durante la richiesta di eliminazione:', error);
+                            alert('Si è verificato un errore durante l\'eliminazione della riga.');
+                        });
+                }
+            });
+        });
+
+        // Aggiungi un gestore di eventi per il pulsante "Conferma" nella finestra modale per la modifica
+        document.getElementById('btnConfermaModifica').addEventListener('click', function () {
+            // Chiudi la finestra modale per la modifica
+            $('#modificaModal').modal('hide');
+
+            // Ottieni i dati modificati dal form di modifica
+            var idRiga = document.getElementById('idRiga').value;
+            var nuovaMatricola = document.getElementById('matricola').value;
+            var nuovoNome = document.getElementById('nome').value;
+            var nuovoCognome = document.getElementById('cognome').value;
+
+            // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
+            fetch('../req/modifica_sbobinatore.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + encodeURIComponent(idRiga) + '&matricola=' + encodeURIComponent(nuovaMatricola) + '&nome=' + encodeURIComponent(nuovoNome) + '&cognome=' + encodeURIComponent(nuovoCognome),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                    if (data.success) {
+                        alert(data.message);
+                        // Aggiorna la pagina o esegui altre azioni dopo la modifica
+                        location.reload(); // Aggiorna la pagina per mostrare i dati aggiornati
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore durante la richiesta di modifica:', error);
+                    alert('Si è verificato un errore durante la modifica della riga.');
+                });
+        });
+        // Codice JavaScript per gestire l'incremento del malus
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnIncrementaMalus = document.querySelector('.btn-incrementa-malus');
+            const malusValue = document.getElementById('malusValue');
+
+            // Imposta il valore iniziale del malus a 0
+            let malus = 0;
+            malusValue.textContent = malus;
+
+            // Gestisci il click sul pulsante Incrementa Malus
+            btnIncrementaMalus.addEventListener('click', function () {
+                // Incrementa il malus di 1
+                malus++;
+
+                // Aggiorna il valore del malus mostrato nel paragrafo
+                malusValue.textContent = malus;
+            });
+        });
+
+
+    </script>
+
 
     <?php
 }else{
