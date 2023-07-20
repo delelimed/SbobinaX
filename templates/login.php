@@ -64,7 +64,6 @@
                     <!-- /.col -->
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">LogIn</button>
-                        <a href="../templates/home.php" class="text-decoration-none">Home</a>
                     </div>
                     <!-- /.col -->
                 </div>

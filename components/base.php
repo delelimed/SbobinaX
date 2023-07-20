@@ -235,6 +235,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <?php
+                    $active_menu = 'Inserisci_Insegnamento';
+                    $page_name = 'Inserisci_Insegnamento.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Inserisci_Insegnamento.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Inserisci_Insegnamento') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Inserisci Insegnamento
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Inserisci Insegnamento
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                    <?php
+                    $active_menu = 'Visualizza_Insegnamenti';
+                    $page_name = 'Visualizza_Insegnamenti.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Visualizza_Insegnamenti.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Visualizza_Insegnamenti') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Insegnamenti
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Insegnamenti
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                     </li>
                             <li class="nav-item">
                                 <?php

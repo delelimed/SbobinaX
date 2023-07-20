@@ -38,6 +38,7 @@ if (isset($_POST['uname']) &&
                 $_SESSION['nome'] = $row['nome'];
                 $_SESSION['cognome'] = $row['cognome'];
                 $_SESSION['id'] = $row['id'];
+                $_SESSION['admin'] = $row['admin'];
                 header("Location: ../templates/home.php");
                 exit();
             }else{

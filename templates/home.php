@@ -235,6 +235,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <?php
+                    $active_menu = 'Inserisci_Insegnamento';
+                    $page_name = 'Inserisci_Insegnamento.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Inserisci_Insegnamento.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Inserisci_Insegnamento') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Inserisci Insegnamento
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Inserisci Insegnamento
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                    <?php
+                    $active_menu = 'Visualizza_Insegnamenti';
+                    $page_name = 'Visualizza_Insegnamenti.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Visualizza_Insegnamenti.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Visualizza_Insegnamenti') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Insegnamenti
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Insegnamenti
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                     </li>
                     <li class="nav-item">
                         <?php
@@ -429,56 +469,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <th>Status</th>
                                     <th>Sbobinatori</th>
                                     <th>Revisori</th>
-                                    <th>Azioni</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>183</td>
-                                    <td>John Doe</td>
-                                    <td>11-7-2014</td>
-                                    <td><span class="tag tag-success">Approved</span></td>
-                                    <td>Bacon .</td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Sbobine Assegnate</h3>
-
-                            <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Insegnamento</th>
-                                    <th>Data Lezione</th>
-                                    <th>Status</th>
-                                    <th>Sbobinatori</th>
-                                    <th>Revisori</th>
-                                    <th>Azioni</th>
                                 </tr>
                                 </thead>
                                 <tbody>

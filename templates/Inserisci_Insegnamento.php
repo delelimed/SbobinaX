@@ -1,8 +1,6 @@
 <?php
 session_start();
-include '../db_connector.php';
 if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1){
-
 
     ?>
 
@@ -18,28 +16,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>SbobinaX | Dashboard</title>
 
-
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-        <!-- Font Awesome -->
+        <!-- Font Awesome Icons -->
         <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
-        <!-- daterange picker -->
-        <link rel="stylesheet" href="../assets/plugins/daterangepicker/daterangepicker.css">
-        <!-- iCheck for checkboxes and radio inputs -->
-        <link rel="stylesheet" href="../assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- Bootstrap Color Picker -->
-        <link rel="stylesheet" href="../assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
-        <!-- Tempusdominus Bootstrap 4 -->
-        <link rel="stylesheet" href="../assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-        <!-- Select2 -->
-        <link rel="stylesheet" href="../assets/plugins/select2/css/select2.min.css">
-        <link rel="stylesheet" href="../assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-        <!-- Bootstrap4 Duallistbox -->
-        <link rel="stylesheet" href="../assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-        <!-- BS Stepper -->
-        <link rel="stylesheet" href="../assets/plugins/bs-stepper/css/bs-stepper.min.css">
-        <!-- dropzonejs -->
-        <link rel="stylesheet" href="../assets/plugins/dropzone/min/dropzone.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
     </head>
@@ -365,11 +345,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
 
                     <li class="nav-item"> <!-- logout -->
-                        <a href="../templates/logout.php" class="nav-link">
-                            <i class="nav-icon fas fa-sign-out-alt"></i>
-                            <p>
-                                Log Out
-                            </p>
+                        <a href="{% url "logout" %}" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>
+                            Log Out
+                        </p>
                         </a>
                     </li> <!-- logout -->
 
@@ -390,50 +370,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Gestione Credenziali</h1>
+                            <h1 class="m-0">Inserisci Insegnamento</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
 
                         </div><!-- /.col -->
                     </div><!-- /.row -->
-                    <!-- block content -->
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Aggiungi Sbobinatore</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="../req/register_sobinator.php" method="post">
+                        <form action="../req/register_insegnamento.php" method="post">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="Nome">Nome</label>
-                                    <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Inserisci il nome">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Cognome">Cognome</label>
-                                    <input type="text" class="form-control" id="Cognome" name="Cognome" placeholder="Inserisci il cognome">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Matricola">Matricola</label>
-                                    <input type="number" class="form-control" id="Matricola" name="Matricola" placeholder="Inserisci la matricola">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Password">Password</label>
-                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Inserisci la password provvisoria">
-                                </div>
-                                <div class="col-sm-6">
-                                    <!-- Select multiple-->
-                                    <div class="form-group" data-select2-id="43">
-                                        <label>Seleziona gli insegnamenti per cui si richiede la partecipazione</label>
-                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
-                                            <option data-select2-id="33">Alabama</option>
-
-                                        </select>
-
-                                    </div>
+                                    <label for="Insegnamento">Insegnamento</label>
+                                    <input type="text" class="form-control" id="Insegnamento" name="Insegnamento" placeholder="Inserisci l'insegnamento">
                                 </div>
 
                             </div>
@@ -444,11 +397,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                             </div>
                         </form>
                     </div>
-
-
-
-
-                    <!-- end block content -->
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
@@ -487,37 +435,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Select2 -->
-    <script src="../assets/plugins/select2/js/select2.full.min.js"></script>
-    <!-- Bootstrap4 Duallistbox -->
-    <script src="../assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-    <!-- InputMask -->
-    <script src="../assets/plugins/moment/moment.min.js"></script>
-    <script src="../assets/plugins/inputmask/jquery.inputmask.min.js"></script>
-    <!-- date-range-picker -->
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- bootstrap color picker -->
-    <script src="../assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="../assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Bootstrap Switch -->
-    <script src="../assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-    <!-- BS-Stepper -->
-    <script src="../assets/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-    <!-- dropzonejs -->
-    <script src="../assets/plugins/dropzone/min/dropzone.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-        })
-
-    </script>
     </body>
     </html>
-
 
     <?php
 }else{
@@ -526,4 +447,3 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     exit();
 }
 ?>
-
