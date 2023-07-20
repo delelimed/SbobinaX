@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
+
+?>
+
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -55,7 +62,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
-                    <a href="#" class="d-block"> <strong>Nome e Cognome</strong> </a>
+                    <a href="#" class="d-block"> <strong> <?php echo $_SESSION['nome'];
+                            echo " ";
+                            echo $_SESSION['cognome'];
+                            ?> </strong> </a>
                 </div>
             </div>
 
@@ -295,7 +305,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
                 <li class="nav-item"> <!-- logout -->
-                    <a href="{% url "logout" %}" class="nav-link">
+                    <a href="../templates/logout.php" class="nav-link">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
                     <p>
                         Log Out
@@ -439,4 +449,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </body>
 </html>
 
-
+    <?php
+}else{
+    header("Location: ../templates/login.php");
+    exit();
+}
+?>
