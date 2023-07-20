@@ -19,7 +19,9 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
+        <img src="../assets/dist/img/logo.png" style="width:200px;height:200px;>
         <a href="">Sbobina<b>X</b></a>
+
     </div>
     <!-- /.login-logo -->
     <div class="card">

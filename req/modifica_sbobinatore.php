@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // L'aggiornamento è avvenuto con successo
         $response = array(
             'success' => true,
-            'message' => 'Riga aggiornata con successo!',
+            'message' => 'Sbobinatore aggiornato con successo!',
         );
     } else {
         // Errore durante l'aggiornamento

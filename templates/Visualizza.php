@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../db_connector.php";
 if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
     ?>
@@ -399,10 +400,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- main content -->
                 <td>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default">Left</button>
-                        <button type="button" class="btn btn-default">Middle</button>
-                        <button type="button" class="btn btn-default">Right</button>
+                        <?php
+                        // Esegui la query per ottenere gli insegnamenti dal database
+                        $query = "SELECT id, materia FROM insegnamenti";
+                        $result = $conn->query($query);
+
+                        // Genera i bottoni in base ai risultati della query
+                        while ($row = $result->fetch_assoc()) {
+                            $idInsegnamento = $row['id'];
+                            $nomeInsegnamento = $row['materia'];
+                            echo "<button type=\"button\" class=\"btn btn-default\">$nomeInsegnamento</button>";
+                        }
+                        ?>
                     </div>
+
                 </td>
 
                 <div class="row">

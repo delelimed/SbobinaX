@@ -442,10 +442,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                     </div><!-- /.row -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">LETTURA DATABASE:</h3>
+                            <h3 class="card-title">LETTURA DATABASE: In caso di errori, prenditela con chi ha inserito i dati</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
+
                         <form action="../req/update_password.php" method="post">
                             <?php if (isset($_GET['status'])) { ?>
                                 <div class="alert alert-success" role="alert">

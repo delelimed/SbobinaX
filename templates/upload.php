@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../db_connector.php";
 if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 ?>
@@ -18,8 +19,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="../assets/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="../assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="../assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="../assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../assets/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="../assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="../assets/plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="../assets/plugins/dropzone/min/dropzone.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
 </head>
@@ -403,37 +421,78 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form>
+                    <form action="../req/insert_sbobina.php" method="post">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="Insegnamento">Insegnamento</label>
-                                <select class="form-control" id="Insegnamento">
+                                <select class="form-control" id="insegnamento" name="insegnamento">
                                     <option value="">Seleziona l'insegnamento</option>
-                                    <option value="matematica">Matematica</option>
-                                    <option value="italiano">Italiano</option>
-                                    <option value="storia">Storia</option>
-                                    <!-- Aggiungi altre opzioni qui -->
+                                    <?php
+                                    // Esegui la query per ottenere gli insegnamenti dal database
+                                    $query = "SELECT id, materia FROM insegnamenti";
+                                    $result = $conn->query($query);
+
+                                    // Popola la select con i risultati della query
+                                    while ($row = $result->fetch_assoc()) {
+                                        $idInsegnamento = $row['id'];
+                                        $nomeInsegnamento = $row['materia'];
+                                        echo "<option value=\"$idInsegnamento\">$nomeInsegnamento</option>";
+                                    }
+                                    ?>
                                 </select>
                             </div>
 
-                        <div class="form-group">
-                            <label for="Argomento">Argomento</label>
-                            <input type="text" class="form-control" id="Argomento" placeholder="Inserisci l'argomento">
-                        </div>
+                            <div class="form-group">
+                                <label for="Argomento">Argomento</label>
+                                <input type="text" class="form-control" id="argomento" name="argomento" placeholder="Inserisci l'argomento">
+                            </div>
 
                             <!-- Assicurati di aver incluso Bootstrap e jQuery prima di aggiungere questo codice -->
                             <div class="form-group">
-                                <label for="Insegnamento">Insegnamento</label>
+                                <label for="Insegnamento">Data della Lezione</label>
                                 <!-- Aggiungi l'attributo "data-provide" con il valore "datepicker" per inizializzare il selettore di date -->
-                                <input type="text" class="form-control datepicker" id="Insegnamento" placeholder="Seleziona una data">
+                                <input type="text" class="form-control datepicker" id="data_lezione" name="data_lezione" placeholder="Seleziona una data">
+                            </div>
+
+                            <div class="form-group" data-select2-id="43">
+                                <label>Seleziona gli Sbobinatori</label>
+                                <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli sbobinatori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori" id="sbobinatori">
+                                    <?php
+                                    // Query per ottenere tutti gli utenti dal database
+                                    $query = "SELECT id, nome FROM users";
+                                    $result = mysqli_query($conn, $query);
+
+                                    // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group" data-select2-id="43">
+                                <label>Seleziona i Revisori</label>
+                                <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i revisori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori" id="revisori">
+                                    <?php
+                                    // Query per ottenere tutti gli utenti dal database
+                                    $query = "SELECT id, nome FROM users";
+                                    $result = mysqli_query($conn, $query);
+
+                                    // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputFile">File input</label>
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                        <!-- Aggiunta l'attributo "name" per permettere l'elaborazione del file -->
+                                        <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina">
+                                        <label class="custom-file-label" for="exampleInputFile" id="fileLabel">Choose file</label>
                                     </div>
                                     <div class="input-group-append">
                                         <span class="input-group-text">Upload</span>
@@ -444,8 +503,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <!-- /.card-body -->
                         <div>
-                            <label>ATTENZIONE! Il file caricato deve essere in PDF. E' inoltre
-                            in corso di attivazione un sistema di rilevamento automatico di IA.</label>
+                            <label>ATTENZIONE! Il file caricato deve essere in PDF. E' inoltre in corso di attivazione un sistema di rilevamento automatico di IA.</label>
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Invia in Revisione</button>
@@ -495,9 +553,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="../assets/plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="../assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<!-- InputMask -->
+<script src="../assets/plugins/moment/moment.min.js"></script>
+<script src="../assets/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="../assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="../assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Bootstrap Switch -->
+<script src="../assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<!-- BS-Stepper -->
+<script src="../assets/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<!-- dropzonejs -->
+<script src="../assets/plugins/dropzone/min/dropzone.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 <script>
     // Inizializza il selettore di date
@@ -507,6 +583,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
             autoclose: true, // Chiude automaticamente il selettore di date dopo aver selezionato una data
             todayHighlight: true // Evidenzia la data odierna
         });
+    });
+
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+
+    $(document).ready(function() {
+        // Intercepisci il cambiamento dello stato della casella di controllo
+        $(".form-check-input").on("change", function() {
+            // Seleziona l'input nascosto
+            var adminInput = $("#adminInput");
+
+            // Imposta il valore dell'input nascosto in base alla selezione della casella di controllo
+            if ($(this).is(":checked")) {
+                adminInput.val("1");
+            } else {
+                adminInput.val("0");
+            }
+        });
+    });
+
+    // Aggiunge un ascoltatore per l'evento di selezione del file
+    document.getElementById('exampleInputFile').addEventListener('change', function() {
+        var fileName = this.value.split("\\").pop();
+        var fileLabel = document.getElementById('fileLabel');
+        fileLabel.innerHTML = fileName;
     });
 </script>
 </body>
