@@ -459,14 +459,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <!-- Select multiple-->
                                     <div class="form-group" data-select2-id="43">
                                         <label>Seleziona gli insegnamenti per cui si richiede la partecipazione</label>
-                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli insegnamenti" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli insegnamenti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="insegnamenti[]"> <!-- Nota l'aggiunta di "[]" dopo il nome dell'elemento -->
                                             <?php foreach ($risultati as $row): ?>
                                                 <option value="<?php echo $row['id']; ?>"><?php echo $row['materia']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-
-
                                     </div>
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox">
                                         <label class="form-check-label"><strong>Estendere diritti di Superutente?</strong>

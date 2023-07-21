@@ -1,5 +1,4 @@
 <?php
-
 // registrazione.php
 include "../db_connector.php";
 
@@ -26,6 +25,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssi", $matricola, $nome, $cognome, $email, $password, $admin); // Usa $hashedPassword invece di $password
 
     if ($stmt->execute()) {
+        // Ottieni l'ID dell'utente appena registrato
+        $user_id = $stmt->insert_id;
+
+        // Inserisci i dati nella tabella "partecipazione_sbobine" per ogni insegnamento selezionato
+        if (isset($_POST['insegnamenti'])) {
+            $insegnamenti_selezionati = $_POST['insegnamenti'];
+            foreach ($insegnamenti_selezionati as $insegnamento_id) {
+                // Esegui la query di inserimento
+                $query_partecipazione = "INSERT INTO partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
+                $stmt_partecipazione = $conn->prepare($query_partecipazione);
+                $stmt_partecipazione->bind_param("ii", $user_id, $insegnamento_id);
+                $stmt_partecipazione->execute();
+            }
+        }
+
         $em = "Sbobinatore Registrato con Successo!";
         header("Location: ../templates/Inserisci_Sbobinatori.php?status=$em");
         exit();
@@ -36,7 +50,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Chiudi la connessione al database
     $conn->close();
 }
-
-
 ?>
-

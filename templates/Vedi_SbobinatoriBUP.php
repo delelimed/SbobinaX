@@ -413,15 +413,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                             <div class="card-tools">
                                                 <div class="input-group input-group-sm" style="width: 150px;">
-                                                    <form id="formRicerca" method="post" action="../req/ricerca_sbobinatori.php" class="input-group input-group-sm" style="width: 150px;">
-                                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                                                        <div class="input-group-append">
-                                                            <button type="submit" class="btn btn-default">
-                                                                <i class="fas fa-search"></i>
-                                                            </button>
-                                                        </div>
-                                                    </form>
+                                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-default">
+                                                            <i class="fas fa-search"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -789,37 +787,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 });
         });
     </script>
-
-    <!-- ricerca -->
-    <script>
-        // Codice JavaScript per gestire il click sul pulsante "Search"
-        document.querySelector('.btn-default').addEventListener('click', function (event) {
-            event.preventDefault(); // Ferma l'azione predefinita del pulsante
-
-            // Ottieni il valore di ricerca inserito dall'utente
-            var searchText = document.querySelector('input[name="table_search"]').value;
-
-            // Invia la richiesta di ricerca tramite AJAX
-            fetch('../req/ricerca_sbobinatori.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'search_text=' + encodeURIComponent(searchText),
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Aggiorna la tabella con i risultati della ricerca
-                    document.querySelector('tbody').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Errore durante la richiesta di ricerca:', error);
-                    alert('Si è verificato un errore durante la ricerca degli sbobinatori.');
-                });
-        });
-
-    </script>
-
 
 
 
