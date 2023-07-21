@@ -457,14 +457,88 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                             }
                                         }
                                         ?>
+                                        <?php
+                                        function getSbobinatoriFromSbobina($sbobina_id, $conn)
+                                        {
+                                            $sbobinatori_data = array();
+
+                                            // Esegui la query per ottenere gli ID degli sbobinatori associati alla sbobina
+                                            $query = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
+                                            $result = $conn->query($query);
+
+                                            // Popola l'array con gli ID degli sbobinatori
+                                            while ($row = $result->fetch_assoc()) {
+                                                $sbobinatori_ids[] = $row['id_sbobinatore'];
+                                            }
+
+                                            // Ottieni i nomi e i cognomi degli sbobinatori associati agli ID
+                                            if (!empty($sbobinatori_ids)) {
+                                                $sbobinatori_ids_str = implode(',', $sbobinatori_ids);
+                                                $query_users = "SELECT nome, cognome FROM users WHERE id IN ($sbobinatori_ids_str)";
+                                                $result_users = $conn->query($query_users);
+
+                                                // Popola l'array con i nomi completi degli sbobinatori
+                                                while ($row_user = $result_users->fetch_assoc()) {
+                                                    $sbobinatori_data[] = $row_user['nome'] . ' ' . substr($row_user['cognome'], 0, 1) . '.';
+                                                }
+                                            }
+
+                                            return $sbobinatori_data;
+                                        }
+
+                                        ?>
+                                        <?php
+                                        function getRevisoriFromSbobina($sbobina_id, $conn)
+                                        {
+                                            $revisori_data = array();
+
+                                            // Esegui la query per ottenere gli ID degli revisori associati alla sbobina
+                                            $query = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobina_id";
+                                            $result = $conn->query($query);
+
+                                            // Popola l'array con gli ID degli sbobinatori
+                                            while ($row = $result->fetch_assoc()) {
+                                                $revisori_ids[] = $row['id_revisore'];
+                                            }
+
+                                            // Ottieni i nomi e i cognomi dei revisori associati agli ID
+                                            if (!empty($revisori_ids)) {
+                                                $revisori_ids_str = implode(',', $revisori_ids);
+                                                $query_users = "SELECT nome, cognome FROM users WHERE id IN ($revisori_ids_str)";
+                                                $result_users = $conn->query($query_users);
+
+                                                // Popola l'array con i nomi completi dei revisori
+                                                while ($row_user = $result_users->fetch_assoc()) {
+                                                    $revisori_data[] = $row_user['nome'] . ' ' . substr($row_user['cognome'], 0, 1) . '.';
+                                                }
+                                            }
+
+                                            return $revisori_data;
+                                        }
+
+                                        ?>
 
                                         <?php foreach ($risultati as $row): ?>
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
                                                 <td><?php echo getMateriaFromId($row['insegnamento']); ?></td>
                                                 <td><?php echo $row['data_lezione']; ?></td>
-                                                <td>implem.</td>
-                                                <td>implem.</td>
+                                                <td>
+                                                    <?php
+                                                    // Ottieni i nomi completi ma solo l'iniziale del cognome degli sbobinatori associati a questa sbobina
+                                                    $sbobinatori_data = getSbobinatoriFromSbobina($row['id'], $conn);
+                                                    // Visualizza i nomi completi ma solo l'iniziale del cognome separati da una virgola
+                                                    echo implode(", ", $sbobinatori_data);
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    // Ottieni i nomi completi ma solo l'iniziale del cognome degli sbobinatori associati a questa sbobina
+                                                    $revisori_data = getRevisoriFromSbobina($row['id'], $conn);
+                                                    // Visualizza i nomi completi ma solo l'iniziale del cognome separati da una virgola
+                                                    echo implode(", ", $revisori_data);
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <!-- Pulsante Modifica -->
                                                     <button class="btn btn-primary btn-sm btn-modifica"

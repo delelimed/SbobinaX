@@ -476,6 +476,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     </select>
                                 </div>
 
+                                <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
                                 $query = "SELECT id, nome FROM users";
@@ -489,14 +490,15 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     $revisori[] = $row;
                                 }
                                 ?>
-                                <div class="form-group" data-select2-id="43">
+                                <div class="form-group" data-select2-id="44">
                                     <label>Seleziona i Revisori</label>
-                                    <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i Revisori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori[]">
+                                    <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i Revisori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori[]">
                                         <?php foreach ($revisori as $revisore): ?>
                                             <option value="<?php echo $revisore['id']; ?>"><?php echo $revisore['nome']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
+
 
 
                             </div>

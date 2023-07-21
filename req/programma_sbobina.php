@@ -17,14 +17,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Connessione al database fallita: " . $conn->connect_error);
     }
 
-    // Prepara e esegui la query per inserire i dati nel database
+    // Prepara e esegui la query per inserire i dati nella tabella sbobine_calendarizzate
     $query = "INSERT INTO sbobine_calendarizzate (insegnamento, data_lezione, revisione) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('sss', $idInsegnamento, $dataLezioneFormatted, $revisionata);
 
-    // Esegui l'inserimento nel database
+    // Esegui l'inserimento nella tabella sbobine_calendarizzate
     if ($stmt->execute()) {
-        // L'inserimento è avvenuto con successo
+        // L'inserimento nella tabella sbobine_calendarizzate è avvenuto con successo, otteniamo l'id della sbobina appena inserita
+        $sbobinaId = $stmt->insert_id;
+
+        // Memorizza gli sbobinatori associati alla sbobina nella tabella sbobinatori_sbobine
+        if (isset($_POST['sbobinatori'])) {
+            $sbobinatoriAssociati = $_POST['sbobinatori'];
+
+            foreach ($sbobinatoriAssociati as $sbobinatoreId) {
+                $query = "INSERT INTO sbobinatori_sbobine (id_sbobinatore, id_sbobina) VALUES (?, ?)";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param('ii', $sbobinatoreId, $sbobinaId);
+                $stmt->execute();
+            }
+        }
+
+        // Memorizza i revisori associati alla sbobina nella tabella revisori_sbobine
+        if (isset($_POST['revisori'])) {
+            $revisoriAssociati = $_POST['revisori'];
+
+            foreach ($revisoriAssociati as $revisoreId) {
+                $query = "INSERT INTO revisori_sbobine (id_revisore, id_sbobina) VALUES (?, ?)";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param('ii', $revisoreId, $sbobinaId);
+                $stmt->execute();
+            }
+        }
+
+        // Successo: crea il messaggio di successo
         $response = array(
             'success' => true,
             'message' => 'Sbobina registrata con successo!',
