@@ -1,5 +1,6 @@
 <?php
 session_start();
+include '../config/db_conn.php';
 if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 ?>
@@ -364,7 +365,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
                     <li class="nav-item"> <!-- logout -->
-                        <a href="{% url "logout" %}" class="nav-link">
+                        <a href="../templates/logout.php" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>
                             Log Out
