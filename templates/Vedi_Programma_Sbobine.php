@@ -472,7 +472,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                                             data-insegnamento="<?php echo $row['insegnamento']; ?>"
                                                             data-data-lezione="<?php echo $row['data_lezione']; ?>">Modifica</button>
 
-                                                    <!-- Pulsante Elimina -->
+                                                    <!-- Pulsante Elimina nella riga -->
                                                     <button class="btn btn-danger btn-sm btn-elimina" data-id="<?php echo $row['id']; ?>">Elimina</button>
                                                 </td>
                                             </tr>
@@ -494,7 +494,18 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                                                     <label for="insegnamentoModifica">Insegnamento</label>
                                                                     <select class="form-control" id="insegnamentoModifica" name="insegnamentoModifica">
                                                                         <option value="">Seleziona l'insegnamento</option>
-                                                                        <!-- Inserisci qui le opzioni per l'insegnamento -->
+                                                                        <?php
+                                                                        // Esegui la query per ottenere gli insegnamenti dal database
+                                                                        $query = "SELECT id, materia FROM insegnamenti";
+                                                                        $result = $conn->query($query);
+
+                                                                        // Popola la select con i risultati della query
+                                                                        while ($row = $result->fetch_assoc()) {
+                                                                            $idInsegnamento = $row['id'];
+                                                                            $nomeInsegnamento = $row['materia'];
+                                                                            echo "<option value=\"$idInsegnamento\">$nomeInsegnamento</option>";
+                                                                        }
+                                                                        ?>
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group">
@@ -545,11 +556,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                             <!-- /.card -->
                         </div>
                     </div>
-
-
-
-
-
 
                     <!-- end block content -->
                 </div><!-- /.container-fluid -->
@@ -642,6 +648,82 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         });
 
     </script>
+    <!-- Codice JavaScript per gestire i bottoni nella finestra modale per la modifica -->
+    <script>
+        // Codice JavaScript per gestire il click sul pulsante "Salva modifiche" nella finestra modale per la modifica
+        document.getElementById('btnSalvaModifiche').addEventListener('click', function () {
+            // Ottieni i dati modificati dal form
+            var idSbobina = document.getElementById('idSbobinaModifica').value;
+            var idInsegnamento = document.getElementById('insegnamentoModifica').value; // Cambia nome da 'nomeInsegnamento' a 'idInsegnamento'
+            var dataLezione = document.getElementById('dataLezioneModifica').value;
+
+            // Nuovo codice per ottenere il nome dell'insegnamento dall'ID
+            var nomeInsegnamento = document.getElementById('insegnamentoModifica').options[document.getElementById('insegnamentoModifica').selectedIndex].text;
+
+            fetch('../req/modifica_programma_sbobina.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'idSbobina=' + encodeURIComponent(idSbobina) + '&nomeInsegnamento=' + encodeURIComponent(nomeInsegnamento) + '&dataLezione=' + encodeURIComponent(dataLezione),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Visualizza eventuali messaggi di conferma o errore
+                    alert(data);
+                    // Chiudi la finestra modale dopo aver salvato le modifiche
+                    $('#modificaModal').modal('hide');
+                    // Aggiorna la pagina per riflettere le modifiche
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Errore durante la richiesta di salvataggio delle modifiche:', error);
+                    alert('Si è verificato un errore durante il salvataggio delle modifiche.');
+                });
+        });
+
+
+        // Gestione del click sul pulsante "Annulla" nella finestra modale per la modifica
+        document.querySelector('#modificaModal .btn-secondary').addEventListener('click', function () {
+            // Chiudi la finestra modale senza salvare le modifiche
+            $('#modificaModal').modal('hide');
+        });
+    </script>
+    <script>
+        // Gestione del click sul pulsante "Elimina" all'interno della finestra modale per l'eliminazione
+        document.querySelectorAll('.btn-elimina').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Ottieni l'ID sbobina dalla riga associata al pulsante "Elimina"
+                var idSbobina = this.getAttribute('data-id');
+
+                // Esegui la chiamata AJAX per eliminare la sbobina
+                fetch('../req/elimina_programma_sbobina.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'idSbobina=' + encodeURIComponent(idSbobina),
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Visualizza eventuali messaggi di conferma o errore
+                        alert(data);
+                        // Chiudi la finestra modale dopo aver eliminato la sbobina
+                        $('#eliminaModal').modal('hide');
+                        // Aggiorna la pagina per riflettere la rimozione della sbobina
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Errore durante la richiesta di eliminazione della sbobina:', error);
+                        alert('Si è verificato un errore durante l\'eliminazione della sbobina.');
+                    });
+            });
+        });
+    </script>
+
+
+
+
 
 
     </body>
