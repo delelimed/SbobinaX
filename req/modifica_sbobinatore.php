@@ -32,14 +32,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmtUpdateSbobinatore = $conn->prepare($queryUpdateSbobinatore);
     $stmtUpdateSbobinatore->bind_param('sssii', $nuovaMatricola, $nuovoNome, $nuovoCognome, $nuovoMalus, $idRiga);
 
-    // Prepara e esegui la query per rimuovere gli insegnamenti precedenti associati allo sbobinatore nel database
+    // Rimuovi gli insegnamenti precedenti associati allo sbobinatore nel database
     $queryRemoveInsegnamenti = "DELETE FROM partecipazione_sbobine WHERE id_user = ?";
     $stmtRemoveInsegnamenti = $conn->prepare($queryRemoveInsegnamenti);
     $stmtRemoveInsegnamenti->bind_param('i', $idRiga);
     $stmtRemoveInsegnamenti->execute();
     $stmtRemoveInsegnamenti->close();
 
-    // Verifica se sono stati selezionati nuovi insegnamenti e, se sì, aggiungili al database
+// Verifica se sono stati selezionati nuovi insegnamenti e, se sì, aggiungili al database
     if (isset($_POST['insegnamentiAssociati'])) {
         $insegnamentiAssociati = json_decode($_POST['insegnamentiAssociati'], true);
         $queryAddInsegnamenti = "INSERT INTO partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
@@ -47,11 +47,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtAddInsegnamenti->bind_param('ii', $idRiga, $idInsegnamento);
 
         foreach ($insegnamentiAssociati as $idInsegnamento) {
+            // Esegui l'inserimento dell'insegnamento associato
             $stmtAddInsegnamenti->execute();
         }
 
         $stmtAddInsegnamenti->close();
     }
+
 
     // Esegui l'aggiornamento dello sbobinatore nel database
     if ($stmtUpdateSbobinatore->execute()) {

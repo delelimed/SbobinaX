@@ -6,13 +6,19 @@ ORGANIZZAZIONE GRAFICA
 - ~~Impostazioni: Inserisci Sbobinatori~~
 - ~~Impostazioni: Inserisci Insegnamento~~
 - ~~Impostazioni: Visualizza Insegnamenti~~
-- Impostazioni: Programma Sbobine
-- Impostazioni: Visualizza Programma Sbobine
+- ~~Impostazioni: Programma Sbobine~~
+- ~~Impostazioni: Visualizza Programma Sbobine~~
 - Visualizza Sbobine
 - Calendario
 - Peer Review
 - Upload
 - Home
 
-ORGANIZZAZIONE FUNZIONALE
+
+DA MODIFICARE ALLA FINE COME PICCOLE CORREZIONI
+
 SISTEMA LA MODIFICA DELLA PARTECIPAZIONE ALLE SBOBINE
+
+SISTEMA LA QUESTIONE DEI MALUS
+
+SISTEMA RICERCA SBOBINATORI E REVISORI

@@ -485,6 +485,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
                                             return $sbobinatori_data;
                                         }
+
                                         ?>
                                         <?php
                                         function getRevisoriFromSbobina($sbobina_id, $conn)
@@ -793,34 +794,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
             });
         });
     </script>
-    <script>
-        // Codice JavaScript per gestire il click sul pulsante "Search"
-        document.querySelector('.btn-default').addEventListener('click', function (event) {
-            event.preventDefault(); // Ferma l'azione predefinita del pulsante
 
-            // Ottieni il valore di ricerca inserito dall'utente
-            var searchText = document.querySelector('input[name="table_search"]').value;
-
-            // Invia la richiesta di ricerca tramite AJAX
-            fetch('../req/ricerca_sbobine.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'search_text=' + encodeURIComponent(searchText),
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Aggiorna la tabella con i risultati della ricerca
-                    document.querySelector('tbody').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Errore durante la richiesta di ricerca:', error);
-                    alert('Si è verificato un errore durante la ricerca degli sbobinatori.');
-                });
-        });
-
-    </script>
 
 
 

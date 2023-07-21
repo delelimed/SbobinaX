@@ -430,7 +430,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         $query = "SELECT * FROM `users`";
                                         $result = $conn->query($query);
                                         $risultati = $result->fetch_all(MYSQLI_ASSOC);
-                                        // $conn->close();
+
                                         ?>
                                         <div class="card-body table-responsive p-0">
                                             <table class="table table-hover text-nowrap">
@@ -455,22 +455,27 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                         <td><?php echo $row['malus']; ?></td>
                                                         <td>
                                                             <?php
-                                                            // Esegui una query per ottenere gli insegnamenti associati a questo utente
-                                                            $query_insegnamenti_utente = "SELECT insegnamenti.materia FROM insegnamenti
-                                 JOIN partecipazione_sbobine ON insegnamenti.id = partecipazione_sbobine.id_insegnamento
-                                 WHERE partecipazione_sbobine.id_user = " . $row['id'];
-                                                            $result_insegnamenti_utente = $conn->query($query_insegnamenti_utente);
+                                                            // Query per recuperare gli insegnamenti associati all'utente corrente ($row['id'])
+                                                            $id_utente_corrente = $row['id'];
+                                                            $query_insegnamenti = "SELECT i.materia FROM insegnamenti i
+                                              INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+                                              WHERE p.id_user = $id_utente_corrente";
 
-                                                            // Mostra gli insegnamenti associati all'utente
-                                                            while ($insegnamento_utente = $result_insegnamenti_utente->fetch_assoc()) {
-                                                                echo $insegnamento_utente['materia'] . "<br>";
+                                                            $result_insegnamenti = $conn->query($query_insegnamenti);
+
+                                                            if ($result_insegnamenti->num_rows > 0) {
+                                                                while ($insegnamento = $result_insegnamenti->fetch_assoc()) {
+                                                                    echo $insegnamento['materia'] . '<br>';
+                                                                }
+                                                            } else {
+                                                                echo "Nessun insegnamento associato";
                                                             }
                                                             ?>
                                                         </td>
 
                                                         <td>
                                                             <!-- Pulsante Modifica -->
-                                                            <button class="btn btn-primary btn-modifica" data-id="<?php echo $row['id']; ?>">Modifica</button>
+                                                            <button type="button" class="btn btn-primary btn-modifica" data-id="<?php echo $row['id']; ?>">Modifica</button>
 
                                                             <!-- Pulsante Elimina -->
                                                             <button class="btn btn-danger btn-elimina" data-id="<?php echo $row['id']; ?>">Elimina</button>
@@ -487,7 +492,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <!-- Form per la modifica della riga -->
-                                                                        <form id="formModifica" method="post" action="../req/modifica_sbobinatore.php">
+                                                                        <form id="formModifica" method="post" action="../req/modifica_sbobinatore.php" onsubmit="">
                                                                             <input type="hidden" id="idRiga" name="id" value="">
                                                                             <div class="form-group">
                                                                                 <label for="matricola">Matricola</label>
@@ -533,7 +538,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                                 ?>
                                                                             </div>
                                                                             <!-- Campo nascosto per gli insegnamenti associati -->
-                                                                            <input type="text" id="insegnamentiAssociati" name="insegnamentiAssociati" value="">
+                                                                            <input type="hidden" id="insegnamentiAssociati_<?php echo $row['id']; ?>" name="insegnamentiAssociati" value="">
 
                                                                             <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
