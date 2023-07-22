@@ -1,6 +1,10 @@
 <?php
 // Connessione al database e altre configurazioni
 include "../../db_connector.php";
+
+// Set the default value of $filePosizione to an empty string
+$filePosizione = '';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Ottieni i dati dal modulo
     $idSbobina = $_POST['id_sbobina'];
@@ -12,32 +16,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $oggi = new DateTime();
     $dataOggi = $oggi->format('Y-m-d');
 
-
-    // Esegui la query per aggiornare il record nella tabella sbobine_calendarizzate
-    $query = "UPDATE sbobine_calendarizzate SET insegnamento = '$idInsegnamento', argomento = '$argomento',  data_caricamento = $dataOggi , caricata = '$caricata', data_lezione = '$dataLezione' WHERE id = '$idSbobina'";
-
-    // Esegui la query tramite $conn, che rappresenta la tua connessione al database
+    // Fetch "progressivo_insegnamento" from the database
+    $query = "SELECT progressivo_insegnamento FROM sbobine_calendarizzate WHERE id = '$idSbobina'";
     $result = $conn->query($query);
 
-    if ($result) {
-        // Query eseguita con successo, gestisci il caricamento del file (posizione server)
-        // Assicurati di avere già caricato il file nella posizione desiderata
-        // $filePosizione = ...; // La posizione del file all'interno del server dopo il caricamento
+    if ($result && $result->num_rows > 0) {
+        // The query returned results, proceed with fetching the data
+        $row = $result->fetch_assoc();
+        $progressivoInsegnamento = $row['progressivo_insegnamento'];
 
-        // Aggiorna il record con la posizione del file
-        $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione' WHERE id = '$idSbobina'";
-        $result = $conn->query($query);
+        // Generate the new filename using "progressivo_insegnamento", "argomento", and ".pdf" extension
+        $nuovoNomeFile = $progressivoInsegnamento . "." . $argomento . ".pdf";
 
-        if ($result) {
-            // Tutto è andato a buon fine, fai quello che serve (ad es. mostrare un messaggio di successo)
-            echo "Invio completato con successo!";
+        // Crea il percorso di destinazione in cui salvare il file
+        $cartellaDestinazione = "../../sbobine";
+        $percorsoDestinazione = $cartellaDestinazione . "/" . $nuovoNomeFile;
+
+        // Retrieve the temporary path of the uploaded file on the server
+        $percorsoTemporaneoFile = $_FILES['file_sbobina']['tmp_name'];
+
+        // Sposta il file temporaneo nella cartella di destinazione
+        if (move_uploaded_file($percorsoTemporaneoFile, $percorsoDestinazione)) {
+            // Aggiorna il record con la posizione del file nel database
+            $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
+            $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
+
+            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione' WHERE id = '$idSbobina'";
+            $result = $conn->query($query);
+
+            if ($result) {
+                // Tutto è andato a buon fine, mostra un messaggio di successo e reindirizza alla pagina di upload
+                echo "<script>alert('Invio completato con successo!'); window.location.href = '../../templates/home.php';</script>";
+            } else {
+                // Gestisci l'errore in caso di fallimento dell'aggiornamento della posizione del file
+                echo "<script>alert('Errore nell\'aggiornamento della posizione del file: " . $conn->error . "'); window.location.href = '../../templates/home.php';</script>";
+            }
         } else {
-            // Gestisci l'errore in caso di fallimento dell'aggiornamento della posizione del file
-            echo "Errore nell'aggiornamento della posizione del file: " . $conn->error;
+            // Handle the case when the file move fails
+            echo "<script>alert('Errore nel caricamento del file nella cartella di destinazione.');</script>";
+            exit(); // Stop the execution here
         }
     } else {
-        // Gestisci l'errore in caso di fallimento dell'aggiornamento dei dati nel database
-        echo "Errore nell'aggiornamento dei dati: " . $conn->error;
+        // Handle the case when the record is not found in the database
+        echo "<script>alert('Record not found in the database.'); window.location.href = '../../templates/home.php';</script>";
+        exit(); // Stop the execution here
     }
 }
 ?>

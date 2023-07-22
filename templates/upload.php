@@ -424,8 +424,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- /.card-header -->
                     <!-- form start -->
 
-
-
                     <!-- Modal -->
                     <div class="modal fade" id="modalCercaSbobina" tabindex="-1" role="dialog" aria-labelledby="modalCercaSbobinaLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -455,8 +453,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
 
 
-                    <form action="../req/upload_fx/gestione_invio.php" method="post" id="sbobinaForm">
-                    <div class="card-body">
+                    <form action="../req/upload_fx/gestione_invio.php" method="post" id="sbobinaForm" enctype="multipart/form-data">
+                        <div class="card-body">
                             <div class="form-group">
                                 <label for="Insegnamento">Insegnamento</label>
                                 <select class="form-control" id="insegnamento" name="insegnamento">
