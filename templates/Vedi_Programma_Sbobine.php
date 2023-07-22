@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../db_connector.php';
-if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1){
 
     ?>
 
@@ -820,6 +820,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
             // Nuovo codice per ottenere gli sbobinatori selezionati
             var selectedSbobinatori = Array.from(document.querySelectorAll('[name="sbobinatori[]"] option:checked')).map(option => option.value);
+            var selectedRevisori = Array.from(document.querySelectorAll('[name="revisori[]"] option:checked')).map(option => option.value);
+
 
             // Eseguire una richiesta AJAX per salvare le modifiche e gli sbobinatori associati
             fetch('../req/modifica_programma_sbobina.php', {
@@ -827,7 +829,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'idSbobina=' + encodeURIComponent(idSbobina) + '&nomeInsegnamento=' + encodeURIComponent(nomeInsegnamento) + '&dataLezione=' + encodeURIComponent(dataLezione) + '&sbobinatori=' + encodeURIComponent(JSON.stringify(selectedSbobinatori)),
+                body: 'idSbobina=' + encodeURIComponent(idSbobina) + '&nomeInsegnamento=' + encodeURIComponent(nomeInsegnamento) + '&dataLezione=' + encodeURIComponent(dataLezione) + '&sbobinatori=' + encodeURIComponent(JSON.stringify(selectedSbobinatori)) + '&revisori=' + encodeURIComponent(JSON.stringify(selectedRevisori)),
             })
                 .then(response => response.text())
                 .then(data => {
@@ -919,7 +921,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
     <?php
 }else{
-    header("Location: ../templates/login.php");
+    echo 'Utente NON abilitato';
+    //header("Location: ../templates/login.php");
     exit();
 }
 ?>

@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Gestisci l'inserimento dei revisori associati alla sbobina nella tabella revisori_sbobine
             if (isset($_POST['revisori'])) {
-                $revisoriAssociati = $_POST['revisori'];
+                $revisoriAssociati = json_decode($_POST['revisori'], true);
 
                 // Elimina i revisori associati a questa sbobina prima di inserirli nuovamente
                 $queryDeleteRevisori = "DELETE FROM revisori_sbobine WHERE id_sbobina = ?";

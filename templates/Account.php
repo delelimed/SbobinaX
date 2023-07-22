@@ -480,14 +480,49 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 </div>
                                 <div class="col-sm-6">
                                     <!-- Select multiple-->
+                                    <?php
+                                    include '../db_connector.php';
+
+                                    $query = "SELECT id, materia FROM insegnamenti"; // Query per ottenere gli insegnamenti dal database
+                                    $result = $conn->query($query);
+
+                                    // Controlla se ci sono risultati e assegna i risultati alla variabile $risultati
+                                    if ($result->num_rows > 0) {
+                                        $risultati = array(); // Inizializza l'array per contenere i risultati
+
+                                        // Loop attraverso i risultati e aggiungili all'array $risultati
+                                        while ($row = $result->fetch_assoc()) {
+                                            $risultati[] = $row;
+                                        }
+                                    } else {
+                                        $risultati = array(); // Inizializza l'array vuoto se non ci sono risultati
+                                    }
+
+                                    $queryGetSbobinePartecipanti = "SELECT id_insegnamento FROM partecipazione_sbobine WHERE id_user = ?";
+                                    $stmtGetSbobinePartecipanti = $conn->prepare($queryGetSbobinePartecipanti);
+                                    $stmtGetSbobinePartecipanti->bind_param('i', $user_id);
+                                    $stmtGetSbobinePartecipanti->execute();
+                                    $resultGetSbobinePartecipanti = $stmtGetSbobinePartecipanti->get_result();
+
+                                    // Crea un array per memorizzare gli ID delle sbobine partecipanti
+                                    $sbobinePartecipanti = array();
+                                    while ($rowSbobinePartecipanti = $resultGetSbobinePartecipanti->fetch_assoc()) {
+                                        $sbobinePartecipanti[] = $rowSbobinePartecipanti['id_insegnamento'];
+                                    }
+                                    ?>
                                     <div class="form-group" data-select2-id="43">
                                         <label>Sbobine Abilitate:</label>
-                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true" disabled>
+                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Nessun Insegnamento Associato" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true" disabled>
                                             <?php foreach ($risultati as $row): ?>
-                                                <option data-select2-id="<?php echo $row['id']; ?>"><?php echo $row['materia']; ?></option>
+                                                <?php
+                                                // Controlla se l'ID dell'insegnamento è presente nell'array degli ID delle sbobine partecipanti
+                                                $isPartecipante = in_array($row['id'], $sbobinePartecipanti);
+                                                // Imposta l'attributo 'selected' per mostrare gli insegnamenti associati
+                                                $selectedAttribute = $isPartecipante ? 'selected' : '';
+                                                ?>
+                                                <option data-select2-id="<?php echo $row['id']; ?>" <?php echo $selectedAttribute; ?>><?php echo $row['materia']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
-
                                     </div>
                                 </div>
 
