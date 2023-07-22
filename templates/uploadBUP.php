@@ -421,36 +421,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-
-
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="modalCercaSbobina" tabindex="-1" role="dialog" aria-labelledby="modalCercaSbobinaLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalCercaSbobinaLabel">Cerca Sbobina per ID</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <label>Per evitare errori nella registrazione, puoi inserire qui sotto l'id associato
-                                    alla tua sbobina (lo trovi nella HOME, prima colonna)</label>
-                                    <div class="form-group">
-                                        <label for="sbobinaId">ID Sbobina:</label>
-                                        <input type="text" class="form-control" id="sbobinaId" name="sbobinaId" placeholder="Inserisci l'ID sbobina">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-                                    <button type="button" class="btn btn-primary" onclick="cercaSbobina()">Cerca</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
                     <form action="../req/insert_sbobina.php" method="post">
                         <div class="card-body">
                             <div class="form-group">
@@ -606,19 +576,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/dist/js/adminlte.min.js"></script>
 
 <script>
-    // Aspetta che il documento sia completamente caricato prima di aprire la finestra modale
-    $(document).ready(function() {
-        // Apri la finestra modale
-        $('#modalCercaSbobina').modal('show');
-    });
-
-    function cercaSbobina() {
-        // Rimane lo stesso il codice per la ricerca dell'ID sbobina e la gestione della risposta
-        // ...
-    }
-</script>
-
-<script>
     // Inizializza il selettore di date
     $(document).ready(function() {
         $('.datepicker').datepicker({
@@ -655,42 +612,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         fileLabel.innerHTML = fileName;
     });
 </script>
-
-<script>
-    function cercaSbobina() {
-        var sbobinaId = document.getElementById('sbobinaId').value;
-
-        // Esegui la ricerca tramite AJAX o invia il form con l'ID sbobina
-        // e gestisci la risposta o l'azione di reindirizzamento nella pagina con i risultati
-        // Qui puoi utilizzare jQuery per semplificare le chiamate AJAX.
-
-        // Esempio di chiamata AJAX con jQuery
-        $.ajax({
-            type: 'POST',
-            url: '../req/upload_fx/cerca_sbobina.php',
-            data: { sbobinaId: sbobinaId },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.success) {
-                    // ID sbobina trovato, puoi gestire la risposta come preferisci
-                    // Ad esempio, puoi impostare i valori dei campi del form o mostrare un messaggio di successo.
-                    alert('Sbobina trovata con ID: ' + sbobinaId);
-                    // Chiudi la finestra modale
-                    $('#modalCercaSbobina').modal('hide');
-                } else {
-                    // ID sbobina non trovato, mostra un messaggio di errore o gestisci la risposta come preferisci
-                    alert('Sbobina non trovata con ID: ' + sbobinaId);
-                }
-            },
-            error: function() {
-                alert('Errore durante la ricerca dell\'ID sbobina');
-            }
-        });
-    }
-</script>
-
-
-
 </body>
 </html>
 
