@@ -7,6 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ottieni i dati dal form
     $idInsegnamento = $_POST['insegnamento'];
     $dataLezione = $_POST['data_lezione'];
+    $progressivoSbobina = $_POST['progressivo_sbobina'];
     $revisionata = 0; // Il valore di default per il campo revisionata
 
     // Formatta la data nel formato corretto "YYYY-MM-DD"
@@ -18,9 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepara e esegui la query per inserire i dati nella tabella sbobine_calendarizzate
-    $query = "INSERT INTO sbobine_calendarizzate (insegnamento, data_lezione, revisione) VALUES (?, ?, ?)";
+    $query = "INSERT INTO sbobine_calendarizzate (insegnamento, data_lezione, progressivo_insegnamento, revisione) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('sss', $idInsegnamento, $dataLezioneFormatted, $revisionata);
+    $stmt->bind_param('sssi', $idInsegnamento, $dataLezioneFormatted, $progressivoSbobina, $revisionata);
 
     // Esegui l'inserimento nella tabella sbobine_calendarizzate
     if ($stmt->execute()) {

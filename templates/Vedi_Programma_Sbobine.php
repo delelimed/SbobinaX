@@ -447,6 +447,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         <thead>
                                         <tr>
                                             <th>ID</th>
+                                            <th>Progr.</th>
                                             <th>Insegnamento</th>
                                             <th>Data Lezione</th>
                                             <th>Sbobinatori</th>
@@ -537,6 +538,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         <?php foreach ($risultati as $row): ?>
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
+                                                <td><?php echo $row['progressivo_insegnamento']; ?></td> <!-- Qui mostriamo il progressivo_sbobina -->
                                                 <td><?php echo getMateriaFromId($row['insegnamento']); ?></td>
                                                 <td><?php echo $row['data_lezione']; ?></td>
                                                 <td>

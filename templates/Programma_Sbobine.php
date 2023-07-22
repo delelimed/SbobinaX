@@ -443,6 +443,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="progressivo_sbobina">Data Lezione</label>
+                                    <input type="number" class="form-control" id="progressivo_sbobina" name="progressivo_sbobina" value="" placeholder="Inserisci il numero progressivo">
+                                </div>
 
                                 <div class="form-group">
                                     <label for="data_lezione">Data Lezione</label>

@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cognome = $_POST["Cognome"];
     $matricola = $_POST["Matricola"];
     $email = $cognome . "." . $matricola . "@studenti.uniroma1.it";
-    $password = $_POST["Password"];
+    $password = $_POST["Matricola"];
     $admin = $_POST["admin"]; // Ottieni il valore dell'input nascosto "admin"
 
     // Verifica eventuali errori di connessione

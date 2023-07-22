@@ -453,7 +453,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                 <div class="form-group">
                                     <label for="Password">Password</label>
-                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Inserisci la password provvisoria">
+                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="La prima password corrisponde alla matricola" disabled>
                                 </div>
                                 <div class="col-sm-6">
                                     <!-- Select multiple-->
