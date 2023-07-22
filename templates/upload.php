@@ -446,7 +446,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
                                     <button type="button" class="btn btn-primary" id="cercaBtn" data-toggle="modal" data-target="#modalCercaSbobina">
                                         Cerca Sbobina
                                     </button>
@@ -456,7 +455,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
 
 
-                    <form action="#" method="post" id="sbobinaForm">
+                    <form action="../req/upload_fx/gestione_invio.php" method="post" id="sbobinaForm">
                     <div class="card-body">
                             <div class="form-group">
                                 <label for="Insegnamento">Insegnamento</label>
@@ -509,13 +508,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                             <div class="form-group" data-select2-id="43">
                                 <label>Seleziona i Revisori</label>
-                                <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i revisori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori" id="revisori">
+                                <select class="select2 select2-hidden-accessible" multiple data-placeholder="Seleziona i revisori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori" id="revisori">
                                     <?php
                                     // Query per ottenere tutti gli utenti dal database
                                     $query = "SELECT id, nome FROM users";
                                     $result = mysqli_query($conn, $query);
 
-                                    // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
+                                   //  Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
                                     }
@@ -523,19 +522,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="exampleInputFile">File input</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <!-- Aggiunta l'attributo "name" per permettere l'elaborazione del file -->
-                                        <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina">
-                                        <label class="custom-file-label" for="exampleInputFile" id="fileLabel">Choose file</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Upload</span>
-                                    </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Input PDF Sbobina</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <!-- Aggiunta l'attributo "name" per permettere l'elaborazione del file -->
+                                    <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina">
+                                    <label class="custom-file-label" for="exampleInputFile" id="fileLabel">Seleziona il file PDF della sbobina</label>
                                 </div>
                             </div>
+                        </div>
 
                         </div>
                         <!-- /.card-body -->
@@ -618,10 +614,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $('#modalCercaSbobina').modal('show');
 
         // Popola il form con i dati trovati dopo la ricerca
-        function popolaForm(idInsegnamento, dataLezione) {
+        function popolaForm(idInsegnamento, dataLezione, sbobinatori, revisori, allUsers) {
             $('#insegnamento').val(idInsegnamento);
             $('#data_lezione').val(dataLezione);
+
+            // Popolare il campo select2 "sbobinatori"
+            var selectSbobinatori = $('#sbobinatori');
+            selectSbobinatori.empty();
+
+            // Popolare il campo select2 "revisori"
+            var selectRevisori = $('#revisori');
+            selectRevisori.empty();
+
+            // Aggiungi tutte le opzioni di inserimento provenienti dalla tabella "users"
+            allUsers.forEach(function (user) {
+                var optionSbobinatori = new Option(user.nome + ' ' + user.cognome, user.id, false, false);
+                var optionRevisori = new Option(user.nome + ' ' + user.cognome, user.id, false, false);
+
+                // Controlla se l'ID dell'utente è presente nell'array degli sbobinatori e seleziona l'opzione di conseguenza
+                if (sbobinatori.includes(user.id)) {
+                    optionSbobinatori.setAttribute('selected', 'selected');
+                }
+                selectSbobinatori.append(optionSbobinatori);
+
+                // Controlla se l'ID dell'utente è presente nell'array dei revisori e seleziona l'opzione di conseguenza
+                if (revisori.includes(user.id)) {
+                    optionRevisori.setAttribute('selected', 'selected');
+                }
+                selectRevisori.append(optionRevisori);
+            });
+
+            // Inizializza i campi select2 dopo aver aggiunto le opzioni
+            selectSbobinatori.select2();
+            selectRevisori.select2();
         }
+
+
+
+
 
         function cercaSbobina() {
             var sbobinaId = document.getElementById('sbobinaId').value;
@@ -635,7 +665,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     if (data.success) {
                         // ID sbobina trovato, popola il form con i dati corrispondenti
-                        popolaForm(data.idInsegnamento, data.dataLezione);
+                        popolaForm(data.idInsegnamento, data.dataLezione, data.sbobinatori, data.revisori, data.allUsers);
                         $('#id_sbobina').val(sbobinaId);
 
                         // Chiudi la finestra modale
@@ -650,6 +680,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 }
             });
         }
+
 
         // Assegna la funzione cercaSbobina al pulsante "Cerca"
         $('#cercaBtn').on('click', function() {
@@ -732,6 +763,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
 </script>
 
+<script>
+    // Aggiungiamo un ascoltatore di eventi per il campo di input file
+    const fileInput = document.getElementById('file_sbobina');
+    const fileLabel = document.getElementById('fileLabel');
+
+    fileInput.addEventListener('change', function () {
+        // Quando viene selezionato un file, aggiorniamo il testo del label con il nome del file selezionato
+        if (fileInput.files.length > 0) {
+            fileLabel.innerText = fileInput.files[0].name;
+        } else {
+            fileLabel.innerText = 'Choose file';
+        }
+    });
+</script>
 
 
 </body>
