@@ -467,17 +467,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="card-header">
                             <h3 class="card-title">Sbobine Assegnate</h3>
 
-                            <div class="card-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
@@ -548,6 +537,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
+<!-- Include jQuery library if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -564,14 +556,40 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         type: "GET",
                         dataType: "json",
                         success: function(insegnamentoData) {
-                            var row = $("<tr>");
-                            row.append($("<td>").text(sbobina.id));
-                            row.append($("<td>").text(insegnamentoData.materia)); // Utilizza il valore restituito dalla chiamata per ottenere la "materia"
-                            row.append($("<td>").text(sbobina.data_lezione));
-                            row.append($("<td>").text("implementa"));
-                            row.append($("<td>").text("implementa"));
-                            row.append($("<td>").text("implementa"));
-                            sbobineTableBody.append(row);
+                            // Effettua una terza chiamata AJAX per ottenere i nomi degli sbobinatori
+                            $.ajax({
+                                url: "../req/get_sbobinatori_names.php",
+                                type: "GET",
+                                data: { sbobinatori_ids: sbobina.sbobinatori_ids },
+                                dataType: "json",
+                                success: function(sbobinatoriData) {
+                                    // Effettua una quarta chiamata AJAX per ottenere i nomi dei revisori
+                                    $.ajax({
+                                        url: "../req/get_revisori_names.php",
+                                        type: "GET",
+                                        data: { sbobina_id: sbobina.id },
+                                        dataType: "json",
+                                        success: function(revisoriData) {
+                                            var sbobinatoriNames = sbobinatoriData.join(", ");
+                                            var revisoriNames = revisoriData.join(", ");
+                                            var row = $("<tr>");
+                                            row.append($("<td>").text(sbobina.id));
+                                            row.append($("<td>").text(insegnamentoData.materia));
+                                            row.append($("<td>").text(sbobina.data_lezione));
+                                            row.append($("<td>").text(sbobina.status));
+                                            row.append($("<td>").text(sbobinatoriNames));
+                                            row.append($("<td>").text(revisoriNames));
+                                            sbobineTableBody.append(row);
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.error("Errore durante il recupero dei nomi dei revisori:", error);
+                                        }
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("Errore durante il recupero dei nomi degli sbobinatori:", error);
+                                }
+                            });
                         },
                         error: function(xhr, status, error) {
                             console.error("Errore durante il recupero dei dati dell'insegnamento:", error);
@@ -585,6 +603,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     });
 </script>
+
+
+
 
 </body>
 </html>
