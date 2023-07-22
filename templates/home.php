@@ -397,12 +397,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div><!-- /.col -->
                 </div><!-- /.row -->
                 <!-- block content -->
+                <?php include '../req/home_fx.php'; ?>
 
                 <div class="row">
                     <div class="col-md-3">
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>44</h3>
+                                <h3><?php echo $num_sbobine_pronte; ?></h3>
                                 <p>Sbobine Caricate</p>
                             </div>
                             <div class="icon">
@@ -416,7 +417,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-md-3">
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>44</h3>
+                                <h3><?php echo $num_sbobine_da_revisionare; ?></h3>
                                 <p>Sbobine in Peer Review</p>
                             </div>
                             <div class="icon">
@@ -430,7 +431,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-md-3">
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>44</h3>
+                                <h3><?php echo $num_sbobine_da_svolgere; ?></h3>
                                 <p>Sbobine da Svolgere</p>
                             </div>
                             <div class="icon">
@@ -444,14 +445,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-md-3">
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3>44</h3>
+                                <h3><?php echo $num_sbobine; ?></h3>
                                 <p>Sbobine Totali Presenti</p>
                             </div>
                             <div class="icon">
                                 <i class="fa fa-folder-open nav-icon"></i>
                             </div>
                             <a href="#" class="small-box-footer">
-                                Buono Studio! <i class=></i>
+                                Calendarizzate, in revisione, pronte <i class=></i>
                             </a>
                         </div>
 
