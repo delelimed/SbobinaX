@@ -18,7 +18,15 @@ if ($resultFile->num_rows > 0) {
 }
 
 // Esegui l'aggiornamento dei campi desiderati nella tabella sbobine_calendarizzate
-$queryUpdate = "UPDATE sbobine_calendarizzate SET argomento = '', data_caricamento = '', caricata = '', revisionata = '', posizione_server = '' WHERE id = $idSbobina";
+$queryUpdate = "UPDATE sbobine_calendarizzate AS sbobine
+                JOIN revisori_sbobine AS revisori ON sbobine.id = revisori.id_sbobina
+                SET sbobine.argomento = '',
+                    sbobine.data_caricamento = '',
+                    sbobine.caricata = '',
+                    sbobine.revisione = '',
+                    sbobine.posizione_server = '',
+                    revisori.esito = 0
+                WHERE sbobine.id = $idSbobina";
 $resultUpdate = $conn->query($queryUpdate);
 
 if ($resultUpdate) {

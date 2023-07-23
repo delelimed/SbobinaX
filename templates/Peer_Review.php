@@ -424,7 +424,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 $userId = $_SESSION['id'];
 
                                 // Query per ottenere le sbobine di cui l'utente è revisore
-                                $sql = "SELECT id_sbobina FROM revisori_sbobine WHERE id_revisore = $userId";
+                                $sql = "SELECT id_sbobina 
+                                FROM revisori_sbobine 
+                                WHERE id_revisore = $userId 
+                                AND id_sbobina IN (SELECT ID FROM sbobine_calendarizzate WHERE caricata = 1)";
                                 $result = $conn->query($sql);
 
                                 ?>
@@ -523,37 +526,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             echo "</td>";
 
                                             echo "<td>" . $sbobinaData['argomento'] . "</td>";
-                                            // Colonna delle azioni con i pulsanti "Download" e "Approva"
-                                            echo "<td>";
 
-// Controlla se il revisore corrente ha l'esito uguale a 0 nella tabella "revisori_sbobine"
-                                            $revisoreId = $_SESSION['id'];
-                                            $esitoQuery = "SELECT esito FROM revisori_sbobine WHERE id_sbobina = $sbobinaId AND id_revisore = $revisoreId";
-                                            $esitoResult = $conn->query($esitoQuery);
+                                            echo '<td>';
+                                            // Aggiungiamo il link per il download del file
+                                            // Effettua il controllo sulla tabella "revisori_sbobine" per vedere se l'utente è autorizzato ad approvare
+                                            $currentUserId = $_SESSION['id'];
+                                            $queryEsito = "SELECT esito FROM revisori_sbobine WHERE id_revisore = $currentUserId AND id_sbobina = " . $sbobinaData['id'];
+                                            $resultEsito = $conn->query($queryEsito);
+                                            $approvato = false;
 
-                                            if ($esitoResult && $esitoResult->num_rows > 0) {
-                                                $esitoData = $esitoResult->fetch_assoc();
-                                                $esito = $esitoData['esito'];
-
-                                                // Pulsante "Download"
-                                                echo "<a href='../req/peer_review_fx/gestisci_PR.php?download_sbobina=" . $sbobinaData['id'] . "' class='btn btn-primary btn-download'";
-                                                if ($esito == 1) {
-                                                    echo " disabled"; // Disabilita il pulsante se l'esito è 1
+                                            if ($resultEsito && $resultEsito->num_rows > 0) {
+                                                $rowEsito = $resultEsito->fetch_assoc();
+                                                if ($rowEsito['esito'] == 1) {
+                                                    $approvato = true;
                                                 }
-                                                echo ">Download</a>";
-
-                                                // Pulsante "Approva"
-                                                echo "<a href='#' class='btn btn-success btn-approva' data-sbobina-id='" . $sbobinaData['id'] . "'";
-                                                if ($esito == 1) {
-                                                    echo " disabled"; // Disabilita il pulsante se l'esito è 1
-                                                }
-                                                echo ">Approva</a>";
                                             }
 
-                                            echo "</td>";
+                                            // Stampa i bottoni "Download" e "Approva" e disabilitali se l'utente ha già effettuato il download o l'approvazione
+                                            if ($approvato) {
+                                                echo '<button class="btn btn-primary" disabled>Download</button>';
+                                                echo '<button class="btn btn-success btn-approva" disabled>Approva</button>';
+                                            } else {
+                                                echo '<a href="../req/peer_review_fx/gestisci_PR.php?download_sbobina=' . $sbobinaData['id'] . '" class="btn btn-primary">Download</a>';
+                                                echo '<a href="#" class="btn btn-success btn-approva" data-sbobina-id="' . $sbobinaData['id'] . '">Approva</a>';
+                                            }                                          echo '</td>';
+                                            echo '</tr>';
+                                            echo '</td>';
+
+
+
 
                                             echo "</tr>";
                                         }
+                                    }
+                                    if ($result->num_rows === 0) {
+                                        echo "<tr>";
+                                        echo "<td colspan='7'>Non hai sbobine assegnate per la revisione disponibili. <br> 
+                                        Questo può accadere perchè non sei un revisore o perchè la sbobina 
+                                        non è ancora stata caricata.</td>"; // Colspan 7 per occupare tutte le colonne della tabella
+                                        echo "</tr>";
                                     }
                                     ?>
                                     </tbody>
@@ -593,7 +604,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             per quanto di conoscenza, è facilmente comprensibile.
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger btn-rigetta" data-sbobina-id="<?php echo $row_sbobina['id']; ?>" data-dismiss="modal">Rigetta</button>
+                                            <button type="button" class="btn btn-danger btn-rigetta" data-sbobina-id="<?php echo $sbobinaData['id']; ?>" data-dismiss="modal">Rigetta</button>
                                             <button type="button" class="btn btn-success" id="btn-conferma-modal">Conferma</button>
                                         </div>
                                     </div>
@@ -729,11 +740,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 success: function(response) {
                     // Ricevi la risposta dal server e gestisci le azioni da intraprendere
                     if (response === 'success') {
-                        // Azioni eseguite con successo, ad esempio aggiornare la pagina o mostrare un messaggio
-                        alert('Sbobina rigettata con successo!');
+                        // Mostra un messaggio di successo
+                        alert('Sbobina rigettata con successo! Contatta lo sbobinatore per invitarlo ad un nuovo invio.');
                     } else {
                         // Gestisci eventuali errori
-                        alert('Si è verificato un errore durante il rigetto della sbobina.');
+                        alert('Sbobina rigettata con successo! Contatta lo sbobinatore per invitarlo ad un nuovo invio.');
                     }
                 },
                 error: function() {
@@ -744,6 +755,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     });
 </script>
+
 
 
 

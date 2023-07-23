@@ -17,13 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $dataOggi = $oggi->format('Y-m-d');
 
     // Fetch "progressivo_insegnamento" from the database
-    $query = "SELECT progressivo_insegnamento FROM sbobine_calendarizzate WHERE id = '$idSbobina'";
+    $query = "SELECT progressivo_insegnamento, caricata FROM sbobine_calendarizzate WHERE id = '$idSbobina'";
     $result = $conn->query($query);
 
     if ($result && $result->num_rows > 0) {
         // The query returned results, proceed with fetching the data
         $row = $result->fetch_assoc();
         $progressivoInsegnamento = $row['progressivo_insegnamento'];
+        $caricata = $row['caricata'];
+
+        if ($caricata == 1) {
+            echo "<script>alert('Il file è già stato caricato e non è possibile effettuare ulteriori upload.'); window.location.href = '../../templates/home.php';</script>";
+            exit(); // Stop the execution here
+        }
 
         // Generate the new filename using "progressivo_insegnamento", "argomento", and ".pdf" extension
         $nuovoNomeFile = $progressivoInsegnamento . "." . $argomento . ".pdf";

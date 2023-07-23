@@ -509,14 +509,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </tbody>
 
 
-
-
-
                                 </table>
-
-
-
-
+                                <div id="avvisoMaschera" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); z-index: 9999;">
+                                    <p id="avvisoMessaggio"></p>
+                                </div>
 
                             </div>
                             <!-- /.card-body -->
@@ -565,6 +561,56 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
+
+<!-- Includi jQuery se non è già incluso -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Aggiungi questa parte del codice JavaScript per gestire la visualizzazione della maschera -->
+<script>
+    $(document).ready(function() {
+        // Funzione per mostrare la maschera con il messaggio di avviso
+        function showAvviso(messaggio, tipo) {
+            var avvisoMaschera = $('#avvisoMaschera');
+            var avvisoMessaggio = $('#avvisoMessaggio');
+            avvisoMessaggio.text(messaggio);
+
+            // Applica stile per avviso di successo o di errore
+            if (tipo === 'success') {
+                avvisoMaschera.removeClass('avviso-errore').addClass('avviso-successo');
+            } else {
+                avvisoMaschera.removeClass('avviso-successo').addClass('avviso-errore');
+            }
+
+            avvisoMaschera.fadeIn(300);
+            setTimeout(function() {
+                avvisoMaschera.fadeOut(300);
+            }, 2000); // Nascondi l'avviso dopo 2 secondi
+        }
+
+        // Funzione per gestire il click sul link di download
+        $("#linkDownload").on("click", function(e) {
+            e.preventDefault();
+            console.log("Click sul link di download");
+
+            // Il resto del codice...
+
+            if (data.authorized) {
+                // Il download è autorizzato, avvia il download
+                console.log("Download autorizzato");
+                // Il resto del codice...
+            } else {
+                // Il download non è autorizzato, mostra il messaggio di avviso
+                console.log("Download non autorizzato");
+                showAvviso(data.message, 'error');
+            }
+        });
+
+    });
+    });
+</script>
+
+
+
 </body>
 </html>
 <?php
