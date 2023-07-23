@@ -406,30 +406,40 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="card-header">
                                 <h3 class="card-title">Sbobine Assegnate da Revisionare</h3>
 
+
                             </div>
+                            <!-- /.card-header -->
+                            <?php
+                            // Connessione al database (sostituisci con le tue credenziali)
+                            include "../db_connector.php";
 
+                            // Verifica la connessione
+                            if ($conn->connect_error) {
+                                die("Connessione fallita: " . $conn->connect_error);
+                            }
 
+                            // Ottenere l'ID dell'utente corrente (supponiamo che tu abbia già questa informazione)
+                            $current_user_id = 1; // Sostituisci con l'ID dell'utente corrente
+
+                            // Query per ottenere gli ID delle sbobine assegnate all'utente corrente
+                            $sql = "SELECT id_sbobina FROM revisori_sbobine WHERE id_revisore = $current_user_id";
+                            $result = $conn->query($sql);
+
+                            // Array per memorizzare gli ID delle sbobine
+                            $sbobine_ids = array();
+
+                            if ($result->num_rows > 0) {
+                                // Memorizza gli ID delle sbobine nell'array
+                                while ($row = $result->fetch_assoc()) {
+                                    $sbobine_ids[] = $row['id_sbobina'];
+                                }
+                            }
+
+                            ?>
+
+                            <!-- Ora popoliamo la tabella HTML con gli ID delle sbobine assegnate all'utente corrente -->
                             <div class="card-body table-responsive p-0">
 
-                                <?php
-                                // Esempio di connessione al database
-                                include "../db_connector.php";
-
-                                // Verifica la connessione
-                                if ($conn->connect_error) {
-                                    die("Connessione al database fallita: " . $conn->connect_error);
-                                }
-
-                                // Recupera l'ID dell'utente dalla sessione (assicurati che l'utente sia loggato)
-                                $userId = $_SESSION['id'];
-
-                                // Query per ottenere le sbobine di cui l'utente è revisore
-                                $sql = "SELECT id_sbobina FROM revisori_sbobine WHERE id_revisore = $userId";
-                                $result = $conn->query($sql);
-
-                                ?>
-
-                                <!-- Tabella HTML -->
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                     <tr>
@@ -444,130 +454,81 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </thead>
                                     <tbody>
                                     <?php
-                                    // Mostra le sbobine nella tabella
-                                    while ($row = $result->fetch_assoc()) {
-                                        $sbobinaId = $row['id_sbobina'];
+                                    // Otteniamo l'id dell'utente loggato
+                                    $current_user_id = $_SESSION['id']; // Sostituisci con il vero id dell'utente loggato
 
-                                        // Ora puoi eseguire una query per ottenere i dettagli completi della sbobina utilizzando $sbobinaId
-                                        $sbobinaQuery = "SELECT * FROM sbobine_calendarizzate WHERE ID = $sbobinaId";
-                                        $sbobinaResult = $conn->query($sbobinaQuery);
+                                    // Iteriamo attraverso gli ID delle sbobine e popoliamo la tabella
+                                    foreach ($sbobine_ids as $sbobina_id) {
+                                        // Esegui un'altra query per ottenere i dettagli della sbobina usando $sbobina_id
+                                        $sql_sbobina = "SELECT sc.*, i.materia, 
+        GROUP_CONCAT(DISTINCT us.nome, ' ', us.cognome SEPARATOR '<br>') AS sbobinatori,
+        GROUP_CONCAT(DISTINCT ur.nome, ' ', ur.cognome SEPARATOR '<br>') AS revisori
+        FROM sbobine_calendarizzate sc
+        INNER JOIN insegnamenti i ON sc.id = i.id
+        LEFT JOIN sbobinatori_sbobine ss ON sc.id = ss.id_sbobina
+        LEFT JOIN users us ON ss.id_sbobinatore = us.id
+        LEFT JOIN revisori_sbobine rs ON sc.id = rs.id_sbobina
+        LEFT JOIN users ur ON rs.id_revisore = ur.id
+        WHERE sc.id = $sbobina_id
+        AND (ss.id_sbobinatore = $current_user_id OR rs.id_revisore = $current_user_id)
+        GROUP BY sc.id";
 
-                                        if ($sbobinaResult && $sbobinaResult->num_rows > 0) {
-                                            // Stampa i dettagli della sbobina nella riga della tabella
-                                            $sbobinaData = $sbobinaResult->fetch_assoc();
+                                        $result_sbobina = $conn->query($sql_sbobina);
 
-                                            // Recupera il nome della materia dalla tabella 'insegnamenti'
-                                            $insegnamentoId = $sbobinaData['insegnamento'];
-                                            $insegnamentoQuery = "SELECT materia FROM insegnamenti WHERE id = $insegnamentoId";
-                                            $insegnamentoResult = $conn->query($insegnamentoQuery);
+                                        if ($result_sbobina->num_rows > 0) {
+                                            $row_sbobina = $result_sbobina->fetch_assoc();
+                                            echo '<tr>';
+                                            echo '<td>' . $row_sbobina['id'] . '</td>';
+                                            echo '<td>' . $row_sbobina['materia'] . '</td>';
+                                            echo '<td>' . $row_sbobina['data_lezione'] . '</td>';
 
-                                            $materia = "";
-                                            if ($insegnamentoResult && $insegnamentoResult->num_rows > 0) {
-                                                $insegnamentoData = $insegnamentoResult->fetch_assoc();
-                                                $materia = $insegnamentoData['materia'];
+                                            // Controlla se ci sono sbobinatori disponibili
+                                            if ($row_sbobina['sbobinatori']) {
+                                                echo '<td>' . $row_sbobina['sbobinatori'] . '</td>';
+                                            } else {
+                                                echo '<td>Nessun Sbobinatore Assegnato</td>';
                                             }
 
-                                            // Recupera gli ID degli sbobinatori dalla tabella 'sbobinatori_sbobine'
-                                            $sbobinatoriQuery = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
-                                            $sbobinatoriResult = $conn->query($sbobinatoriQuery);
-                                            $sbobinatori = [];
+                                            // Controlla se ci sono revisori disponibili
+                                            if ($row_sbobina['revisori']) {
+                                                echo '<td>' . $row_sbobina['revisori'] . '</td>';
+                                            } else {
+                                                echo '<td>Nessun Revisore Assegnato</td>';
+                                            }
 
-                                            if ($sbobinatoriResult && $sbobinatoriResult->num_rows > 0) {
-                                                while ($sbobinatoreData = $sbobinatoriResult->fetch_assoc()) {
-                                                    $sbobinatori[] = $sbobinatoreData['id_sbobinatore'];
+                                            echo '<td>' . $row_sbobina['argomento'] . '</td>';
+                                            echo '<td>';
+                                            // Aggiungiamo il link per il download del file
+                                            // Effettua il controllo sulla tabella "revisori_sbobine" per vedere se l'utente è autorizzato ad approvare
+                                            $currentUserId = $_SESSION['id'];
+                                            $queryEsito = "SELECT esito FROM revisori_sbobine WHERE id_revisore = $currentUserId AND id_sbobina = " . $row_sbobina['id'];
+                                            $resultEsito = $conn->query($queryEsito);
+                                            $approvato = false;
+
+                                            if ($resultEsito && $resultEsito->num_rows > 0) {
+                                                $rowEsito = $resultEsito->fetch_assoc();
+                                                if ($rowEsito['esito'] == 1) {
+                                                    $approvato = true;
                                                 }
                                             }
 
-                                            // Recupera gli ID dei revisori dalla tabella 'revisori_sbobine'
-                                            $revisoriQuery = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobinaId";
-                                            $revisoriResult = $conn->query($revisoriQuery);
-                                            $revisori = [];
-
-                                            if ($revisoriResult && $revisoriResult->num_rows > 0) {
-                                                while ($revisoreData = $revisoriResult->fetch_assoc()) {
-                                                    $revisori[] = $revisoreData['id_revisore'];
-                                                }
-                                            }
-
-                                            echo "<tr>";
-                                            echo "<td>" . $sbobinaData['id'] . "</td>";
-                                            echo "<td>" . $materia . "</td>"; // Mostra il nome della materia
-                                            echo "<td>" . $sbobinaData['data_lezione'] . "</td>";
-
-                                            // Mostra il nome e cognome degli sbobinatori uno sotto l'altro, se presenti
-                                            echo "<td>";
-                                            if (!empty($sbobinatori)) {
-                                                foreach ($sbobinatori as $sbobinatoreId) {
-                                                    $sbobinatoreQuery = "SELECT nome, cognome FROM users WHERE id = $sbobinatoreId";
-                                                    $sbobinatoreResult = $conn->query($sbobinatoreQuery);
-                                                    if ($sbobinatoreResult && $sbobinatoreResult->num_rows > 0) {
-                                                        $sbobinatoreData = $sbobinatoreResult->fetch_assoc();
-                                                        echo $sbobinatoreData['nome'] . " " . $sbobinatoreData['cognome'] . "<br>";
-                                                    }
-                                                }
-                                            }
-                                            echo "</td>";
-
-                                            // Mostra il nome e cognome dei revisori uno sotto l'altro, se presenti
-                                            echo "<td>";
-                                            if (!empty($revisori)) {
-                                                foreach ($revisori as $revisoreId) {
-                                                    $revisoreQuery = "SELECT nome, cognome FROM users WHERE id = $revisoreId";
-                                                    $revisoreResult = $conn->query($revisoreQuery);
-                                                    if ($revisoreResult && $revisoreResult->num_rows > 0) {
-                                                        $revisoreData = $revisoreResult->fetch_assoc();
-                                                        echo $revisoreData['nome'] . " " . $revisoreData['cognome'] . "<br>";
-                                                    }
-                                                }
-                                            }
-                                            echo "</td>";
-
-                                            echo "<td>" . $sbobinaData['argomento'] . "</td>";
-                                            // Colonna delle azioni con i pulsanti "Download" e "Approva"
-                                            echo "<td>";
-
-// Controlla se il revisore corrente ha l'esito uguale a 0 nella tabella "revisori_sbobine"
-                                            $revisoreId = $_SESSION['id'];
-                                            $esitoQuery = "SELECT esito FROM revisori_sbobine WHERE id_sbobina = $sbobinaId AND id_revisore = $revisoreId";
-                                            $esitoResult = $conn->query($esitoQuery);
-
-                                            if ($esitoResult && $esitoResult->num_rows > 0) {
-                                                $esitoData = $esitoResult->fetch_assoc();
-                                                $esito = $esitoData['esito'];
-
-                                                // Pulsante "Download"
-                                                echo "<a href='../req/peer_review_fx/gestisci_PR.php?download_sbobina=" . $sbobinaData['id'] . "' class='btn btn-primary btn-download'";
-                                                if ($esito == 1) {
-                                                    echo " disabled"; // Disabilita il pulsante se l'esito è 1
-                                                }
-                                                echo ">Download</a>";
-
-                                                // Pulsante "Approva"
-                                                echo "<a href='#' class='btn btn-success btn-approva' data-sbobina-id='" . $sbobinaData['id'] . "'";
-                                                if ($esito == 1) {
-                                                    echo " disabled"; // Disabilita il pulsante se l'esito è 1
-                                                }
-                                                echo ">Approva</a>";
-                                            }
-
-                                            echo "</td>";
-
-                                            echo "</tr>";
+                                            // Stampa i bottoni "Download" e "Approva" e disabilitali se l'utente ha già effettuato il download o l'approvazione
+                                            if ($approvato) {
+                                                echo '<button class="btn btn-primary" disabled>Download</button>';
+                                                echo '<button class="btn btn-success btn-approva" disabled>Approva</button>';
+                                            } else {
+                                                echo '<a href="../req/peer_review_fx/gestisci_PR.php?download_sbobina=' . $row_sbobina['id'] . '" class="btn btn-primary">Download</a>';
+                                                echo '<a href="#" class="btn btn-success btn-approva" data-sbobina-id="' . $row_sbobina['id'] . '">Approva</a>';
+                                            }                                          echo '</td>';
+                                            echo '</tr>';
+                                            echo '</td>';
+                                            echo '</tr>';
                                         }
                                     }
                                     ?>
+
                                     </tbody>
-
-
-
-
                                 </table>
-
-                                <?php
-                                // Chiudi la connessione
-                                $conn->close();
-                                ?>
-
                             </div>
 
                             <div id="avvisoMaschera" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); z-index: 9999;">
@@ -593,7 +554,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             per quanto di conoscenza, è facilmente comprensibile.
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger btn-rigetta" data-sbobina-id="<?php echo $row_sbobina['id']; ?>" data-dismiss="modal">Rigetta</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Rigetta</button>
                                             <button type="button" class="btn btn-success" id="btn-conferma-modal">Conferma</button>
                                         </div>
                                     </div>
@@ -716,35 +677,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 
 </script>
-<script>
-    $(document).ready(function() {
-        $('.btn-rigetta').click(function() {
-            var sbobinaId = $(this).data('sbobina-id');
-
-            // Effettua la richiesta AJAX per cancellare la sbobina
-            $.ajax({
-                url: '../req/peer_review_fx/rigetta_sbobina.php',
-                type: 'POST',
-                data: { id_sbobina: sbobinaId },
-                success: function(response) {
-                    // Ricevi la risposta dal server e gestisci le azioni da intraprendere
-                    if (response === 'success') {
-                        // Azioni eseguite con successo, ad esempio aggiornare la pagina o mostrare un messaggio
-                        alert('Sbobina rigettata con successo!');
-                    } else {
-                        // Gestisci eventuali errori
-                        alert('Si è verificato un errore durante il rigetto della sbobina.');
-                    }
-                },
-                error: function() {
-                    // Gestisci eventuali errori di connessione o del server
-                    alert('Errore di connessione al server.');
-                }
-            });
-        });
-    });
-</script>
-
 
 
 

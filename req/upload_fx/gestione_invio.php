@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
             $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
 
-            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione' WHERE id = '$idSbobina'";
+            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1' WHERE id = '$idSbobina'";
             $result = $conn->query($query);
 
             if ($result) {
