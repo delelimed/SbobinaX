@@ -1,32 +1,33 @@
 <?php
-// elimina_sbobinatore.php
-include "../db_connector.php";
+// modifica_materia.php
+include "../../db_connector.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ottieni l'ID della riga da eliminare dal form
+    // Ottieni l'ID della riga da modificare e il nuovo valore della materia dal form
     $idRiga = $_POST['id'];
+    $nuovaMateria = $_POST['materia'];
 
     // Verifica eventuali errori di connessione
     if ($conn->connect_error) {
         die("Connessione al database fallita: " . $conn->connect_error);
     }
 
-    // Prepara e esegui la query per eliminare la riga dal database
-    $query = "DELETE FROM users WHERE id = ?";
+    // Prepara e esegui la query per la modifica della materia nel database
+    $query = "UPDATE insegnamenti SET materia = ? WHERE id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $idRiga);
+    $stmt->bind_param('si', $nuovaMateria, $idRiga);
 
     if ($stmt->execute()) {
-        // L'eliminazione è avvenuta con successo
+        // La modifica è avvenuta con successo
         $response = array(
             'success' => true,
-            'message' => 'Riga eliminata con successo!',
+            'message' => 'Modifica avvenuta con successo!',
         );
     } else {
-        // Errore durante l'eliminazione
+        // Errore durante la modifica
         $response = array(
             'success' => false,
-            'message' => 'Errore durante l\'eliminazione della riga: ' . $conn->error,
+            'message' => 'Errore durante la modifica della materia: ' . $conn->error,
         );
     }
 
@@ -39,4 +40,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode($response);
 }
 ?>
-

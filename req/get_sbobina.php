@@ -1,6 +1,6 @@
 <?php
 // Connessione al database
-include 'db_connector.php';
+include '../db_connector.php';
 if ($conn->connect_error) {
     die("Connessione al database fallita: " . $conn->connect_error);
 }

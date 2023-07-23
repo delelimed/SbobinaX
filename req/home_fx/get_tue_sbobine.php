@@ -1,6 +1,6 @@
 <?php
 // Connessione al database (sostituisci queste variabili con le tue credenziali)
-include '../db_connector.php';
+include '../../db_connector.php';
 session_start();
 
 // Funzione per ottenere gli ID dei sbobinatori dati l'ID della sbobina

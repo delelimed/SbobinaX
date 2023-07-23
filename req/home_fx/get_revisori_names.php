@@ -1,6 +1,6 @@
 <?php
 // Connessione al database (sostituisci queste variabili con le tue credenziali)
-include '../db_connector.php';
+include '../../db_connector.php';
 
 // Verifica la connessione
 if ($conn->connect_error) {

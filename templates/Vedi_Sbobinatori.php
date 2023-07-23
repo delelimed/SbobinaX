@@ -413,9 +413,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                             <div class="card-tools">
                                                 <div class="input-group input-group-sm" style="width: 150px;">
-                                                    <form id="formRicerca" method="post" action="../req/ricerca_sbobinatori.php" class="input-group input-group-sm" style="width: 150px;">
-                                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                                                        <div class="input-group-append">
+                                                    <form id="formRicerca" method="post" class="input-group input-group-sm" style="width: 150px;">
+                                                        <input type="text" id="tableSearch" name="table_search" class="form-control float-right" placeholder="Search">
+                                                            <div class="input-group-append">
                                                             <button type="submit" class="btn btn-default">
                                                                 <i class="fas fa-search"></i>
                                                             </button>
@@ -492,7 +492,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <!-- Form per la modifica della riga -->
-                                                                        <form id="formModifica" method="post" action="../req/modifica_sbobinatore.php" onsubmit="">
+                                                                        <form class="modifica-form" method="post" action="../req/vedi_sbobinatori_fx/modifica_sbobinatore.php" onsubmit="return false;">
                                                                             <input type="hidden" id="idRiga" name="id" value="">
                                                                             <div class="form-group">
                                                                                 <label for="matricola">Matricola</label>
@@ -648,6 +648,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 document.getElementById('cognome').value = cognome;
                 document.getElementById('malusValue').textContent = malus; // Imposta il valore del malus nel paragrafo
 
+
                 // Apri la finestra modale per la modifica
                 $('#modificaModal').modal('show');
             });
@@ -675,7 +676,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 // Apri la finestra modale di conferma per l'eliminazione
                 if (confirm('Sei sicuro di voler eliminare questa riga?')) {
                     // Esegui l'azione di eliminazione utilizzando l'API Fetch per inviare i dati al server
-                    fetch('../req/elimina_sbobinatore.php', {
+                    fetch('../req/vedi_sbobinatori_fx/elimina_sbobinatore.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -713,7 +714,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             var nuovoCognome = document.getElementById('cognome').value;
 
             // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
-            fetch('../req/modifica_sbobinatore.php', {
+            fetch('../req/vedi_sbobinatori_fx/modifica_sbobinatore.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -769,13 +770,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 insegnamentiSelezionati.push(checkbox.value);
             });
 
-            // Imposta il campo nascosto con gli insegnamenti selezionati
-            document.getElementById("insegnamentiAssociati").value = insegnamentiSelezionati.join(',');
-
+            // Imposta il campo nascosto con gli insegnamenti selezionati specifici per la riga
+            const idRiga = document.getElementById("idRiga").value;
+            document.getElementById("insegnamentiAssociati_" + idRiga).value = insegnamentiSelezionati.join(',');
 
             // Invia il form tramite AJAX
             const formData = new FormData(this);
-            fetch("modifica_sbobinatore.php", {
+            fetch("../req/vedi_sbobinatori_fx/modifica_sbobinatore.php", {
                 method: "POST",
                 body: formData
             })
@@ -795,34 +796,37 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         });
     </script>
 
+
     <!-- ricerca -->
     <script>
-        // Codice JavaScript per gestire il click sul pulsante "Search"
-        document.querySelector('.btn-default').addEventListener('click', function (event) {
-            event.preventDefault(); // Ferma l'azione predefinita del pulsante
+        // Aggiungiamo l'evento input all'input di ricerca
+        const inputSearch = document.getElementById('tableSearch');
+        inputSearch.addEventListener('input', function () {
+            const searchText = inputSearch.value.toLowerCase(); // Ottieni il testo di ricerca in minuscolo
 
-            // Ottieni il valore di ricerca inserito dall'utente
-            var searchText = document.querySelector('input[name="table_search"]').value;
+            // Recupera tutte le righe della tabella
+            const rows = document.querySelectorAll('.table tbody tr');
 
-            // Invia la richiesta di ricerca tramite AJAX
-            fetch('../req/ricerca_sbobinatori.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'search_text=' + encodeURIComponent(searchText),
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Aggiorna la tabella con i risultati della ricerca
-                    document.querySelector('tbody').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Errore durante la richiesta di ricerca:', error);
-                    alert('Si è verificato un errore durante la ricerca degli sbobinatori.');
-                });
+            // Filtra le righe in base al testo di ricerca
+            rows.forEach(row => {
+                const columns = row.getElementsByTagName('td');
+                let shouldShowRow = false;
+                for (let i = 0; i < columns.length; i++) {
+                    const columnText = columns[i].textContent.toLowerCase();
+                    if (columnText.includes(searchText)) {
+                        shouldShowRow = true;
+                        break;
+                    }
+                }
+
+                // Mostra o nascondi la riga in base al risultato del filtro
+                if (shouldShowRow) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
-
     </script>
 
 

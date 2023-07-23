@@ -574,7 +574,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             var nuovaMateria = document.getElementById('materia').value;
 
             // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
-            fetch('../req/modifica_materia.php', {
+            fetch('../req/visualizza_insegnamenti_fx/modifica_materia.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -606,7 +606,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 // Apri la finestra modale di conferma per l'eliminazione
                 if (confirm('Sei sicuro di voler eliminare questa materia?')) {
                     // Esegui l'azione di eliminazione utilizzando l'API Fetch per inviare i dati al server
-                    fetch('../req/elimina_materia.php', {
+                    fetch('../req/visualizza_insegnamenti_fx/elimina_materia.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',

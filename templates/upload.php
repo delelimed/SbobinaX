@@ -437,7 +437,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <div class="modal-body">
                                     <label>Per evitare errori nella registrazione, puoi inserire qui sotto l'id associato
                                     alla tua sbobina (lo trovi nella HOME, prima colonna). In caso di errori,
-                                    potrai liberamente modificare tutti i valori</label>
+                                    potrai liberamente modificare tutti i valori. <br>
+                                    La versione attuale del software non consente l'upload senza prima aver
+                                    indicato l'id della sbobina. In caso di errore,
+                                    ricaricare la pagina e riprovare, non forzare.</label>
                                     <div class="form-group">
                                         <label for="sbobinaId">ID Sbobina:</label>
                                         <input type="text" class="form-control" id="sbobinaId" name="sbobinaId" placeholder="Inserisci l'ID sbobina">

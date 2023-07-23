@@ -1,6 +1,6 @@
 <?php
 // Connessione al database
-include '../db_connector.php';
+include '../../db_connector.php';
 
 // Verifica se la richiesta è stata inviata tramite metodo POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

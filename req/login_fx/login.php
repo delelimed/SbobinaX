@@ -3,7 +3,7 @@ session_start();
 
 if (isset($_POST['uname']) &&
     isset($_POST['password'])){
-    include "../db_connector.php";
+    include "../../db_connector.php";
 
         function validate($data){
             $data = trim($data);
@@ -17,12 +17,12 @@ if (isset($_POST['uname']) &&
 
     if (empty($uname)){
         $em = "Matricola is Required";
-        header("Location: ../templates/login.php?error=$em");
+        header("Location: ../../templates/login.php?error=$em");
         exit;
 
     }else if (empty($password)){
         $em = "Password is required";
-        header("Location: ../templates/login.php?error=$em");
+        header("Location: ../../templates/login.php?error=$em");
         exit;
 
     }else{
@@ -39,24 +39,24 @@ if (isset($_POST['uname']) &&
                 $_SESSION['cognome'] = $row['cognome'];
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['admin'] = $row['admin'];
-                header("Location: ../templates/home.php");
+                header("Location: ../../templates/home.php");
                 exit();
             }else{
                 $em = "Cannot Find User";
-                header("Location: ../templates/login.php?error=$em");
+                header("Location: ../../templates/login.php?error=$em");
                 exit();
             }
 
         }else{
             $em = "Cannot Find User";
-            header("Location: ../templates/login.php?error=$em");
+            header("Location: ../../templates/login.php?error=$em");
             exit();
         }
     }
 
 
 }else{
-    header("Location: ../templates/login.php");
+    header("Location: ../../templates/login.php");
     exit;
 
 }

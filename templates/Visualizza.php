@@ -412,7 +412,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         while ($row = $result->fetch_assoc()) {
                             $idInsegnamento = $row['id'];
                             $nomeInsegnamento = $row['materia'];
-                            echo "<button type=\"button\" class=\"btn btn-default\">$nomeInsegnamento</button>";
+                            echo "<button type=\"button\" class=\"btn btn-default btn-insegnamento\" data-insegnamento=\"$idInsegnamento\">$nomeInsegnamento</button>";
                         }
                         ?>
                     </div>
@@ -427,7 +427,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                                 <div class="card-tools">
                                     <div class="input-group input-group-sm" style="width: 150px;">
-                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                                        <input type="text" id="tableSearch" name="table_search" class="form-control float-right" placeholder="Search">
 
                                         <div class="input-group-append">
                                             <button type="submit" class="btn btn-default">
@@ -455,26 +455,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <?php
                                     // Esegui la query per ottenere i dati dalla tabella sbobine_calendarizzate
                                     $query = "SELECT sc.id AS id_lezione, sc.insegnamento, sc.argomento, sc.data_lezione, sc.posizione_server,
-                GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
-                GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
-                FROM sbobine_calendarizzate AS sc
-                LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
-                LEFT JOIN users AS rv ON rs.id_revisore = rv.id
-                LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
-                LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
-                GROUP BY sc.id";
+    GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
+    GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
+    FROM sbobine_calendarizzate AS sc
+    LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
+    LEFT JOIN users AS rv ON rs.id_revisore = rv.id
+    LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
+    LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
+    GROUP BY sc.id";
 
                                     $result = $conn->query($query);
 
                                     // Genera le righe della tabella in base ai risultati della query
                                     while ($row = $result->fetch_assoc()) {
                                         $idLezione = $row['id_lezione'];
-                                        $insegnamento = $row['insegnamento'];
+                                        $insegnamentoId = $row['insegnamento'];
                                         $dataLezione = $row['data_lezione'];
                                         $argomento = $row['argomento'];
                                         $revisori = explode(',', $row['revisori']); // Converti la stringa di revisori in un array separato da virgole
                                         $sbobinatori = explode(',', $row['sbobinatori']); // Converti la stringa di sbobinatori in un array separato da virgole
                                         $posizioneServer = $row['posizione_server']; // Percorso del file sul server
+
+                                        // Recupera il nome dell'insegnamento dalla tabella insegnamenti utilizzando l'id insegnamento
+                                        $queryInsegnamento = "SELECT materia FROM insegnamenti WHERE id = $insegnamentoId";
+                                        $resultInsegnamento = $conn->query($queryInsegnamento);
+                                        if ($resultInsegnamento->num_rows > 0) {
+                                            $rowInsegnamento = $resultInsegnamento->fetch_assoc();
+                                            $insegnamento = $rowInsegnamento['materia'];
+                                        } else {
+                                            $insegnamento = 'Insegnamento non trovato'; // Messaggio di default in caso di insegnamento non trovato
+                                        }
 
                                         // Concatena gli sbobinatori e i revisori con la tag <br> per inserire un'interruzione di linea
                                         $sbobinatoriList = implode('<br>', $sbobinatori);
@@ -483,30 +493,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         // Verifica se l'utente loggato è associato all'insegnamento per cui è stata fatta la sbobina
                                         $currentUserId = $_SESSION['id'];
                                         $queryPartecipazione = "SELECT * FROM partecipazione_sbobine 
-                                WHERE id_user = $currentUserId AND id_insegnamento = $insegnamento";
+                    WHERE id_user = $currentUserId AND id_insegnamento = $insegnamentoId";
                                         $resultPartecipazione = $conn->query($queryPartecipazione);
                                         $canDownload = $resultPartecipazione->num_rows > 0;
 
                                         // Stampa la riga con sbobinatori e revisori nella stessa cella
-                                        echo "<tr>";
-                                        echo "<td rowspan='2'>$idLezione</td>";
-                                        echo "<td rowspan='2'>$insegnamento</td>";
-                                        echo "<td rowspan='2'>$dataLezione</td>";
+                                        echo "<tr data-insegnamento=\"$insegnamentoId\">";
+                                        echo "<td>$idLezione</td>";
+                                        echo "<td>$insegnamento</td>";
+                                        echo "<td>$dataLezione</td>";
                                         echo "<td>$sbobinatoriList</td>";
                                         echo "<td>$revisoriList</td>";
-                                        echo "<td rowspan='2'>$argomento</td>";
-                                        echo "<td rowspan='2'>";
+                                        echo "<td>$argomento</td>";
+                                        echo "<td>";
                                         if ($canDownload) {
-                                            echo '<a href="../req/download_fx/gestisci_download.php?id_sbobina=' . $idLezione . '&insegnamento=' . $insegnamento . '" class="btn btn-success btn-sm">Download</a>';
+                                            echo '<a href="../req/download_fx/gestisci_download.php?id_sbobina=' . $idLezione . '&insegnamento=' . $insegnamentoId . '" class="btn btn-success btn-sm">Download</a>';
                                         } else {
                                             echo '<button class="btn btn-secondary btn-sm" disabled>Non autorizzato</button>';
                                         }
-
                                         echo "</td>";
                                         echo "</tr>";
                                     }
                                     ?>
                                     </tbody>
+
+
 
 
                                 </table>
@@ -608,6 +619,59 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btnsInsegnamento = document.querySelectorAll('.btn-insegnamento');
+        btnsInsegnamento.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const insegnamentoId = btn.getAttribute('data-insegnamento');
+                const rows = document.querySelectorAll('.table tbody tr');
+                rows.forEach(row => {
+                    row.style.display = 'none';
+                });
+                const filteredRows = document.querySelectorAll(`.table tbody tr[data-insegnamento="${insegnamentoId}"]`);
+                filteredRows.forEach(row => {
+                    row.style.display = 'table-row';
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    // Aggiungiamo l'evento input all'input di ricerca
+    const inputSearch = document.getElementById('tableSearch');
+    inputSearch.addEventListener('input', function () {
+        const searchText = inputSearch.value.toLowerCase(); // Ottieni il testo di ricerca in minuscolo
+
+        // Recupera tutte le righe della tabella
+        const rows = document.querySelectorAll('.table tbody tr');
+
+        // Filtra le righe in base al testo di ricerca
+        rows.forEach(row => {
+            const columns = row.getElementsByTagName('td');
+            let shouldShowRow = false;
+            for (let i = 0; i < columns.length; i++) {
+                const columnText = columns[i].textContent.toLowerCase();
+                if (columnText.includes(searchText)) {
+                    shouldShowRow = true;
+                    break;
+                }
+            }
+
+            // Mostra o nascondi la riga in base al risultato del filtro
+            if (shouldShowRow) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+
+
+
 
 
 

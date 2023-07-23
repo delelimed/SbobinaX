@@ -1,5 +1,5 @@
 <?php
-include '../db_connector.php';
+include '../../db_connector.php';
 
 // Verifica che la richiesta sia di tipo POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

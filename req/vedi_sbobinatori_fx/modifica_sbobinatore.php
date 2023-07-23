@@ -1,6 +1,6 @@
 <?php
 // modifica_sbobinatore.php
-include "../db_connector.php";
+include "../../db_connector.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ottieni i dati modificati dal form
@@ -39,21 +39,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmtRemoveInsegnamenti->execute();
     $stmtRemoveInsegnamenti->close();
 
-// Verifica se sono stati selezionati nuovi insegnamenti e, se sì, aggiungili al database
+    // Verifica se sono stati selezionati nuovi insegnamenti e, se sì, aggiungili al database
     if (isset($_POST['insegnamentiAssociati'])) {
         $insegnamentiAssociati = json_decode($_POST['insegnamentiAssociati'], true);
         $queryAddInsegnamenti = "INSERT INTO partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
         $stmtAddInsegnamenti = $conn->prepare($queryAddInsegnamenti);
-        $stmtAddInsegnamenti->bind_param('ii', $idRiga, $idInsegnamento);
 
         foreach ($insegnamentiAssociati as $idInsegnamento) {
             // Esegui l'inserimento dell'insegnamento associato
+            $stmtAddInsegnamenti->bind_param('ii', $idRiga, $idInsegnamento);
             $stmtAddInsegnamenti->execute();
         }
 
         $stmtAddInsegnamenti->close();
     }
-
 
     // Esegui l'aggiornamento dello sbobinatore nel database
     if ($stmtUpdateSbobinatore->execute()) {
@@ -79,3 +78,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode($response);
 }
 ?>
+

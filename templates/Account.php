@@ -447,7 +447,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                         <!-- /.card-header -->
                         <!-- form start -->
 
-                        <form action="../req/update_password.php" method="post">
+                        <form action="../req/account_fx/update_password.php" method="post">
                             <?php if (isset($_GET['status'])) { ?>
                                 <div class="alert alert-success" role="alert">
                                     <?php echo $_GET['status']; ?>

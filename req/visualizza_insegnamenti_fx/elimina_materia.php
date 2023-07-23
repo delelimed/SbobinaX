@@ -1,33 +1,32 @@
 <?php
-// modifica_materia.php
-include "../db_connector.php";
+// elimina_materia.php
+include "../../db_connector.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ottieni l'ID della riga da modificare e il nuovo valore della materia dal form
+    // Ottieni l'ID della riga da eliminare dal form
     $idRiga = $_POST['id'];
-    $nuovaMateria = $_POST['materia'];
 
     // Verifica eventuali errori di connessione
     if ($conn->connect_error) {
         die("Connessione al database fallita: " . $conn->connect_error);
     }
 
-    // Prepara e esegui la query per la modifica della materia nel database
-    $query = "UPDATE insegnamenti SET materia = ? WHERE id = ?";
+    // Prepara e esegui la query per eliminare la materia dal database
+    $query = "DELETE FROM insegnamenti WHERE id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('si', $nuovaMateria, $idRiga);
+    $stmt->bind_param('i', $idRiga);
 
     if ($stmt->execute()) {
-        // La modifica è avvenuta con successo
+        // L'eliminazione è avvenuta con successo
         $response = array(
             'success' => true,
-            'message' => 'Modifica avvenuta con successo!',
+            'message' => 'Materia eliminata con successo!',
         );
     } else {
-        // Errore durante la modifica
+        // Errore durante l'eliminazione
         $response = array(
             'success' => false,
-            'message' => 'Errore durante la modifica della materia: ' . $conn->error,
+            'message' => 'Errore durante l\'eliminazione della materia: ' . $conn->error,
         );
     }
 
@@ -40,3 +39,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode($response);
 }
 ?>
+

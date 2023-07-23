@@ -543,7 +543,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
     $(document).ready(function() {
         $.ajax({
-            url: "../req/get_tue_sbobine.php",
+            url: "../req/home_fx/get_tue_sbobine.php",
             type: "GET",
             dataType: "json",
             success: function(data) {
@@ -552,20 +552,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 $.each(data, function(index, sbobina) {
                     // Effettua una seconda chiamata AJAX per ottenere il valore della colonna "materia"
                     $.ajax({
-                        url: "../req/get_insegnamento.php?id=" + sbobina.insegnamento,
+                        url: "../req/home_fx/get_insegnamento.php?id=" + sbobina.insegnamento,
                         type: "GET",
                         dataType: "json",
                         success: function(insegnamentoData) {
                             // Effettua una terza chiamata AJAX per ottenere i nomi degli sbobinatori
                             $.ajax({
-                                url: "../req/get_sbobinatori_names.php",
+                                url: "../req/home_fx/get_sbobinatori_names.php",
                                 type: "GET",
                                 data: { sbobinatori_ids: sbobina.sbobinatori_ids },
                                 dataType: "json",
                                 success: function(sbobinatoriData) {
                                     // Effettua una quarta chiamata AJAX per ottenere i nomi dei revisori
                                     $.ajax({
-                                        url: "../req/get_revisori_names.php",
+                                        url: "../req/home_fx/get_revisori_names.php",
                                         type: "GET",
                                         data: { sbobina_id: sbobina.id },
                                         dataType: "json",

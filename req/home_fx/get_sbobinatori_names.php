@@ -1,6 +1,6 @@
 <?php
 // Connessione al database (sostituisci queste variabili con le tue credenziali)
-include '../db_connector.php';
+include '../../db_connector.php';
 
 // Controlla se è stato fornito un array di ID degli sbobinatori come parametro nella chiamata
 if (isset($_GET['sbobinatori_ids'])) {

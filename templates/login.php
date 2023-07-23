@@ -30,7 +30,7 @@
 
             <form class="login"
                 method="post"
-                action="../req/login.php">
+                action="../req/login_fx/login.php">
 
                 <?php if (isset($_GET['error'])) { ?>
                     <div class="alert alert-danger" role="alert">

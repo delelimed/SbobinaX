@@ -1,6 +1,6 @@
 <?php
 // update_password.php
-include "../db_connector.php";
+include "../../db_connector.php";
 
 // Avvia la sessione per accedere ai dati dell'utente corrente
 session_start();
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt->execute()) {
                 // Password aggiornata con successo
                 $em = "Password aggiornata con successo!";
-                header("Location: ../templates/Account.php?status=$em");
+                header("Location: ../../templates/Account.php?status=$em");
                 exit();
             } else {
                 // Errore durante l'aggiornamento della password

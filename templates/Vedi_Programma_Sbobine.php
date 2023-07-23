@@ -423,7 +423,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                     <div class="card-tools">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <form id="formRicerca" method="post" action="../req/ricerca_sbobine.php" class="input-group input-group-sm" style="width: 150px;">
+                                            <form id="formRicerca" method="post" action="../req/vedi_programma_sbobine_fx/ricerca_sbobine.php" class="input-group input-group-sm" style="width: 150px;">
                                                 <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-default">
@@ -826,7 +826,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
 
             // Eseguire una richiesta AJAX per salvare le modifiche e gli sbobinatori associati
-            fetch('../req/modifica_programma_sbobina.php', {
+            fetch('../req/vedi_programma_sbobine_fx/modifica_programma_sbobina.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -862,7 +862,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 var idSbobina = this.getAttribute('data-id');
 
                 // Esegui la chiamata AJAX per eliminare la sbobina
-                fetch('../req/elimina_programma_sbobina.php', {
+                fetch('../req/vedi_programma_sbobine_fx/elimina_programma_sbobina.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -894,7 +894,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             var searchText = document.querySelector('input[name="table_search"]').value;
 
             // Invia la richiesta di ricerca tramite AJAX
-            fetch('../req/ricerca_sbobine.php', {
+            fetch('../req/vedi_programma_sbobine_fx/ricerca_sbobine.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
