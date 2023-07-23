@@ -404,22 +404,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Sbobine da Revisionare</h3>
+                                <h3 class="card-title">Sbobine Assegnate da Revisionare</h3>
 
-                                <div class="card-tools">
-                                    <div class="input-group input-group-sm" style="width: 150px;">
-                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-default">
-                                                <i class="fas fa-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <!-- /.card-header -->
+                            <?php
+                            // Connessione al database (sostituisci con le tue credenziali)
+                            include "../db_connector.php";
+
+                            // Verifica la connessione
+                            if ($conn->connect_error) {
+                                die("Connessione fallita: " . $conn->connect_error);
+                            }
+
+                            // Ottenere l'ID dell'utente corrente (supponiamo che tu abbia già questa informazione)
+                            $current_user_id = 1; // Sostituisci con l'ID dell'utente corrente
+
+                            // Query per ottenere gli ID delle sbobine assegnate all'utente corrente
+                            $sql = "SELECT id_sbobina FROM revisori_sbobine WHERE id_revisore = $current_user_id";
+                            $result = $conn->query($sql);
+
+                            // Array per memorizzare gli ID delle sbobine
+                            $sbobine_ids = array();
+
+                            if ($result->num_rows > 0) {
+                                // Memorizza gli ID delle sbobine nell'array
+                                while ($row = $result->fetch_assoc()) {
+                                    $sbobine_ids[] = $row['id_sbobina'];
+                                }
+                            }
+
+                            ?>
+
+                            <!-- Ora popoliamo la tabella HTML con gli ID delle sbobine assegnate all'utente corrente -->
                             <div class="card-body table-responsive p-0">
+
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                     <tr>
@@ -433,16 +453,101 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>183</td>
-                                        <td>John Doe</td>
-                                        <td>11-7-2014</td>
-                                        <td><span class="tag tag-success">Approved</span></td>
-                                        <td>Bacon doner.</td>
-                                    </tr>
+                                    <?php
+                                    // Otteniamo l'id dell'utente loggato
+                                    $current_user_id = $_SESSION['id']; // Sostituisci con il vero id dell'utente loggato
+
+                                    // Iteriamo attraverso gli ID delle sbobine e popoliamo la tabella
+                                    foreach ($sbobine_ids as $sbobina_id) {
+                                        // Esegui un'altra query per ottenere i dettagli della sbobina usando $sbobina_id
+                                        $sql_sbobina = "SELECT sc.*, i.materia, 
+        GROUP_CONCAT(DISTINCT us.nome, ' ', us.cognome SEPARATOR '<br>') AS sbobinatori,
+        GROUP_CONCAT(DISTINCT ur.nome, ' ', ur.cognome SEPARATOR '<br>') AS revisori
+        FROM sbobine_calendarizzate sc
+        INNER JOIN insegnamenti i ON sc.id = i.id
+        LEFT JOIN sbobinatori_sbobine ss ON sc.id = ss.id_sbobina
+        LEFT JOIN users us ON ss.id_sbobinatore = us.id
+        LEFT JOIN revisori_sbobine rs ON sc.id = rs.id_sbobina
+        LEFT JOIN users ur ON rs.id_revisore = ur.id
+        WHERE sc.id = $sbobina_id
+        AND (ss.id_sbobinatore = $current_user_id OR rs.id_revisore = $current_user_id)
+        GROUP BY sc.id";
+
+                                        $result_sbobina = $conn->query($sql_sbobina);
+
+                                        if ($result_sbobina->num_rows > 0) {
+                                            $row_sbobina = $result_sbobina->fetch_assoc();
+                                            echo '<tr>';
+                                            echo '<td>' . $row_sbobina['id'] . '</td>';
+                                            echo '<td>' . $row_sbobina['materia'] . '</td>';
+                                            echo '<td>' . $row_sbobina['data_lezione'] . '</td>';
+
+                                            // Controlla se ci sono sbobinatori disponibili
+                                            if ($row_sbobina['sbobinatori']) {
+                                                echo '<td>' . $row_sbobina['sbobinatori'] . '</td>';
+                                            } else {
+                                                echo '<td>Nessun Sbobinatore Assegnato</td>';
+                                            }
+
+                                            // Controlla se ci sono revisori disponibili
+                                            if ($row_sbobina['revisori']) {
+                                                echo '<td>' . $row_sbobina['revisori'] . '</td>';
+                                            } else {
+                                                echo '<td>Nessun Revisore Assegnato</td>';
+                                            }
+
+                                            echo '<td>' . $row_sbobina['argomento'] . '</td>';
+                                            echo '<td>';
+                                            // Aggiungiamo il link per il download del file
+                                            echo '<a href="../req/peer_review_fx/gestisci_PR.php?download_sbobina=' . $row_sbobina['id'] . '" class="btn btn-primary">Download</a>';
+                                            // Aggiungiamo il link o il pulsante per approvare la sbobina
+                                            echo '<a href="#" class="btn btn-success btn-approva" data-sbobina-id="' . $row_sbobina['id'] . '">Approva</a>';
+                                            echo '</td>';
+                                            echo '</tr>';
+                                            echo '</td>';
+                                            echo '</tr>';
+                                        }
+                                    }
+                                    ?>
+
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div id="avvisoMaschera" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); z-index: 9999;">
+                                <p id="avvisoMessaggio"></p>
+                            </div>
+
+                            <!-- La finestra modale di conferma -->
+                            <div class="modal fade" id="confermaModal" tabindex="-1" aria-labelledby="confermaModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confermaModalLabel">Conferma approvazione</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label>Sei sicuro di voler approvare questa sbobina?</label>
+                                        </div>
+                                        <div class="modal-body">
+                                            Procedendo, confermi di aver scaricato e letto la sbobina, che essa
+                                            non presenta gravi errori sintattici e grammaticali, e che il contenuto
+                                            per quanto di conoscenza, è facilmente comprensibile.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Rigetta</button>
+                                            <button type="button" class="btn btn-success" id="btn-conferma-modal">Conferma</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
@@ -489,6 +594,77 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
+<!-- Nel tuo file HTML, nella sezione head, assicurati di avere inclusi i file di jQuery e Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Quando si clicca sul pulsante "Approva"
+        $('.btn-approva').on('click', function(e) {
+            e.preventDefault();
+            var sbobinaId = $(this).data('sbobina-id');
+            var approvaUrl = "../req/peer_review_fx/gestisci_PR.php?approva_sbobina=" + sbobinaId;
+
+            // Mostriamo la finestra modale di conferma
+            $('#confermaModal').modal('show');
+
+            // Se viene cliccato il pulsante "Conferma" nella finestra modale
+            $('#btn-conferma-modal').on('click', function() {
+                // Effettua la richiesta Ajax per chiamare la funzione approve_sbobina_in_database
+                $.ajax({
+                    url: approvaUrl,
+                    method: 'GET',
+                    dataType: 'json', // Specifica il tipo di dati da attendersi nella risposta
+                    success: function(response) {
+                        // Qui puoi gestire la risposta ricevuta dal server
+                        if (response.success) {
+                            // Mostra avviso di successo nella maschera
+                            showAvviso(response.message, 'success');
+                        } else {
+                            // Mostra avviso di errore nella maschera
+                            showAvviso(response.message, 'error');
+                        }
+
+                        // Chiudiamo la finestra modale dopo aver effettuato la richiesta
+                        $('#confermaModal').modal('hide');
+                    },
+                    error: function(xhr, status, error) {
+                        // Gestione degli errori, se necessario
+                        console.error(error);
+                    }
+                });
+            });
+
+// Funzione per mostrare l'avviso nella maschera
+            function showAvviso(messaggio, tipo) {
+                var avvisoMaschera = $('#avvisoMaschera');
+                var avvisoMessaggio = $('#avvisoMessaggio');
+                avvisoMessaggio.text(messaggio);
+
+                // Applica stile per avviso di successo o di errore
+                if (tipo === 'success') {
+                    avvisoMaschera.removeClass('avviso-errore').addClass('avviso-successo');
+                } else {
+                    avvisoMaschera.removeClass('avviso-successo').addClass('avviso-errore');
+                }
+
+                avvisoMaschera.fadeIn(300);
+                setTimeout(function() {
+                    avvisoMaschera.fadeOut(300);
+                }, 2000); // Nascondi l'avviso dopo 2 secondi
+            }
+
+        });
+    });
+
+</script>
+
+
+
+
+
 </body>
 </html>
 

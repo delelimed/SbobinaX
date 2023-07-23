@@ -1,20 +1,3 @@
-ORGANIZZAZIONE GRAFICA
-- ~~Log Out~~
-- ~~Info~~
-- ~~Visualizza se stesso~~
-- ~~Impostazioni: Visualizza Sbobinatori~~
-- ~~Impostazioni: Inserisci Sbobinatori~~
-- ~~Impostazioni: Inserisci Insegnamento~~
-- ~~Impostazioni: Visualizza Insegnamenti~~
-- ~~Impostazioni: Programma Sbobine~~
-- ~~Impostazioni: Visualizza Programma Sbobine~~
-- Visualizza Sbobine
-- Calendario
-- Peer Review
-- Upload
-- Home
-
-
 DA MODIFICARE ALLA FINE COME PICCOLE CORREZIONI
 
 SISTEMA LA MODIFICA DELLA PARTECIPAZIONE ALLE SBOBINE
@@ -24,3 +7,9 @@ SISTEMA LA QUESTIONE DEI MALUS
 SISTEMA RICERCA SBOBINATORI E REVISORI
 
 CERCA DI FAR RIMANERE IN MEMORIA SBOBINATORI E REVISORI QUANDO MODIFICHI
+
+ELIMINA LE SBOBINE DAL PEER REVIEW QUANDO LE REVISIONI (2)
+
+ELIMINA LE SBOBINE QUANDO NON PASSA LA REVISIONE (1)
+
+TOGLI POSSIBILITA' DI UPLOAD DOPO IL CARICAMENTO

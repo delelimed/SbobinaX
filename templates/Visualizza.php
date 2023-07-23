@@ -401,8 +401,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <td>
                     <div class="btn-group">
                         <?php
-                        // Esegui la query per ottenere gli insegnamenti dal database
-                        $query = "SELECT id, materia FROM insegnamenti";
+                        // Ottieni gli insegnamenti a cui l'utente è autorizzato
+                        $idUser = $_SESSION['id'];
+                        $query = "SELECT i.id, i.materia FROM insegnamenti AS i
+                  INNER JOIN partecipazione_sbobine AS p ON i.id = p.id_insegnamento
+                  WHERE p.id_user = $idUser";
                         $result = $conn->query($query);
 
                         // Genera i bottoni in base ai risultati della query
@@ -413,8 +416,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         }
                         ?>
                     </div>
-
                 </td>
+
 
                 <div class="row">
                     <div class="col-12">
@@ -449,15 +452,72 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>183</td>
-                                        <td>John Doe</td>
-                                        <td>11-7-2014</td>
-                                        <td><span class="tag tag-success">Approved</span></td>
-                                        <td>Bacon doner.</td>
-                                    </tr>
+                                    <?php
+                                    // Esegui la query per ottenere i dati dalla tabella sbobine_calendarizzate
+                                    $query = "SELECT sc.id AS id_lezione, sc.insegnamento, sc.argomento, sc.data_lezione, sc.posizione_server,
+                GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
+                GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
+                FROM sbobine_calendarizzate AS sc
+                LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
+                LEFT JOIN users AS rv ON rs.id_revisore = rv.id
+                LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
+                LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
+                GROUP BY sc.id";
+
+                                    $result = $conn->query($query);
+
+                                    // Genera le righe della tabella in base ai risultati della query
+                                    while ($row = $result->fetch_assoc()) {
+                                        $idLezione = $row['id_lezione'];
+                                        $insegnamento = $row['insegnamento'];
+                                        $dataLezione = $row['data_lezione'];
+                                        $argomento = $row['argomento'];
+                                        $revisori = explode(',', $row['revisori']); // Converti la stringa di revisori in un array separato da virgole
+                                        $sbobinatori = explode(',', $row['sbobinatori']); // Converti la stringa di sbobinatori in un array separato da virgole
+                                        $posizioneServer = $row['posizione_server']; // Percorso del file sul server
+
+                                        // Concatena gli sbobinatori e i revisori con la tag <br> per inserire un'interruzione di linea
+                                        $sbobinatoriList = implode('<br>', $sbobinatori);
+                                        $revisoriList = implode('<br>', $revisori);
+
+                                        // Verifica se l'utente loggato è associato all'insegnamento per cui è stata fatta la sbobina
+                                        $currentUserId = $_SESSION['id'];
+                                        $queryPartecipazione = "SELECT * FROM partecipazione_sbobine 
+                                WHERE id_user = $currentUserId AND id_insegnamento = $insegnamento";
+                                        $resultPartecipazione = $conn->query($queryPartecipazione);
+                                        $canDownload = $resultPartecipazione->num_rows > 0;
+
+                                        // Stampa la riga con sbobinatori e revisori nella stessa cella
+                                        echo "<tr>";
+                                        echo "<td rowspan='2'>$idLezione</td>";
+                                        echo "<td rowspan='2'>$insegnamento</td>";
+                                        echo "<td rowspan='2'>$dataLezione</td>";
+                                        echo "<td>$sbobinatoriList</td>";
+                                        echo "<td>$revisoriList</td>";
+                                        echo "<td rowspan='2'>$argomento</td>";
+                                        echo "<td rowspan='2'>";
+                                        if ($canDownload) {
+                                            echo '<a href="../req/download_fx/gestisci_download.php?id_sbobina=' . $idLezione . '&insegnamento=' . $insegnamento . '" class="btn btn-success btn-sm">Download</a>';
+                                        } else {
+                                            echo '<button class="btn btn-secondary btn-sm" disabled>Non autorizzato</button>';
+                                        }
+
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                    ?>
                                     </tbody>
+
+
+
+
+
                                 </table>
+
+
+
+
+
                             </div>
                             <!-- /.card-body -->
                         </div>
