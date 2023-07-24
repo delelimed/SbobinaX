@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2023 at 03:26 PM
+-- Generation Time: Jul 24, 2023 at 11:07 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -31,6 +31,14 @@ CREATE TABLE `insegnamenti` (
   `id` int(11) NOT NULL,
   `materia` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `insegnamenti`
+--
+
+INSERT INTO `insegnamenti` (`id`, `materia`) VALUES
+(1, 'Anatomia1'),
+(2, 'Fisiologia');
 
 -- --------------------------------------------------------
 
@@ -90,6 +98,19 @@ CREATE TABLE `sbobine_calendarizzate` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `nome_impostazione` varchar(255) NOT NULL,
+  `attuale` varchar(255) NOT NULL,
+  `predefinita` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -104,6 +125,13 @@ CREATE TABLE `users` (
   `locked` tinyint(1) NOT NULL DEFAULT 0,
   `admin` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `matricola`, `nome`, `cognome`, `email`, `password`, `malus`, `locked`, `admin`) VALUES
+(1, '123', 'SUPERUSER', 'ELIMINAMI', '123@EMAIL.IT', '$2y$15$fzxhLXvwJUa2U2AaFSlD4u0jdEPMOFWyx1x6Fd8.KcdtUp1pfK6Hu', '0', 0, 1);
 
 --
 -- Indexes for dumped tables
@@ -140,6 +168,12 @@ ALTER TABLE `sbobine_calendarizzate`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -153,37 +187,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `insegnamenti`
 --
 ALTER TABLE `insegnamenti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `partecipazione_sbobine`
 --
 ALTER TABLE `partecipazione_sbobine`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=332;
 
 --
 -- AUTO_INCREMENT for table `revisori_sbobine`
 --
 ALTER TABLE `revisori_sbobine`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `sbobinatori_sbobine`
 --
 ALTER TABLE `sbobinatori_sbobine`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `sbobine_calendarizzate`
 --
 ALTER TABLE `sbobine_calendarizzate`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
