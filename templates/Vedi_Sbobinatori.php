@@ -19,10 +19,29 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-        <!-- Font Awesome Icons -->
+        <!-- Font Awesome -->
         <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
+        <!-- daterange picker -->
+        <link rel="stylesheet" href="../assets/plugins/daterangepicker/daterangepicker.css">
+        <!-- iCheck for checkboxes and radio inputs -->
+        <link rel="stylesheet" href="../assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+        <!-- Bootstrap Color Picker -->
+        <link rel="stylesheet" href="../assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+        <!-- Tempusdominus Bootstrap 4 -->
+        <link rel="stylesheet" href="../assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+        <!-- Select2 -->
+        <link rel="stylesheet" href="../assets/plugins/select2/css/select2.min.css">
+        <link rel="stylesheet" href="../assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+        <!-- Bootstrap4 Duallistbox -->
+        <link rel="stylesheet" href="../assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+        <!-- BS Stepper -->
+        <link rel="stylesheet" href="../assets/plugins/bs-stepper/css/bs-stepper.min.css">
+        <!-- dropzonejs -->
+        <link rel="stylesheet" href="../assets/plugins/dropzone/min/dropzone.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     </head>
     <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -446,7 +465,24 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                <?php
+                                                // Query per ottenere tutti gli insegnamenti dalla tabella "insegnamenti"
+                                                $query_insegnamenti_tutti = "SELECT * FROM `insegnamenti`";
+                                                $result_insegnamenti_tutti = $conn->query($query_insegnamenti_tutti);
+                                                $insegnamenti_tutti = $result_insegnamenti_tutti->fetch_all(MYSQLI_ASSOC);
+                                                ?>
                                                 <?php foreach ($risultati as $row): ?>
+                                                    <?php
+                                                    // Ottieni gli insegnamenti associati all'utente corrente ($row['id'])
+                                                    $id_utente_corrente = $row['id'];
+                                                    $query_insegnamenti_utente = "SELECT i.materia, i.id FROM insegnamenti i
+                                  INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+                                  WHERE p.id_user = $id_utente_corrente";
+
+                                                    $result_insegnamenti_utente = $conn->query($query_insegnamenti_utente);
+                                                    $insegnamenti_utente = $result_insegnamenti_utente->fetch_all(MYSQLI_ASSOC);
+                                                    ?>
+
                                                     <tr>
                                                         <td><?php echo $row['id']; ?></td>
                                                         <td><?php echo $row['matricola']; ?></td>
@@ -524,33 +560,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                             </div>
 
 
-                                                                            <!-- Campo per gli insegnamenti -->
                                                                             <div class="form-group">
                                                                                 <label for="insegnamenti">Insegnamenti</label><br>
-                                                                                <?php
-                                                                                // Esegui una query per ottenere gli insegnamenti associati all'utente
-                                                                                $query_insegnamenti_utente = "SELECT id_insegnamento FROM partecipazione_sbobine WHERE id_user = " . $row['id'];
-                                                                                $result_insegnamenti_utente = $conn->query($query_insegnamenti_utente);
-
-                                                                                // Crea un array con gli insegnamenti associati all'utente
-                                                                                $insegnamenti_utente = array();
-                                                                                while ($insegnamento_utente = $result_insegnamenti_utente->fetch_assoc()) {
-                                                                                    $insegnamenti_utente[] = $insegnamento_utente['id_insegnamento'];
-                                                                                }
-
-                                                                                // Esegui una query per ottenere tutti gli insegnamenti disponibili
-                                                                                $query_insegnamenti = "SELECT * FROM insegnamenti";
-                                                                                $result_insegnamenti = $conn->query($query_insegnamenti);
-
-                                                                                // Mostra le caselle di controllo per gli insegnamenti disponibili
-                                                                                while ($insegnamento = $result_insegnamenti->fetch_assoc()) {
-                                                                                    $checked = in_array($insegnamento['id'], $insegnamenti_utente) ? 'checked' : '';
-                                                                                    echo '<input type="checkbox" name="insegnamenti[]" value="' . $insegnamento['id'] . '" ' . $checked . '> ' . $insegnamento['materia'] . '<br>';
-                                                                                }
-                                                                                ?>
+                                                                                <select id="insegnamenti-select" name="insegnamenti[]" multiple class="select2">
+                                                                                    <?php foreach ($insegnamenti_tutti as $insegnamento): ?>
+                                                                                        <?php
+                                                                                        // Verifica se l'insegnamento è associato all'utente corrente per selezionarlo di default
+                                                                                        $selected = in_array($insegnamento['id'], $insegnamenti_utente) ? 'selected' : '';
+                                                                                        ?>
+                                                                                        <option value="<?php echo $insegnamento['id']; ?>" <?php echo $selected; ?>>
+                                                                                            <?php echo $insegnamento['materia']; ?>
+                                                                                        </option>
+                                                                                    <?php endforeach; ?>
+                                                                                </select>
                                                                             </div>
-                                                                            <!-- Campo nascosto per gli insegnamenti associati -->
-                                                                            <input type="hidden" id="insegnamentiAssociati_<?php echo $row['id']; ?>" name="insegnamentiAssociati" value="">
+
+
+
 
                                                                             <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
@@ -636,8 +662,60 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="../assets/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="../assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- InputMask -->
+    <script src="../assets/plugins/moment/moment.min.js"></script>
+    <script src="../assets/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="../assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="../assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="../assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- BS-Stepper -->
+    <script src="../assets/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <!-- dropzonejs -->
+    <script src="../assets/plugins/dropzone/min/dropzone.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
+    <!-- ... Il resto del tuo codice HTML ... -->
+
+    <script>
+        // Codice PHP per ottenere gli insegnamenti associati all'utente corrente
+        <?php
+        // Query per recuperare gli insegnamenti associati all'utente corrente ($row['id'])
+        $id_utente_corrente = $row['id'];
+        $query_insegnamenti = "SELECT i.materia FROM insegnamenti i
+                          INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+                          WHERE p.id_user = $id_utente_corrente";
+
+        $result_insegnamenti = $conn->query($query_insegnamenti);
+
+        // Crea un array con gli insegnamenti associati all'utente
+        $insegnamenti_utente = array();
+        while ($insegnamento = $result_insegnamenti->fetch_assoc()) {
+            $insegnamenti_utente[] = $insegnamento['materia'];
+        }
+        ?>
+
+        // Inizializza Select2 sulla casella di selezione multipla
+        $(document).ready(function() {
+            var insegnamentiUtente = <?php echo json_encode($insegnamenti_utente); ?>;
+            $('#insegnamenti-select').select2({
+                data: insegnamentiUtente
+            });
+        });
+    </script>
+
+    <!-- ... Il resto del tuo codice HTML ... -->
+
+
+
     </body>
     </html>
     <script>
@@ -727,13 +805,62 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
             // Raccogli gli insegnamenti selezionati
             const insegnamentiSelezionati = [];
-            const checkboxes = document.querySelectorAll('input[name="insegnamenti[]"]:checked');
-            checkboxes.forEach(checkbox => {
-                insegnamentiSelezionati.push(checkbox.value);
+            const selectedOptions = document.querySelectorAll('#insegnamenti-select option:checked');
+            selectedOptions.forEach(option => {
+                insegnamentiSelezionati.push(option.value);
             });
 
-            // Imposta il campo nascosto con gli insegnamenti selezionati specifici per la riga
-            document.getElementById("insegnamentiAssociati_" + idRiga).value = insegnamentiSelezionati.join(',');
+            // Esegui l'azione di eliminazione delle voci nella tabella "partecipazione_sbobine" per l'utente corrente
+            fetch('../req/vedi_sbobinatori_fx/elimina_insegnamenti.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + encodeURIComponent(idRiga),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                    if (data.success) {
+                        // Inserisci le nuove voci nella tabella "partecipazione_sbobine" con i nuovi insegnamenti selezionati
+                        insegnamentiSelezionati.forEach(insegnamentoId => {
+                            fetch('../req/vedi_sbobinatori_fx/inserisci_insegnamenti.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'id_user=' + encodeURIComponent(idRiga) + '&id_insegnamento=' + encodeURIComponent(insegnamentoId),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Verifica la risposta del server e mostra eventuali messaggi di conferma o errore
+                                    if (data.success) {
+                                        // Successo nell'inserimento del nuovo insegnamento
+                                        console.log(data.message);
+                                    } else {
+                                        // Errore nell'inserimento del nuovo insegnamento
+                                        console.error(data.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Errore durante la richiesta di inserimento insegnamento:', error);
+                                });
+                        });
+
+                        // Mostra messaggio di successo
+                        alert(data.message);
+                        // Aggiorna la pagina o esegui altre azioni dopo la modifica
+                        location.reload(); // Aggiorna la pagina per mostrare i dati aggiornati
+                    } else {
+                        // Errore durante l'eliminazione delle voci
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore durante la richiesta di eliminazione:', error);
+                    alert('Si è verificato un errore durante l\'eliminazione delle voci.');
+                });
+
 
             // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
             fetch('../req/vedi_sbobinatori_fx/modifica_sbobinatore.php', {
