@@ -506,23 +506,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                                 <label for="cognome">Cognome</label>
                                                                                 <input type="text" class="form-control" id="cognome" name="cognome" required>
                                                                             </div>
-                                                                            <?php
-                                                                            // Query per recuperare il valore del malus dal database
-                                                                            $sql = "SELECT malus FROM users WHERE id = ?"; // Supponendo che ci sia una colonna "id" nella tabella "users"
-                                                                            $stmt = $conn->prepare($sql);
-                                                                            $stmt->bind_param("i", $id); // Assumendo che $id contenga l'ID dell'utente di cui vuoi recuperare il malus
-                                                                            $stmt->execute();
-                                                                            $stmt->bind_result($malus_value_from_database);
-                                                                            $stmt->fetch();
-                                                                            $stmt->close();
-                                                                            ?>
                                                                             <div class="form-group">
                                                                                 <label for="malus">Malus</label>
-                                                                                <p id="malusValue" data-initial-malus="<?php echo (int)$malus_value_from_database; ?>"><?php echo (int)$malus_value_from_database; ?></p>
-                                                                                <input type="hidden" id="malus" name="malus" value="<?php echo $malus_value_from_database; ?>">
+                                                                                <p id="malusValue"></p>
                                                                                 <button type="button" class="btn btn-primary btn-incrementa-malus">Incrementa Malus</button>
                                                                             </div>
-
 
                                                                             <!-- Campo per gli insegnamenti -->
                                                                             <div class="form-group">
@@ -713,6 +701,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 }
             });
         });
+
         // Aggiungi un gestore di eventi per il pulsante "Conferma" nella finestra modale per la modifica
         document.getElementById('btnConfermaModifica').addEventListener('click', function () {
             // Chiudi la finestra modale per la modifica
@@ -723,17 +712,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             var nuovaMatricola = document.getElementById('matricola').value;
             var nuovoNome = document.getElementById('nome').value;
             var nuovoCognome = document.getElementById('cognome').value;
-            var nuovoMalus = document.getElementById('malusValue').textContent; // Get the value of the "malus" field from the paragraph
-
-            // Raccogli gli insegnamenti selezionati
-            const insegnamentiSelezionati = [];
-            const checkboxes = document.querySelectorAll('input[name="insegnamenti[]"]:checked');
-            checkboxes.forEach(checkbox => {
-                insegnamentiSelezionati.push(checkbox.value);
-            });
-
-            // Imposta il campo nascosto con gli insegnamenti selezionati specifici per la riga
-            document.getElementById("insegnamentiAssociati_" + idRiga).value = insegnamentiSelezionati.join(',');
 
             // Esegui l'azione di modifica utilizzando l'API Fetch per inviare i dati al server
             fetch('../req/vedi_sbobinatori_fx/modifica_sbobinatore.php', {
@@ -741,7 +719,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'id=' + encodeURIComponent(idRiga) + '&matricola=' + encodeURIComponent(nuovaMatricola) + '&nome=' + encodeURIComponent(nuovoNome) + '&cognome=' + encodeURIComponent(nuovoCognome) + '&malus=' + encodeURIComponent(nuovoMalus), // Include the "malus" value in the request
+                body: 'id=' + encodeURIComponent(idRiga) + '&matricola=' + encodeURIComponent(nuovaMatricola) + '&nome=' + encodeURIComponent(nuovoNome) + '&cognome=' + encodeURIComponent(nuovoCognome),
             })
                 .then(response => response.json())
                 .then(data => {
@@ -759,50 +737,32 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                     alert('Si è verificato un errore durante la modifica della riga.');
                 });
         });
-
-
         // Codice JavaScript per gestire l'incremento del malus
         document.addEventListener('DOMContentLoaded', function () {
             const btnIncrementaMalus = document.querySelector('.btn-incrementa-malus');
             const malusValue = document.getElementById('malusValue');
 
-            // Ottieni il valore iniziale del malus dal paragrafo
-            let malus = parseInt(malusValue.getAttribute('data-initial-malus'));
-
-            // Funzione per aggiornare il valore del paragrafo "malusValue"
-            function updateMalusValue() {
-                malusValue.textContent = malus;
-            }
-
-            // Chiama la funzione per aggiornare il valore del paragrafo al caricamento della pagina
-            updateMalusValue();
+            // Imposta il valore iniziale del malus a 0
+            let malus = 0;
+            malusValue.textContent = malus;
 
             // Gestisci il click sul pulsante Incrementa Malus
             btnIncrementaMalus.addEventListener('click', function () {
                 // Incrementa il malus di 1
                 malus++;
 
-                // Chiama la funzione per aggiornare il valore del paragrafo con il nuovo malus
-                updateMalusValue();
-
-                // Aggiorna anche il valore del malus nel campo nascosto per inviarlo al server
-                document.getElementById('malus').value = malus;
+                // Aggiorna il valore del malus mostrato nel paragrafo
+                malusValue.textContent = malus;
             });
         });
-
-
-
-
-
-
-
-
 
 
     </script>
     <script>
         // Al momento dell'invio del form, raccogli gli insegnamenti selezionati e imposta il campo nascosto
-        document.getElementById("btnConfermaModifica").addEventListener("click", function () {
+        document.getElementById("formModifica").addEventListener("submit", function (event) {
+            event.preventDefault(); // Ferma l'invio del form
+
             // Raccogli gli insegnamenti selezionati
             const insegnamentiSelezionati = [];
             const checkboxes = document.querySelectorAll('input[name="insegnamenti[]"]:checked');
@@ -815,7 +775,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             document.getElementById("insegnamentiAssociati_" + idRiga).value = insegnamentiSelezionati.join(',');
 
             // Invia il form tramite AJAX
-            const formData = new FormData(document.getElementById("formModifica"));
+            const formData = new FormData(this);
             fetch("../req/vedi_sbobinatori_fx/modifica_sbobinatore.php", {
                 method: "POST",
                 body: formData

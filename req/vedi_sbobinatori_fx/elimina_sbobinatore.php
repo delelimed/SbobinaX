@@ -16,18 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $idRiga);
 
+    $response = array(); // Inizializza l'array per la risposta JSON
+
     if ($stmt->execute()) {
         // L'eliminazione è avvenuta con successo
-        $response = array(
-            'success' => true,
-            'message' => 'Riga eliminata con successo!',
-        );
+        $response['success'] = true;
+        $response['message'] = 'Riga eliminata con successo!';
     } else {
         // Errore durante l'eliminazione
-        $response = array(
-            'success' => false,
-            'message' => 'Errore durante l\'eliminazione della riga: ' . $conn->error,
-        );
+        $response['success'] = false;
+        $response['message'] = 'Errore durante l\'eliminazione della riga: ' . $conn->error;
     }
 
     // Chiudi lo statement e la connessione al database
@@ -39,4 +37,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode($response);
 }
 ?>
-
