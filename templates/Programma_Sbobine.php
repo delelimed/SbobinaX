@@ -7,10 +7,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
 
     <!DOCTYPE html>
-    <!--
-    This is a starter template page. Use this page to start your new project from
-    scratch. This page gets rid of all links and provides the needed markup only.
-    -->
+
     <html lang="it">
     <head>
         <meta charset="utf-8">
@@ -357,6 +354,27 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <?php
+                            $active_menu = 'Avanzate';
+                            $page_name = 'Avanzate.php';
+                            ?>
+                        <li class="nav-item">
+                            <a href="../templates/Avanzate.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Avanzate
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Avanzate
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
                     </ul>
                     </li> <!-- impostazioni -->
 
@@ -453,8 +471,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <input type="date" class="form-control" id="data_lezione" name="data_lezione" value="<?php echo date('Y-m-d'); ?>" placeholder="Inserisci la data della lezione">
                                 </div>
 
-                                <!-- Prima di includere questo codice, assicurati di aver stabilito una connessione al database -->
-                                <!-- Assumiamo che la connessione sia già stata stabilita e sia rappresentata dalla variabile $conn -->
 
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
@@ -503,8 +519,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     </select>
                                 </div>
 
-
-
                             </div>
                             <!-- /.card-body -->
 
@@ -514,12 +528,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         </form>
                     </div>
 
-
-
-
-
-
-                    <!-- end block content -->
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->

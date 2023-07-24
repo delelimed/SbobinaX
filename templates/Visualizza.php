@@ -7,10 +7,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
     <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="it">
 <head>
     <meta charset="utf-8">
@@ -340,6 +337,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -455,14 +473,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <?php
                                     // Esegui la query per ottenere i dati dalla tabella sbobine_calendarizzate
                                     $query = "SELECT sc.id AS id_lezione, sc.insegnamento, sc.argomento, sc.data_lezione, sc.posizione_server,
-    GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
-    GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
-    FROM sbobine_calendarizzate AS sc
-    LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
-    LEFT JOIN users AS rv ON rs.id_revisore = rv.id
-    LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
-    LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
-    GROUP BY sc.id";
+            GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
+            GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
+            FROM sbobine_calendarizzate AS sc
+            LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
+            LEFT JOIN users AS rv ON rs.id_revisore = rv.id
+            LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
+            LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
+            WHERE sc.revisione = 1 AND sc.caricata = 1
+            GROUP BY sc.id";
 
                                     $result = $conn->query($query);
 
@@ -472,8 +491,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         $insegnamentoId = $row['insegnamento'];
                                         $dataLezione = $row['data_lezione'];
                                         $argomento = $row['argomento'];
-                                        $revisori = explode(',', $row['revisori']); // Converti la stringa di revisori in un array separato da virgole
-                                        $sbobinatori = explode(',', $row['sbobinatori']); // Converti la stringa di sbobinatori in un array separato da virgole
+                                        $revisori = explode(',', $row['revisori']);
+                                        $sbobinatori = explode(',', $row['sbobinatori']);
                                         $posizioneServer = $row['posizione_server']; // Percorso del file sul server
 
                                         // Recupera il nome dell'insegnamento dalla tabella insegnamenti utilizzando l'id insegnamento
@@ -603,12 +622,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             e.preventDefault();
             console.log("Click sul link di download");
 
-            // Il resto del codice...
-
             if (data.authorized) {
                 // Il download è autorizzato, avvia il download
                 console.log("Download autorizzato");
-                // Il resto del codice...
+
             } else {
                 // Il download non è autorizzato, mostra il messaggio di avviso
                 console.log("Download non autorizzato");

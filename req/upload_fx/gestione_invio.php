@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $idSbobina = $_POST['id_sbobina'];
     $idInsegnamento = $_POST['insegnamento'];
     $argomento = $_POST['argomento'];
+    error_log("argomento: " . $argomento);
     $dataLezione = $_POST['data_lezione'];
     $caricata = '1';
     date_default_timezone_set('Europe/Rome');
@@ -47,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
             $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
 
-            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1' WHERE id = '$idSbobina'";
+            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1', argomento = '$argomento' WHERE id = '$idSbobina'";
             $result = $conn->query($query);
 
             if ($result) {

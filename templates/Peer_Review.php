@@ -6,10 +6,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
     <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="it">
 <head>
     <meta charset="utf-8">
@@ -339,6 +336,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -374,8 +392,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li> <!-- logout -->
 
 
-
-
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -398,8 +414,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div><!-- /.row -->
                 <!-- block content -->
 
-
-
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -407,7 +421,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <h3 class="card-title">Sbobine Assegnate da Revisionare</h3>
 
                             </div>
-
 
                             <div class="card-body table-responsive p-0">
 
@@ -552,10 +565,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             }                                          echo '</td>';
                                             echo '</tr>';
                                             echo '</td>';
-
-
-
-
                                             echo "</tr>";
                                         }
                                     }
@@ -568,9 +577,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     }
                                     ?>
                                     </tbody>
-
-
-
 
                                 </table>
 
@@ -610,10 +616,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </div>
                                 </div>
                             </div>
-
-
-
-
 
                             <!-- /.card-body -->
                         </div>
@@ -661,7 +663,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
-<!-- Nel tuo file HTML, nella sezione head, assicurati di avere inclusi i file di jQuery e Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -685,7 +686,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     method: 'GET',
                     dataType: 'json', // Specifica il tipo di dati da attendersi nella risposta
                     success: function(response) {
-                        // Qui puoi gestire la risposta ricevuta dal server
                         if (response.success) {
                             // Mostra avviso di successo nella maschera
                             showAvviso(response.message, 'success');
@@ -755,12 +755,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     });
 </script>
-
-
-
-
-
-
 
 </body>
 </html>

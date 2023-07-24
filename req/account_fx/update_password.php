@@ -16,17 +16,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $idUtente = $_SESSION['id'];
 
             // Genera l'hash della nuova password
-            $hashedPassword = password_hash($nuovaPassword, PASSWORD_DEFAULT);
+            $hashedPassword = password_hash($nuovaPassword, PASSWORD_DEFAULT, ['cost' => 15]);
 
             // Verifica eventuali errori di connessione
             if ($conn->connect_error) {
                 die("Connessione al database fallita: " . $conn->connect_error);
             }
 
-            // Prepara e esegui la query per aggiornare la password nel database
+            // Prepara e esegui la query per aggiornare la password nel database utilizzando prepared statements
             $query = "UPDATE users SET password = ? WHERE id = ?";
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("si", $nuovaPassword, $idUtente);
+            $stmt->bind_param("si", $hashedPassword, $idUtente);
 
             if ($stmt->execute()) {
                 // Password aggiornata con successo
@@ -51,3 +51,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../config/db_conn.php';
+include '../db_connector.php';
 if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 ?>
@@ -181,6 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <?php
                     $active_menu = 'Account';
                     $page_name = 'Account.php';
                     ?>
@@ -335,6 +336,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
                                     Vedi Programma Sbobine
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
                                 </p>
                             <?php endif; ?>
                         </a>

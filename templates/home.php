@@ -6,10 +6,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="it">
 <head>
     <meta charset="utf-8">
@@ -339,6 +336,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -469,7 +487,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
+                        <div class="cd-body table-responsive p-0">
                             <table class="table table-hover text-nowrap">
                                 <thead>
                                 <tr>
@@ -487,7 +505,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                                 </tbody>
                             </table>
-                        </div>
+                        </div>ar
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
@@ -528,7 +546,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </footer>
 </div>
 <!-- ./wrapper -->
-
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
@@ -575,7 +592,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             var row = $("<tr>");
                                             row.append($("<td>").text(sbobina.id));
                                             row.append($("<td>").text(insegnamentoData.materia));
-                                            row.append($("<td>").text(sbobina.data_lezione));
+                                            row.append($("<td>").text(new Date(sbobina.data_lezione).toLocaleDateString('it-IT')));
                                             row.append($("<td>").text(sbobina.status));
                                             row.append($("<td>").text(sbobinatoriNames));
                                             row.append($("<td>").text(revisoriNames));
@@ -603,9 +620,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     });
 </script>
-
-
-
 
 </body>
 </html>

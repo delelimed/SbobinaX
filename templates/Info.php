@@ -6,10 +6,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
     <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="it">
 <head>
     <meta charset="utf-8">
@@ -339,6 +336,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -363,7 +381,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                 </li>
 
-
                 <li class="nav-item"> <!-- logout -->
                     <a href="../templates/logout.php" class="nav-link">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -372,9 +389,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </p>
                     </a>
                 </li> <!-- logout -->
-
-
-
 
                 </ul>
             </nav>
@@ -404,11 +418,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         AdminLTE <br>
         Bootstrap <br>
         Fontawesome <br>
+        Fullcalendar <br>
         </div>
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
-
         <!-- Main content -->
 
         <!-- /.content -->

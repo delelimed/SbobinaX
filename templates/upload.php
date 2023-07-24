@@ -7,10 +7,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html lang="it">
 <head>
     <meta charset="utf-8">
@@ -92,8 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
+
                     <?php
                     $active_menu = 'Home';
                     $page_name = 'home.php';
@@ -359,6 +355,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <?php endif; ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        $active_menu = 'Avanzate';
+                        $page_name = 'Avanzate.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Avanzate.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Avanzate
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -481,14 +498,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                         <div class="form-group">
                                 <label for="Argomento">Argomento</label>
-                                <input type="text" class="form-control" id="argomento" name="argomento" placeholder="Inserisci l'argomento">
+                            <input type="text" class="form-control" id="argomento" name="argomento" placeholder="Inserisci l'argomento">
                             </div>
 
                             <!-- Assicurati di aver incluso Bootstrap e jQuery prima di aggiungere questo codice -->
                             <div class="form-group">
                                 <label for="Insegnamento">Data della Lezione</label>
                                 <!-- Aggiungi l'attributo "data-provide" con il valore "datepicker" per inizializzare il selettore di date -->
-                                <input type="text" class="form-control datepicker" id="data_lezione" name="data_lezione" placeholder="Seleziona una data">
+                                <input type="date" class="form-control datepicker" id="data_lezione" name="data_lezione" placeholder="Seleziona una data">
                             </div>
 
                             <div class="form-group" data-select2-id="43">
@@ -735,11 +752,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     function cercaSbobina() {
         var sbobinaId = document.getElementById('sbobinaId').value;
 
-        // Esegui la ricerca tramite AJAX o invia il form con l'ID sbobina
-        // e gestisci la risposta o l'azione di reindirizzamento nella pagina con i risultati
-        // Qui puoi utilizzare jQuery per semplificare le chiamate AJAX.
 
-        // Esempio di chiamata AJAX con jQuery
         $.ajax({
             type: 'POST',
             url: '../req/upload_fx/cerca_sbobina.php',
@@ -748,7 +761,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 var data = JSON.parse(response);
                 if (data.success) {
                     // ID sbobina trovato, puoi gestire la risposta come preferisci
-                    // Ad esempio, puoi impostare i valori dei campi del form o mostrare un messaggio di successo.
+
                     alert('Sbobina trovata con ID: ' + sbobinaId);
                     // Chiudi la finestra modale
                     $('#modalCercaSbobina').modal('hide');

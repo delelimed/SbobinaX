@@ -13,7 +13,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $query_nome_cognome = "SELECT matricola, nome, cognome, password, malus FROM users WHERE id = ?";
+        $query_nome_cognome = "SELECT matricola, nome, cognome, password, malus, email FROM users WHERE id = ?";
         $stmt_nome_cognome = $conn->prepare($query_nome_cognome);
         $stmt_nome_cognome->bind_param('i', $user_id);
         $stmt_nome_cognome->execute();
@@ -22,6 +22,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         $row_nome_cognome = $result_nome_cognome->fetch_assoc();
         $matricola = $row_nome_cognome['matricola'];
         $nome = $row_nome_cognome['nome'];
+        $email = $row_nome_cognome['email'];
         $cognome = $row_nome_cognome['cognome'];
         $password = $row_nome_cognome['password'];
         $malus = $row_nome_cognome['malus'];
@@ -33,10 +34,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
 
     <!DOCTYPE html>
-    <!--
-    This is a starter template page. Use this page to start your new project from
-    scratch. This page gets rid of all links and provides the needed markup only.
-    -->
+
     <html lang="it">
     <head>
         <meta charset="utf-8">
@@ -383,7 +381,29 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <?php
+                            $active_menu = 'Avanzate';
+                            $page_name = 'Avanzate.php';
+                            ?>
+                        <li class="nav-item">
+                            <a href="../templates/Avanzate.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Avanzate
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Avanzate
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
                     </ul>
+
                     </li> <!-- impostazioni -->
 
                     <?php
@@ -467,6 +487,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 <div class="form-group">
                                     <label for="Matricola">Matricola</label>
                                     <input type="number" class="form-control" id="Matricola" name="Matricola" value="<?php echo $matricola ?>" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Matricola">Email</label>
+                                    <input type="text" class="form-control" id="email" name="email" value="<?php echo $email ?>" disabled>
                                 </div>
 
                                 <div class="form-group">

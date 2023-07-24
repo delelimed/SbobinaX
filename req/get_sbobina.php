@@ -20,11 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['idSbobina'])) {
     // Estrai i dati della sbobina
     $sbobina = $result->fetch_assoc();
 
-    // Debug: Output the data for testing
-    // echo '<pre>';
-    // print_r($sbobina);
-    // echo '</pre>';
-
     // Chiudi la connessione al database
     $stmt->close();
     $conn->close();
