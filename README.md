@@ -78,9 +78,7 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 
 ## Changelog
-- 1.1.0 (25/07/2023)
-  - Aggiunta possibilità di inviare email al caricamento di una sbobina per la revisione
-  - Aggiunta possibilità di mandare email nel momento della nomina a sbobinatore o revisore
+
 - 1.0.0 (24/07/2023)
   - Prima versione stabile
 
