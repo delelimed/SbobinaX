@@ -27,7 +27,7 @@ per l'installazione è necessario eseguire manualmente le operazioni descritte n
 eventualmente aiutandosi con il file `install.sql` per la creazione del database.
 
 Sono di seguito riportate alcune informazioni base. Per ulteriori informazioni, è possibile consultare
-la documentazione presente nella cartella `Docs`, ove sono riportati i manuali utente (unico per 
+la documentazione presente nella cartella `Docs`, ove sono riportati i [manuali utente](Docs/Manuale.pdf) (unico per 
 SuperUser ed utente normale) e di installazione, oltre ad una descrizione dei database ed il file `install.sql`.
 
 
