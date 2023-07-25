@@ -33,8 +33,10 @@ SuperUser ed utente normale) e di installazione, oltre ad una descrizione dei da
 
 ## Installazione
 Per installare il gestionale, è necessario eseguire le seguenti operazioni:
-1. Creare un database MySQL, nominandolo "sbobinax" (in alternativa è necessario modificare il file `db_configurator.php`);
-2. Selezionare "import" dalla barra superiore presente in phpMyAdmin;
+1. Creare un database MySQL, nominandolo "sbobinax" (in alternativa è necessario modificare il file `db_configurator.php`).
+Qualora non fosse possibile creare un database, è possibile utilizzare un database già esistente, ma è necessario
+modificare il file `db_configurator.php` inserendo i dati di accesso al database;
+2. Selezionare "import" dalla barra superiore presente in phpMyAdmin (anche in un database già esistente);
 3. Selezionare il file `install.sql` e confermare l'importazione;
 4. Copiare i file del gestionale nella ROOT del sito web (o in alternativa nella cartella desiderata);
 5. Modificare il file `db_configurator.php` inserendo i dati di accesso al database;
