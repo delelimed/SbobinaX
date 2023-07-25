@@ -419,6 +419,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         Bootstrap <br>
         Fontawesome <br>
         Fullcalendar <br>
+        PHPMailer <br>
         </div>
             </div><!-- /.container-fluid -->
         </div>

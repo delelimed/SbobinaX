@@ -19,8 +19,28 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <link rel="stylesheet" href="../assets/plugins/fontawesome-free/css/all.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+        <!-- Link CSS di Bootstrap Switch -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css">
+
+        <!-- Link jQuery (assicurati di includerlo prima di bootstrap.min.js) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- Link di Bootstrap JS (assicurati di includerlo dopo jQuery) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+        <!-- Link di Bootstrap Switch JS (assicurati di includerlo dopo Bootstrap JS) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-switch@3.3.4/dist/js/bootstrap-switch.min.js"></script>
+
+        <script>
+            // Inizializza gli switch bootstrap quando il documento è pronto
+            $(document).ready(function () {
+                $("[data-bootstrap-switch]").bootstrapSwitch();
+            });
+        </script>
+
+
 
     </head>
     <body class="hold-transition sidebar-mini">
@@ -427,7 +447,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <button type="button" id="btn-download-zip" class="btn btn-block btn-primary" data-action="download_zip">1. Scarica TUTTE le sbobine in formato .zip</button>
                                 </td>
                                 <td>
-                                    <button type="button" id="btn-download-all" class="btn btn-block btn-primary" data-action="download_zip">1. Scarica TUTTE le sbobine in formato singolarmente (se pulsante sopra non funziona)</button>
+                                    <button type="button" id="btn-download-all" class="btn btn-block btn-primary" data-action="download_zip">1. Scarica TUTTE le sbobine singolarmente (se pulsante sopra non funziona)</button>
                                 </td>
                                 <td>
                                     <button type="button" id="btn-elimina-sbob" class="btn btn-block btn-danger" data-action="elimina_sbobine">2. ELIMINA TUTTE LE SBOBINE</button>
@@ -444,6 +464,57 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                             </div>
 
                         </form>
+                    </div>
+
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Configurazione Server SMTP - Invio Email (attivata in una prossima versione)</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="settingsForm">
+                            <input type="hidden" name="action" value="get_data">
+
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="ServerSMTP">Server SMTP Primario</label>
+                                    <input type="text" class="form-control" id="ServerSMTP" name="ServerSMTP" placeholder="Inserisci il Nome del Server" value="<?php echo isset($data['ServerSMTP']) ? $data['ServerSMTP'] : ''; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="NPorta">Numero Porta</label>
+                                    <input type="number" class="form-control" id="NPorta" name="NPorta" placeholder="Inserisci il Numero della Porta (1 - 65535)" value="<?php echo isset($data['NPorta']) ? $data['NPorta'] : ''; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="UtenteSMPT">Utente SMTP</label>
+                                    <input type="text" class="form-control" id="UtenteSMTP" name="UtenteSMTP" placeholder="Inserisci il Nome Utente" value="<?php echo isset($data['UtenteSMTP']) ? $data['UtenteSMTP'] : ''; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="PSSWSMTP">Password SMTP</label>
+                                    <input type="password" class="form-control" id="PSSWSMTP" name="PSSWSMTP" placeholder="Inserisci la Password" value="<?php echo isset($data['PSSWSMTP']) ? $data['PSSWSMTP'] : ''; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="MailSMTP">Email di Invio</label>
+                                    <input type="email" class="form-control" id="MailSMTP" name="MailSMTP" placeholder="Inserisci la Mail di invio" value="<?php echo isset($data['MailSMTP']) ? $data['MailSMTP'] : ''; ?>">
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="smtp_attivo" value="off">
+                                    <label for="SwitchEmailProva">Abilita SMTP (ON: invio email; OFF: non invio email)</label>
+                                    <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-focused bootstrap-switch-animate bootstrap-switch-on" style="width: 86px;">
+                                        <div class="bootstrap-switch-container" style="width: 126px; margin-left: 0px;">
+                                            <input type="checkbox" id="smtp_attivo" name="smtp_attivo" <?php echo isset($data['smtp_attivo']) && $data['smtp_attivo'] == 1 ? 'checked' : ''; ?> data-bootstrap-switch="" data-off-color="danger" data-on-color="success">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Salva i Dati</button>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-info" id="btnInviaEmail">Invia EMAIL di prova</button>
+                            </div>
+
+                        </form>
+
                     </div>
 
                     <!-- end block content -->
@@ -481,12 +552,70 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
     <!-- REQUIRED SCRIPTS -->
 
-    <!-- jQuery -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
+
     <!-- Bootstrap 4 -->
     <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
+    <script>
+        $('#btnInviaEmail').on('click', function() {
+            // Invia una richiesta POST a mail_prova.php
+            $.post('../req/email_fx/mail_prova.php', function(data) {
+                // Questa funzione verrà eseguita quando la richiesta POST avrà successo
+                // Puoi aggiungere ulteriori azioni qui, ad esempio, mostrare un messaggio di conferma
+                alert('Email di prova inviata con successo!');
+            }).fail(function() {
+                // Questa funzione verrà eseguita se la richiesta POST fallisce
+                alert('Errore nell\'invio dell\'email di prova.');
+            });
+        });
+        // Inizializza gli switch bootstrap quando il documento è pronto
+        $(document).ready(function () {
+            $("[data-bootstrap-switch]").bootstrapSwitch();
+
+            // Funzione per eseguire la richiesta AJAX
+            function getDataFromServer() {
+                $.ajax({
+                    url: "../req/avanzate_fx/get_SMTP_data.php",
+                    type: "POST",
+                    data: $("#settingsForm").serialize(), // Invia i dati del form al server
+                    success: function (response) {
+                        // Popola il form con i dati ricevuti dal server
+                        var data = JSON.parse(response);
+                        $("#ServerSMTP").val(data.ServerSMTP || '');
+                        $("#NPorta").val(data.NPorta || '');
+                        $("#UtenteSMTP").val(data.UtenteSMTP || '');
+                        $("#PSSWSMTP").val(data.PSSWSMTP || '');
+                        $("#MailSMTP").val(data.MailSMTP || '');
+                        $("#smtp_attivo").bootstrapSwitch('state', data.smtp_attivo === 'on' ? true : false, true);
+                    },
+                    error: function () {
+                        console.log("Errore durante la richiesta AJAX");
+                    }
+                });
+            }
+
+            // Richiama la funzione di richiesta dati all'avvio della pagina
+            getDataFromServer();
+
+            // Funzione per gestire l'invio del form
+            $("#settingsForm").on("submit", function (event) {
+                event.preventDefault(); // Impedisci il comportamento predefinito del form
+
+                // Esegui la richiesta AJAX per salvare i dati
+                $.ajax({
+                    url: "../req/avanzate_fx/save_SMTP_data.php",
+                    type: "POST",
+                    data: $(this).serialize(), // Serializza i dati del form
+                    success: function (response) {
+                        alert(response); // Visualizza una notifica con il messaggio di risposta dal server
+                    },
+
+                });
+            });
+        });
+    </script>
+
 
 
     <script>
@@ -634,6 +763,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             });
         });
     </script>
+
 
     </body>
     </html>
