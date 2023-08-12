@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "../db_connector.php";
-if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] == 0){
 
     ?>
 
