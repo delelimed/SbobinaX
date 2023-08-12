@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1){
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1 && $_SESSION['locked'] == 0){
 
     ?>
 
@@ -437,6 +437,64 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                     <!-- block content -->
                     <div class="card card-primary">
                         <div class="card-header">
+                            <h3 class="card-title">Limite di Ammonizioni</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+
+                        <?php
+                        include "../db_connector.php";
+
+                        // Verifica la connessione
+                        if ($conn->connect_error) {
+                            die("Connessione al database fallita: " . $conn->connect_error);
+                        }
+
+                        // Gestione della richiesta POST
+                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                            $nuovoValore = $_POST["Limite"];
+
+                            // Query per aggiornare il valore delle ammonizioni
+                            $queryUpdate = "UPDATE settings SET attuale = '$nuovoValore' WHERE nome_impostazione = 'ammonizioni'";
+
+                            if ($conn->query($queryUpdate) === TRUE) {
+                                echo "Valore delle ammonizioni aggiornato con successo!";
+                            } else {
+                                echo "Errore durante l'aggiornamento: " . $conn->error;
+                            }
+                        }
+
+                        // Query per ottenere il valore delle ammonizioni
+                        $query = "SELECT attuale FROM settings WHERE nome_impostazione = 'ammonizioni'";
+                        $result = $conn->query($query);
+
+                        if ($result->num_rows > 0) {
+                            // Estrai il valore
+                            $row = $result->fetch_assoc();
+                            $valoreAmmonizioni = $row['attuale'];
+                        } else {
+                            $valoreAmmonizioni = "Valore non trovato";
+                        }
+
+                        // Chiudi la connessione al database
+                        $conn->close();
+                        ?>
+
+                        <form method="POST">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="Limite">Dopo quante ammonizioni vuoi bloccare gli account?</label>
+                                    <input type="number" class="form-control" id="Limite" name="Limite" placeholder="Inserisci il numero di ammonizioni" value="<?php echo $valoreAmmonizioni; ?>">
+                                    <button type="submit" id="btn-save-ammonizioni" class="btn btn-block btn-primary" name="submit">SALVA AMMONIZIONI</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                    <div class="card card-primary">
+                        <div class="card-header">
                             <h3 class="card-title">Preparazione per Cambio Semestre</h3>
                         </div>
                         <!-- /.card-header -->
@@ -545,7 +603,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 Sistema SbobinaX
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2023 <a href="https://github.com/devdeleli">DEVDELELI</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/">DEVDELELI</a>.</strong> All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -557,6 +615,29 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
+
+    <script>
+
+        // Assumendo che tu utilizzi jQuery per semplificare le chiamate Ajax
+        $(document).ready(function() {
+            // Effettua la chiamata Ajax al backend per ottenere il valore delle ammonizioni
+            $.ajax({
+                url: 'url_del_tuo_backend', // Sostituisci con l'URL del tuo backend
+                method: 'GET', // O il metodo appropriato per ottenere i dati
+                data: { nome_impostazione: 'ammonizioni' }, // Eventuali dati da inviare al backend
+                success: function(data) {
+                    // Aggiorna il valore nell'elemento span
+                    $('#ammonizioni-value').text(data);
+                },
+                error: function(error) {
+                    console.log('Errore durante la richiesta Ajax:', error);
+                }
+            });
+        });
+
+
+    </script>
+
     <script>
         $('#btnInviaEmail').on('click', function() {
             // Invia una richiesta POST a mail_prova.php

@@ -1,7 +1,7 @@
 <?php
 include '../db_connector.php';
 session_start();
-if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1){
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1 && $_SESSION['locked'] == 0){
 
     ?>
 
@@ -534,7 +534,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
             Sistema SbobinaX
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2023 <a href="https://github.com/devdeleli">DEVDELELI</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/">DEVDELELI</a>.</strong> All rights reserved.
     </footer>
     </div>
     <!-- ./wrapper -->

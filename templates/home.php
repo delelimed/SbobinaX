@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] == 0){
 
 ?>
 
@@ -542,7 +542,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
             Sistema SbobinaX
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2023 <a href="https://github.com/devdeleli">DEVDELELI</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/">DEVDELELI</a>.</strong> All rights reserved.
     </footer>
 </div>
 <!-- ./wrapper -->
@@ -625,8 +625,14 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 </html>
 
 <?php
-}else{
-    header("Location: ../templates/login.php");
+
+}elseif ($_SESSION['locked'] == 1) {
+    echo "Risulta che tu abbia superato il numero massimo di malus. Il tuo account è stato disabilitato.";
+    exit();
+}
+else
+{
+    echo "Utente NON abilitato. Effettua il login con un accunt abilitato.";
     exit();
 }
     ?>
