@@ -12,14 +12,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cognome = $_POST['cognome'];
         $malus = $_POST['malus'];
 
-
         // Esegui l'azione di modifica nel database per aggiornare l'utente
         $sql = "UPDATE users SET matricola = ?, nome = ?, cognome = ?, malus = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssii", $matricola, $nome, $cognome, $malus, $id);
 
-
         if ($stmt->execute()) {
+            // Verifica se il MALUS dell'utente è uguale al valore nelle impostazioni "ammonizioni"
+            $querySettings = "SELECT attuale FROM settings WHERE nome_impostazione = 'ammonizioni'";
+            $resultSettings = $conn->query($querySettings);
+            $rowSettings = $resultSettings->fetch_assoc();
+            $valoreAmmonizioni = $rowSettings['attuale'];
+
+            if ($malus == $valoreAmmonizioni) {
+                // Se il MALUS è uguale al valore delle ammonizioni, imposta "locked" a 1
+                $sqlLockUser = "UPDATE users SET locked = 1 WHERE id = ?";
+                $stmtLockUser = $conn->prepare($sqlLockUser);
+                $stmtLockUser->bind_param("i", $id);
+                $stmtLockUser->execute();
+                $stmtLockUser->close();
+            }
+
             // Modifica avvenuta con successo
             $response = array(
                 "success" => true,
