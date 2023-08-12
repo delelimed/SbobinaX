@@ -1,6 +1,6 @@
 <?php
 include '../db_connector.php';
-$sql = "SELECT COUNT(*) as num_sbobine_da_svolgere FROM sbobine_calendarizzate WHERE caricata = 0";
+$sql = "SELECT COUNT(*) as num_sbobine_da_svolgere FROM sx_sbobine_calendarizzate WHERE caricata = 0";
 
 $result = $conn->query($sql);
 
@@ -16,7 +16,7 @@ $conn->close();
 
 <?php
 include '../db_connector.php';
-$sql = "SELECT COUNT(*) as num_sbobine_da_revisionare FROM sbobine_calendarizzate WHERE caricata = 1 AND revisione = 0";
+$sql = "SELECT COUNT(*) as num_sbobine_da_revisionare FROM sx_sbobine_calendarizzate WHERE caricata = 1 AND revisione = 0";
 
 $result = $conn->query($sql);
 
@@ -32,7 +32,7 @@ $conn->close();
 
 <?php
 include '../db_connector.php';
-$sql = "SELECT COUNT(*) as num_sbobine_pronte FROM sbobine_calendarizzate WHERE caricata = 1 AND revisione = 1";
+$sql = "SELECT COUNT(*) as num_sbobine_pronte FROM sx_sbobine_calendarizzate WHERE caricata = 1 AND revisione = 1";
 
 $result = $conn->query($sql);
 
@@ -48,7 +48,7 @@ $conn->close();
 
 <?php
 include '../db_connector.php';
-$sql = "SELECT COUNT(*) as num_sbobine FROM sbobine_calendarizzate";
+$sql = "SELECT COUNT(*) as num_sbobine FROM sx_sbobine_calendarizzate";
 
 $result = $conn->query($sql);
 

@@ -10,7 +10,7 @@ if (isset($_GET['sbobinatori_ids'])) {
     $sbobinatori_ids_string = implode(',', $sbobinatori_ids);
 
     // Query per recuperare i nomi degli sbobinatori associati agli ID specificati
-    $query = "SELECT nome, cognome FROM users WHERE id IN ($sbobinatori_ids_string)";
+    $query = "SELECT nome, cognome FROM sx_users WHERE id IN ($sbobinatori_ids_string)";
     $result = $conn->query($query);
 
     $sbobinatori_names = array();

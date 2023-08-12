@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST['id'];
 
         // Esegui l'azione di eliminazione delle voci nella tabella "partecipazione_sbobine" per l'utente corrente
-        $sql = "DELETE FROM partecipazione_sbobine WHERE id_user = ?";
+        $sql = "DELETE FROM sx_partecipazione_sbobine WHERE id_user = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
 

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dataLezione = $_POST['dataLezione'];
 
     // Recupera l'ID dell'insegnamento dalla tabella "insegnamenti" in base al nome
-    $queryGetIdInsegnamento = "SELECT id FROM insegnamenti WHERE materia = ?";
+    $queryGetIdInsegnamento = "SELECT id FROM sx_insegnamenti WHERE materia = ?";
     $stmtGetIdInsegnamento = $conn->prepare($queryGetIdInsegnamento);
     $stmtGetIdInsegnamento->bind_param('s', $nomeInsegnamento);
     $stmtGetIdInsegnamento->execute();
@@ -22,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idInsegnamento = $row['id'];
 
         // Esegui la query per aggiornare i dati nel database
-        $queryUpdateSbobina = "UPDATE sbobine_calendarizzate SET insegnamento = ?, data_lezione = ? WHERE id = ?";
+        $queryUpdateSbobina = "UPDATE sx_sbobine_calendarizzate SET insegnamento = ?, data_lezione = ? WHERE id = ?";
         $stmtUpdateSbobina = $conn->prepare($queryUpdateSbobina);
         $stmtUpdateSbobina->bind_param('isi', $idInsegnamento, $dataLezione, $idSbobina);
 
 
         if ($stmtUpdateSbobina->execute()) {
             // L'aggiornamento è stato completato con successo
-            $queryDeleteSbobinatori = "DELETE FROM sbobinatori_sbobine WHERE id_sbobina = ?";
+            $queryDeleteSbobinatori = "DELETE FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
             $stmtDeleteSbobinatori = $conn->prepare($queryDeleteSbobinatori);
             $stmtDeleteSbobinatori->bind_param('i', $idSbobina);
             $stmtDeleteSbobinatori->execute();
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Inserisci gli sbobinatori associati alla sbobina
                 foreach ($sbobinatoriAssociati as $sbobinatoreId) {
-                    $queryInsertSbobinatore = "INSERT INTO sbobinatori_sbobine (id_sbobina, id_sbobinatore) VALUES (?, ?)";
+                    $queryInsertSbobinatore = "INSERT INTO sx_sbobinatori_sbobine (id_sbobina, id_sbobinatore) VALUES (?, ?)";
                     $stmtInsertSbobinatore = $conn->prepare($queryInsertSbobinatore);
                     $stmtInsertSbobinatore->bind_param('ii', $idSbobina, $sbobinatoreId);
                     $stmtInsertSbobinatore->execute();
@@ -53,14 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $revisoriAssociati = json_decode($_POST['revisori'], true);
 
                 // Elimina i revisori associati a questa sbobina prima di inserirli nuovamente
-                $queryDeleteRevisori = "DELETE FROM revisori_sbobine WHERE id_sbobina = ?";
+                $queryDeleteRevisori = "DELETE FROM sx_revisori_sbobine WHERE id_sbobina = ?";
                 $stmtDeleteRevisori = $conn->prepare($queryDeleteRevisori);
                 $stmtDeleteRevisori->bind_param('i', $idSbobina);
                 $stmtDeleteRevisori->execute();
 
                 // Inserisci i revisori associati alla sbobina
                 foreach ($revisoriAssociati as $revisoreId) {
-                    $queryInsertRevisore = "INSERT INTO revisori_sbobine (id_revisore, id_sbobina) VALUES (?, ?)";
+                    $queryInsertRevisore = "INSERT INTO sx_revisori_sbobine (id_revisore, id_sbobina) VALUES (?, ?)";
                     $stmtInsertRevisore = $conn->prepare($queryInsertRevisore);
                     $stmtInsertRevisore->bind_param('ii', $revisoreId, $idSbobina);
                     $stmtInsertRevisore->execute();

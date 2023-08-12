@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 }
 
 // Query per recuperare i dati dalla tabella sbobine_calendarizzate
-$sql = "SELECT id, insegnamento, posizione_server FROM sbobine_calendarizzate";
+$sql = "SELECT id, insegnamento, posizione_server FROM sx_sbobine_calendarizzate";
 $result = $conn->query($sql);
 
 // Controllo se ci sono risultati

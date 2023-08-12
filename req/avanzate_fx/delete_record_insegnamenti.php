@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 }
 
 // Query per eliminare tutti i record dalla tabella insegnamenti
-$sql = "DELETE FROM insegnamenti";
+$sql = "DELETE FROM sx_insegnamenti";
 if ($conn->query($sql) === TRUE) {
     echo "Tutti i record nella tabella insegnamenti sono stati cancellati correttamente.";
 } else {

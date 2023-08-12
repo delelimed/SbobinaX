@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
 }
 
 // Query per recuperare l'insegnamento in base all'ID fornito
-$sql = "SELECT materia FROM insegnamenti WHERE id = $insegnamento_id";
+$sql = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamento_id";
 
 $result = $conn->query($sql);
 

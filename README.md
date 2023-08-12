@@ -79,6 +79,11 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 ## Changelog
 
+- 1.1.0 (12/08/2023)
+  - Sistemata denominazione tabelle database
+  - Aggiunta possibilità di definire numero dei malus
+  - Aggiunto blocco automatico ed IRREVOCABILE dell'account al raggiungimento del numero di malus
+
 - 1.0.0 (24/07/2023)
   - Prima versione stabile
 

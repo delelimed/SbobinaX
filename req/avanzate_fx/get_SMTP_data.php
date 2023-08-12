@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 // Verifica l'azione richiesta
 if ($_POST['action'] === 'get_data') {
     // Query per ottenere i dati dalla tabella "settings"
-    $sql = "SELECT nome_impostazione, attuale FROM settings";
+    $sql = "SELECT nome_impostazione, attuale FROM sx_settings";
     $result = $conn->query($sql);
 
     // Array associativo per memorizzare i dati

@@ -12,10 +12,10 @@ if (isset($_GET['idSbobina'])) {
 
     // Esegui la query per ottenere gli sbobinatori associati a questa sbobina
     // Utilizza prepared statements per evitare SQL injection
-    $query = "SELECT sbobinatori_sbobine.id_sbobina, sbobinatori_sbobine.id_sbobinatore
-              FROM sbobinatori_sbobine
-              INNER JOIN users ON sbobinatori_sbobine.id_sbobinatore = users.id
-              WHERE sbobinatori_sbobine.id_sbobina = ?";
+    $query = "SELECT sx_sbobinatori_sbobine.id_sbobina, sx_sbobinatori_sbobine.id_sbobinatore
+              FROM sx_sbobinatori_sbobine
+              INNER JOIN sx_users ON sx_sbobinatori_sbobine.id_sbobinatore = sx_users.id
+              WHERE sx_sbobinatori_sbobine.id_sbobina = ?";
 
     // Prepara la query
     $stmt = $conn->prepare($query);

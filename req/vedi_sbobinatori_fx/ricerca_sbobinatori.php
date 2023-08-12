@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $searchText = $_POST["search_text"];
 
     // Query per ottenere gli sbobinatori in base al valore di ricerca
-    $query = "SELECT * FROM users WHERE matricola LIKE '%$searchText%' OR nome LIKE '%$searchText%' OR cognome LIKE '%$searchText%'";
+    $query = "SELECT * FROM sx_users WHERE matricola LIKE '%$searchText%' OR nome LIKE '%$searchText%' OR cognome LIKE '%$searchText%'";
     $result = $conn->query($query);
 
 

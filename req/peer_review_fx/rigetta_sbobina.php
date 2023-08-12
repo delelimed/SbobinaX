@@ -4,7 +4,7 @@ include "../../db_connector.php";
 $idSbobina = $_POST['id_sbobina'];
 
 // Recupera il percorso del file dalla tabella sbobine_calendarizzate
-$queryFile = "SELECT posizione_server FROM sbobine_calendarizzate WHERE id = $idSbobina";
+$queryFile = "SELECT posizione_server FROM sx_sbobine_calendarizzate WHERE id = $idSbobina";
 $resultFile = $conn->query($queryFile);
 
 if ($resultFile->num_rows > 0) {
@@ -18,8 +18,8 @@ if ($resultFile->num_rows > 0) {
 }
 
 // Esegui l'aggiornamento dei campi desiderati nella tabella sbobine_calendarizzate
-$queryUpdate = "UPDATE sbobine_calendarizzate AS sbobine
-                JOIN revisori_sbobine AS revisori ON sbobine.id = revisori.id_sbobina
+$queryUpdate = "UPDATE sx_sbobine_calendarizzate AS sbobine
+                JOIN sx_revisori_sbobine AS revisori ON sbobine.id = revisori.id_sbobina
                 SET sbobine.argomento = '',
                     sbobine.data_caricamento = '',
                     sbobine.caricata = '',

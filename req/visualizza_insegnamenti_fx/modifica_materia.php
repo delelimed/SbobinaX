@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepara e esegui la query per la modifica della materia nel database
-    $query = "UPDATE insegnamenti SET materia = ? WHERE id = ?";
+    $query = "UPDATE sx_insegnamenti SET materia = ? WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('si', $nuovaMateria, $idRiga);
 

@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id_insegnamento = $_POST['id_insegnamento'];
 
         // Esegui l'azione di inserimento del nuovo insegnamento nella tabella "partecipazione_sbobine"
-        $sql = "INSERT INTO partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
+        $sql = "INSERT INTO sx_partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $id_user, $id_insegnamento);
 

@@ -8,7 +8,7 @@ session_start();
 
 // Esempio di verifica dei permessi: controlla se l'utente loggato ha partecipato alla sbobina con questo ID
 $currentUserId = $_SESSION['id']; // Sostituisci con il tuo modo per ottenere l'ID dell'utente loggato
-$queryPartecipazione = "SELECT * FROM partecipazione_sbobine 
+$queryPartecipazione = "SELECT * FROM sx_partecipazione_sbobine 
                         WHERE id_user = $currentUserId AND id_insegnamento = $idPartecipazione";
 $resultPartecipazione = $conn->query($queryPartecipazione);
 $utenteAutorizzato = $resultPartecipazione->num_rows > 0;
@@ -18,7 +18,7 @@ $utenteAutorizzato = $resultPartecipazione->num_rows > 0;
 if ($utenteAutorizzato) {
     // Ottieni il percorso del file dal database in base all'ID della sbobina
     // Sostituisci questa parte con il codice per ottenere il percorso del file e il valore di "revisione" dal database
-    $queryFile = "SELECT posizione_server, revisione FROM sbobine_calendarizzate WHERE id = $idSbobina";
+    $queryFile = "SELECT posizione_server, revisione FROM sx_sbobine_calendarizzate WHERE id = $idSbobina";
     $resultFile = $conn->query($queryFile);
 
     if ($resultFile->num_rows > 0) {

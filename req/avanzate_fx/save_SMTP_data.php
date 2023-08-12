@@ -21,14 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hashedPassword = password_hash($passwordSMTP, PASSWORD_BCRYPT);
 
     // Verifica se i dati esistono nella tabella settings
-    $sql_check = "SELECT COUNT(*) AS count FROM settings";
+    $sql_check = "SELECT COUNT(*) AS count FROM sx_settings";
     $result = $conn->query($sql_check);
     $row = $result->fetch_assoc();
     $count = $row["count"];
 
     if ($count > 0) {
         // I dati esistono, quindi esegui l'aggiornamento
-        $sql_update = "UPDATE settings SET
+        $sql_update = "UPDATE sx_settings SET
             attuale = CASE
                 WHEN nome_impostazione = 'ServerSMTP' THEN '$serverSMTP'
                 WHEN nome_impostazione = 'NPorta' THEN '$numeroPorta'

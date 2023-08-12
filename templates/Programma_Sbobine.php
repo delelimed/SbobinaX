@@ -448,7 +448,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         <option value="">Seleziona l'insegnamento</option>
                                         <?php
                                         // Esegui la query per ottenere gli insegnamenti dal database
-                                        $query = "SELECT id, materia FROM insegnamenti";
+                                        $query = "SELECT id, materia FROM sx_insegnamenti";
                                         $result = $conn->query($query);
 
                                         // Popola la select con i risultati della query
@@ -474,7 +474,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                $query = "SELECT id, nome FROM users";
+                                $query = "SELECT id, nome FROM sx_users";
                                 $result = $conn->query($query);
 
                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
@@ -499,7 +499,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                $query = "SELECT id, nome FROM users";
+                                $query = "SELECT id, nome FROM sx_users";
                                 $result = $conn->query($query);
 
                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati

@@ -438,9 +438,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 
                                 // Query per ottenere le sbobine di cui l'utente è revisore
                                 $sql = "SELECT id_sbobina 
-                                FROM revisori_sbobine 
+                                FROM sx_revisori_sbobine 
                                 WHERE id_revisore = $userId 
-                                AND id_sbobina IN (SELECT ID FROM sbobine_calendarizzate WHERE caricata = 1)";
+                                AND id_sbobina IN (SELECT ID FROM sx_sbobine_calendarizzate WHERE caricata = 1)";
                                 $result = $conn->query($sql);
 
                                 ?>
@@ -465,7 +465,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                         $sbobinaId = $row['id_sbobina'];
 
                                         // Ora puoi eseguire una query per ottenere i dettagli completi della sbobina utilizzando $sbobinaId
-                                        $sbobinaQuery = "SELECT * FROM sbobine_calendarizzate WHERE ID = $sbobinaId";
+                                        $sbobinaQuery = "SELECT * FROM sx_sbobine_calendarizzate WHERE ID = $sbobinaId";
                                         $sbobinaResult = $conn->query($sbobinaQuery);
 
                                         if ($sbobinaResult && $sbobinaResult->num_rows > 0) {
@@ -474,7 +474,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 
                                             // Recupera il nome della materia dalla tabella 'insegnamenti'
                                             $insegnamentoId = $sbobinaData['insegnamento'];
-                                            $insegnamentoQuery = "SELECT materia FROM insegnamenti WHERE id = $insegnamentoId";
+                                            $insegnamentoQuery = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamentoId";
                                             $insegnamentoResult = $conn->query($insegnamentoQuery);
 
                                             $materia = "";
@@ -484,7 +484,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             }
 
                                             // Recupera gli ID degli sbobinatori dalla tabella 'sbobinatori_sbobine'
-                                            $sbobinatoriQuery = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
+                                            $sbobinatoriQuery = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
                                             $sbobinatoriResult = $conn->query($sbobinatoriQuery);
                                             $sbobinatori = [];
 
@@ -495,7 +495,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             }
 
                                             // Recupera gli ID dei revisori dalla tabella 'revisori_sbobine'
-                                            $revisoriQuery = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobinaId";
+                                            $revisoriQuery = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobinaId";
                                             $revisoriResult = $conn->query($revisoriQuery);
                                             $revisori = [];
 
@@ -514,7 +514,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             echo "<td>";
                                             if (!empty($sbobinatori)) {
                                                 foreach ($sbobinatori as $sbobinatoreId) {
-                                                    $sbobinatoreQuery = "SELECT nome, cognome FROM users WHERE id = $sbobinatoreId";
+                                                    $sbobinatoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = $sbobinatoreId";
                                                     $sbobinatoreResult = $conn->query($sbobinatoreQuery);
                                                     if ($sbobinatoreResult && $sbobinatoreResult->num_rows > 0) {
                                                         $sbobinatoreData = $sbobinatoreResult->fetch_assoc();
@@ -528,7 +528,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             echo "<td>";
                                             if (!empty($revisori)) {
                                                 foreach ($revisori as $revisoreId) {
-                                                    $revisoreQuery = "SELECT nome, cognome FROM users WHERE id = $revisoreId";
+                                                    $revisoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = $revisoreId";
                                                     $revisoreResult = $conn->query($revisoreQuery);
                                                     if ($revisoreResult && $revisoreResult->num_rows > 0) {
                                                         $revisoreData = $revisoreResult->fetch_assoc();
@@ -544,7 +544,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             // Aggiungiamo il link per il download del file
                                             // Effettua il controllo sulla tabella "revisori_sbobine" per vedere se l'utente è autorizzato ad approvare
                                             $currentUserId = $_SESSION['id'];
-                                            $queryEsito = "SELECT esito FROM revisori_sbobine WHERE id_revisore = $currentUserId AND id_sbobina = " . $sbobinaData['id'];
+                                            $queryEsito = "SELECT esito FROM sx_revisori_sbobine WHERE id_revisore = $currentUserId AND id_sbobina = " . $sbobinaData['id'];
                                             $resultEsito = $conn->query($queryEsito);
                                             $approvato = false;
 

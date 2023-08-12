@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepara e esegui la query per eliminare la riga dal database
-    $query = "DELETE FROM users WHERE id = ?";
+    $query = "DELETE FROM sx_users WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $idRiga);
 

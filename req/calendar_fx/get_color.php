@@ -8,9 +8,9 @@ if ($conn->connect_error) {
 }
 
 // Query per selezionare gli eventi dalla tabella, includendo l'id della sbobina, 'caricata' e 'revisionata'
-$sql = "SELECT sbobine_calendarizzate.id AS id_sbobina, 
-        sbobine_calendarizzate.caricata, sbobine_calendarizzate.revisione
-        FROM sbobine_calendarizzate";
+$sql = "SELECT sx_sbobine_calendarizzate.id AS id_sbobina, 
+        sx_sbobine_calendarizzate.caricata, sx_sbobine_calendarizzate.revisione
+        FROM sx_sbobine_calendarizzate";
 
 $result = $conn->query($sql);
 

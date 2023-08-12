@@ -17,13 +17,13 @@ function is_user_authorized_to_download_sbobina($user_id, $sbobina_id)
     }
 
     // Ottieni l'id_insegnamento della sbobina dalla tabella sbobine_calendarizzate
-    $sql_sbobina = "SELECT insegnamento FROM sbobine_calendarizzate WHERE id = $sbobina_id";
+    $sql_sbobina = "SELECT insegnamento FROM sx_sbobine_calendarizzate WHERE id = $sbobina_id";
     $result_sbobina = $conn->query($sql_sbobina);
     $row_sbobina = $result_sbobina->fetch_assoc();
     $id_insegnamento_sbobina = $row_sbobina['insegnamento'];
 
     // Esegui la query per verificare se l'utente partecipa alle sbobine di quella materia
-    $sql_partecipazione = "SELECT * FROM partecipazione_sbobine WHERE id_user = $user_id AND id_insegnamento = $id_insegnamento_sbobina";
+    $sql_partecipazione = "SELECT * FROM sx_partecipazione_sbobine WHERE id_user = $user_id AND id_insegnamento = $id_insegnamento_sbobina";
     $result_partecipazione = $conn->query($sql_partecipazione);
 
     if ($result_partecipazione->num_rows > 0) {
@@ -44,7 +44,7 @@ function get_file_path_from_database($sbobina_id)
     }
 
     // Esegui la query per ottenere il percorso del file
-    $sql = "SELECT posizione_server FROM sbobine_calendarizzate WHERE id = $sbobina_id";
+    $sql = "SELECT posizione_server FROM sx_sbobine_calendarizzate WHERE id = $sbobina_id";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -67,25 +67,25 @@ function approve_sbobina_in_database($sbobina_id) {
 
     $sessionId = $_SESSION['id'];
     // Prepare the SQL query to update the sbobina status
-    $sql = "UPDATE revisori_sbobine SET esito = '1' WHERE id_sbobina = $sbobina_id AND id_revisore = $sessionId";
+    $sql = "UPDATE sx_revisori_sbobine SET esito = '1' WHERE id_sbobina = $sbobina_id AND id_revisore = $sessionId";
 
     // Execute the query
     if ($conn->query($sql) === TRUE) {
         // Check if all entries for the sbobina in revisori_sbobine have esito=1
-        $check_sql = "SELECT COUNT(*) AS num_entries FROM revisori_sbobine WHERE id_sbobina = $sbobina_id AND esito = '1'";
+        $check_sql = "SELECT COUNT(*) AS num_entries FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id AND esito = '1'";
         $check_result = $conn->query($check_sql);
         $row = $check_result->fetch_assoc();
         $num_entries = $row['num_entries'];
 
         // Get the total number of revisori_sbobine entries for the sbobina
-        $total_entries_sql = "SELECT COUNT(*) AS total_entries FROM revisori_sbobine WHERE id_sbobina = $sbobina_id";
+        $total_entries_sql = "SELECT COUNT(*) AS total_entries FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id";
         $total_entries_result = $conn->query($total_entries_sql);
         $total_row = $total_entries_result->fetch_assoc();
         $total_entries = $total_row['total_entries'];
 
         if ($num_entries === $total_entries) {
             // Update the revisione field in sbobine_calendarizzate to 1 for the corresponding sbobina_id
-            $update_revisione_sql = "UPDATE sbobine_calendarizzate SET revisione = '1' WHERE id = $sbobina_id";
+            $update_revisione_sql = "UPDATE sx_sbobine_calendarizzate SET revisione = '1' WHERE id = $sbobina_id";
             $conn->query($update_revisione_sql);
         }
 

@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 $user_id = $_GET['user_id'];
 
 // Query per recuperare l'email dell'utente dal database utilizzando l'ID
-$sql = "SELECT email FROM users WHERE id = ?";
+$sql = "SELECT email FROM sx_users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();

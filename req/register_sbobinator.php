@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 15]);
 
     // Prepara e esegui la query per inserire i dati nel database utilizzando prepared statements
-    $query = "INSERT INTO users (matricola, nome, cognome, email, password, admin) VALUES (?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO sx_users (matricola, nome, cognome, email, password, admin) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ssssss", $matricola, $nome, $cognome, $email, $hashedPassword, $admin);
 
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insegnamenti_selezionati = $_POST['insegnamenti'];
             foreach ($insegnamenti_selezionati as $insegnamento_id) {
                 // Esegui la query di inserimento
-                $query_partecipazione = "INSERT INTO partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
+                $query_partecipazione = "INSERT INTO sx_partecipazione_sbobine (id_user, id_insegnamento) VALUES (?, ?)";
                 $stmt_partecipazione = $conn->prepare($query_partecipazione);
                 $stmt_partecipazione->bind_param("ii", $user_id, $insegnamento_id);
                 $stmt_partecipazione->execute();

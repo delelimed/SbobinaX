@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['idSbobina'])) {
     $idSbobina = $_GET['idSbobina'];
 
     // Esegui la query per ottenere i dati della sbobina corrispondente all'ID
-    $query = "SELECT * FROM sbobine_calendarizzate WHERE id = ?";
+    $query = "SELECT * FROM sx_sbobine_calendarizzate WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $idSbobina);
     $stmt->execute();

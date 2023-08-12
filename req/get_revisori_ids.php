@@ -12,7 +12,7 @@ if (isset($_GET['sbobina_id'])) {
     $sbobina_id = $_GET['sbobina_id'];
 
     // Query per recuperare gli ID dei revisori associati all'ID della sbobina
-    $query = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobina_id";
+    $query = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id";
     $result = $conn->query($query);
 
     $revisori_ids = array();

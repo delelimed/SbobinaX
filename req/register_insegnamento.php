@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepara e esegui la query per inserire i dati nel database
-    $query = "INSERT INTO insegnamenti (materia) VALUES (?)";
+    $query = "INSERT INTO sx_insegnamenti (materia) VALUES (?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $insegnamento);
 

@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Prepara e esegui la query per aggiornare la password nel database utilizzando prepared statements
-            $query = "UPDATE users SET password = ? WHERE id = ?";
+            $query = "UPDATE sx_users SET password = ? WHERE id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("si", $hashedPassword, $idUtente);
 

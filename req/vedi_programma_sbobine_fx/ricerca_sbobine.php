@@ -12,11 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $search_term = $_POST["search_text"];
 
     // Esegui la query per cercare le bobine nel database
-    $sql = "SELECT sbobine_calendarizzate.*, insegnamenti.materia AS nome_materia
-            FROM sbobine_calendarizzate
-            INNER JOIN insegnamenti ON sbobine_calendarizzate.insegnamento = insegnamenti.id
-            WHERE insegnamenti.materia LIKE '%$search_term%'
-            OR sbobine_calendarizzate.data_lezione LIKE '%$search_term%'";
+    $sql = "SELECT sx_sbobine_calendarizzate.*, sx_insegnamenti.materia AS nome_materia
+            FROM sx_sbobine_calendarizzate
+            INNER JOIN sx_insegnamenti ON sx_sbobine_calendarizzate.insegnamento = sx_insegnamenti.id
+            WHERE sx_insegnamenti.materia LIKE '%$search_term%'
+            OR sx_sbobine_calendarizzate.data_lezione LIKE '%$search_term%'";
 
     $result = $conn->query($sql);
 
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $sbobinatori_data = array();
 
         // Esegui la query per ottenere gli ID degli sbobinatori associati alla sbobina
-        $query = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
+        $query = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
         $result = $conn->query($query);
 
         // Popola l'array con gli ID degli sbobinatori
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Ottieni i nomi e i cognomi degli sbobinatori associati agli ID
         if (!empty($sbobinatori_ids)) {
             $sbobinatori_ids_str = implode(',', $sbobinatori_ids);
-            $query_users = "SELECT nome, cognome FROM users WHERE id IN ($sbobinatori_ids_str)";
+            $query_users = "SELECT nome, cognome FROM sx_users WHERE id IN ($sbobinatori_ids_str)";
             $result_users = $conn->query($query_users);
 
             // Popola l'array con i nomi completi degli sbobinatori

@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 $current_user_id = 1; // Sostituisci con l'ID dell'utente corrente
 
 // Query per ottenere gli ID delle sbobine assegnate all'utente corrente
-$sql = "SELECT sbobina_id FROM revisori_sbobine WHERE id_revisore = $current_user_id";
+$sql = "SELECT sbobina_id FROM sx_revisori_sbobine WHERE id_revisore = $current_user_id";
 $result = $conn->query($sql);
 
 // Array per memorizzare gli ID delle sbobine
