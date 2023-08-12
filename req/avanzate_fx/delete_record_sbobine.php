@@ -12,19 +12,19 @@ $conn->begin_transaction();
 
 try {
     // Query per eliminare tutti i record dalla tabella partecipazione_sbobine
-    $sql1 = "DELETE FROM partecipazione_sbobine";
+    $sql1 = "DELETE FROM sx_partecipazione_sbobine";
     $conn->query($sql1);
 
     // Query per eliminare tutti i record dalla tabella revisori_sbobine
-    $sql2 = "DELETE FROM revisori_sbobine";
+    $sql2 = "DELETE FROM sx_revisori_sbobine";
     $conn->query($sql2);
 
     // Query per eliminare tutti i record dalla tabella sbobinatori_sbobine
-    $sql3 = "DELETE FROM sbobinatori_sbobine";
+    $sql3 = "DELETE FROM sx_sbobinatori_sbobine";
     $conn->query($sql3);
 
     // Query per eliminare tutti i record dalla tabella sbobine_calendarizzate
-    $sql4 = "DELETE FROM sbobine_calendarizzate";
+    $sql4 = "DELETE FROM sx_sbobine_calendarizzate";
     $conn->query($sql4);
 
     // Conferma la transazione

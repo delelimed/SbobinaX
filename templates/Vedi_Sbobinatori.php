@@ -464,7 +464,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         </div>
                                         <!-- /.card-header -->
                                         <?php
-                                        $query = "SELECT * FROM `users`";
+                                        $query = "SELECT * FROM `sx_users`";
                                         $result = $conn->query($query);
                                         $risultati = $result->fetch_all(MYSQLI_ASSOC);
 
@@ -485,7 +485,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                 <tbody>
                                                 <?php
                                                 // Query per ottenere tutti gli insegnamenti dalla tabella "insegnamenti"
-                                                $query_insegnamenti_tutti = "SELECT * FROM `insegnamenti`";
+                                                $query_insegnamenti_tutti = "SELECT * FROM `sx_insegnamenti`";
                                                 $result_insegnamenti_tutti = $conn->query($query_insegnamenti_tutti);
                                                 $insegnamenti_tutti = $result_insegnamenti_tutti->fetch_all(MYSQLI_ASSOC);
                                                 ?>
@@ -493,8 +493,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                     <?php
                                                     // Ottieni gli insegnamenti associati all'utente corrente ($row['id'])
                                                     $id_utente_corrente = $row['id'];
-                                                    $query_insegnamenti_utente = "SELECT i.materia, i.id FROM insegnamenti i
-                                  INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+                                                    $query_insegnamenti_utente = "SELECT i.materia, i.id FROM sx_insegnamenti i
+                                  INNER JOIN sx_partecipazione_sbobine p ON i.id = p.id_insegnamento
                                   WHERE p.id_user = $id_utente_corrente";
 
                                                     $result_insegnamenti_utente = $conn->query($query_insegnamenti_utente);
@@ -511,8 +511,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                             <?php
                                                             // Query per recuperare gli insegnamenti associati all'utente corrente ($row['id'])
                                                             $id_utente_corrente = $row['id'];
-                                                            $query_insegnamenti = "SELECT i.materia FROM insegnamenti i
-                                              INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+                                                            $query_insegnamenti = "SELECT i.materia FROM sx_insegnamenti i
+                                              INNER JOIN sx_partecipazione_sbobine p ON i.id = p.id_insegnamento
                                               WHERE p.id_user = $id_utente_corrente";
 
                                                             $result_insegnamenti = $conn->query($query_insegnamenti);
@@ -566,7 +566,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                             </div>
                                                                             <?php
                                                                             // Query per recuperare il valore del malus dal database
-                                                                            $sql = "SELECT malus FROM users WHERE id = ?"; // Supponendo che ci sia una colonna "id" nella tabella "users"
+                                                                            $sql = "SELECT malus FROM sx_users WHERE id = ?"; // Supponendo che ci sia una colonna "id" nella tabella "users"
                                                                             $stmt = $conn->prepare($sql);
                                                                             $stmt->bind_param("i", $id); // Assumendo che $id contenga l'ID dell'utente di cui vuoi recuperare il malus
                                                                             $stmt->execute();
@@ -712,8 +712,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <?php
         // Query per recuperare gli insegnamenti associati all'utente corrente ($row['id'])
         $id_utente_corrente = $row['id'];
-        $query_insegnamenti = "SELECT i.materia FROM insegnamenti i
-                          INNER JOIN partecipazione_sbobine p ON i.id = p.id_insegnamento
+        $query_insegnamenti = "SELECT i.materia FROM sx_insegnamenti i
+                          INNER JOIN sx_partecipazione_sbobine p ON i.id = p.id_insegnamento
                           WHERE p.id_user = $id_utente_corrente";
 
         $result_insegnamenti = $conn->query($query_insegnamenti);

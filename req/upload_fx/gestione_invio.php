@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $dataOggi = $oggi->format('Y-m-d');
 
     // Fetch "progressivo_insegnamento" from the database
-    $query = "SELECT progressivo_insegnamento, caricata FROM sbobine_calendarizzate WHERE id = '$idSbobina'";
+    $query = "SELECT progressivo_insegnamento, caricata FROM sx_sbobine_calendarizzate WHERE id = '$idSbobina'";
     $result = $conn->query($query);
 
     if ($result && $result->num_rows > 0) {
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
             $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
 
-            $query = "UPDATE sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1', argomento = '$argomento' WHERE id = '$idSbobina'";
+            $query = "UPDATE sx_sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1', argomento = '$argomento' WHERE id = '$idSbobina'";
             $result = $conn->query($query);
 
             if ($result) {

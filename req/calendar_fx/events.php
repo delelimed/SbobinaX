@@ -8,10 +8,10 @@ if ($conn->connect_error) {
 }
 
 // Query per selezionare gli eventi dalla tabella, includendo il nome della materia, l'argomento, 'caricata' e 'revisionata'
-$sql = "SELECT sbobine_calendarizzate.id AS id_sbobina, sbobine_calendarizzate.data_lezione, insegnamenti.materia, sbobine_calendarizzate.argomento, 
-        sbobine_calendarizzate.caricata, sbobine_calendarizzate.revisione
-        FROM sbobine_calendarizzate
-        JOIN insegnamenti ON sbobine_calendarizzate.insegnamento = insegnamenti.id";
+$sql = "SELECT sx_sbobine_calendarizzate.id AS id_sbobina, sx_sbobine_calendarizzate.data_lezione, sx_insegnamenti.materia, sx_sbobine_calendarizzate.argomento, 
+        sx_sbobine_calendarizzate.caricata, sx_sbobine_calendarizzate.revisione
+        FROM sx_sbobine_calendarizzate
+        JOIN sx_insegnamenti ON sx_sbobine_calendarizzate.insegnamento = sx_insegnamenti.id";
 
 
 
@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
         $id_sbobina = $row["id_sbobina"];
 
         // Query per ottenere gli ID degli sbobinatori corrispondenti all'id_sbobina dalla tabella "sbobinatori_sbobine"
-        $sql_sbobinatori = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = '$id_sbobina'";
+        $sql_sbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = '$id_sbobina'";
         $result_sbobinatori = $conn->query($sql_sbobinatori);
 
         $id_sbobinatori = array();
@@ -33,7 +33,7 @@ if ($result->num_rows > 0) {
                 $id_sbobinatore = $row_sbobinatori["id_sbobinatore"];
 
                 // Query per ottenere il nome e il cognome dell'utente corrispondente all'id_sbobinatore dalla tabella "users"
-                $sql_sbobinatore_info = "SELECT nome, cognome FROM users WHERE id = '$id_sbobinatore'";
+                $sql_sbobinatore_info = "SELECT nome, cognome FROM sx_users WHERE id = '$id_sbobinatore'";
                 $result_sbobinatore_info = $conn->query($sql_sbobinatore_info);
 
                 if ($result_sbobinatore_info->num_rows > 0) {
@@ -51,7 +51,7 @@ if ($result->num_rows > 0) {
         }
 
         // Query per ottenere gli ID dei revisori corrispondenti all'id_sbobina dalla tabella "revisori_sbobine"
-        $sql_revisori = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = '$id_sbobina'";
+        $sql_revisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = '$id_sbobina'";
         $result_revisori = $conn->query($sql_revisori);
 
         $id_revisori = array();
@@ -60,7 +60,7 @@ if ($result->num_rows > 0) {
                 $id_revisore = $row_revisori["id_revisore"];
 
                 // Query per ottenere il nome e il cognome dell'utente corrispondente all'id_revisore dalla tabella "users"
-                $sql_revisore_info = "SELECT nome, cognome FROM users WHERE id = '$id_revisore'";
+                $sql_revisore_info = "SELECT nome, cognome FROM sx_users WHERE id = '$id_revisore'";
                 $result_revisore_info = $conn->query($sql_revisore_info);
 
                 if ($result_revisore_info->num_rows > 0) {

@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 }
 
 // Query per eliminare gli inserimenti con admin = 0
-$sql = "DELETE FROM users WHERE admin = 0";
+$sql = "DELETE FROM sx_users WHERE admin = 0";
 if ($conn->query($sql) === TRUE) {
     echo "Tutti gli inserimenti con admin = 0 sono stati cancellati correttamente.";
 } else {

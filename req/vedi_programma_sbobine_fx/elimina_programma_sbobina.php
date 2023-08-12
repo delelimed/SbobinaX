@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idSbobina = $_POST['idSbobina'];
 
     // Esegui la query per eliminare la sbobina dal database
-    $query = "DELETE FROM sbobine_calendarizzate WHERE id = ?";
+    $query = "DELETE FROM sx_sbobine_calendarizzate WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $idSbobina);
 

@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     $userId = $_GET['id'];
 
     // Query per ottenere i dati dell'utente dal database
-    $query = "SELECT * FROM users WHERE id = $userId";
+    $query = "SELECT * FROM sx_users WHERE id = $userId";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {

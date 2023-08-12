@@ -12,9 +12,9 @@ if (isset($_GET['sbobina_id'])) {
     $sbobina_id = $_GET['sbobina_id'];
 
     // Query per recuperare i nomi dei revisori associati all'ID della sbobina
-    $query = "SELECT nome, cognome FROM users
-              INNER JOIN revisori_sbobine ON users.id = revisori_sbobine.id_revisore
-              WHERE revisori_sbobine.id_sbobina = $sbobina_id";
+    $query = "SELECT nome, cognome FROM sx_users
+              INNER JOIN sx_revisori_sbobine ON sx_users.id = sx_revisori_sbobine.id_revisore
+              WHERE sx_revisori_sbobine.id_sbobina = $sbobina_id";
     $result = $conn->query($query);
 
     $revisori_names = array();

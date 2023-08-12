@@ -433,7 +433,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     </div>
                                     <!-- /.card-header -->
                                     <?php
-                                    $query = "SELECT * FROM `insegnamenti`";
+                                    $query = "SELECT * FROM `sx_insegnamenti`";
                                     $result = $conn->query($query);
                                     $risultati = $result->fetch_all(MYSQLI_ASSOC);
                                     $conn->close();

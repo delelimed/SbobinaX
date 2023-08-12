@@ -455,7 +455,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                             $nuovoValore = $_POST["Limite"];
 
                             // Query per aggiornare il valore delle ammonizioni
-                            $queryUpdate = "UPDATE settings SET attuale = '$nuovoValore' WHERE nome_impostazione = 'ammonizioni'";
+                            $queryUpdate = "UPDATE sx_settings SET attuale = '$nuovoValore' WHERE nome_impostazione = 'ammonizioni'";
 
                             if ($conn->query($queryUpdate) === TRUE) {
                                 echo "Valore delle ammonizioni aggiornato con successo!";
@@ -465,7 +465,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         }
 
                         // Query per ottenere il valore delle ammonizioni
-                        $query = "SELECT attuale FROM settings WHERE nome_impostazione = 'ammonizioni'";
+                        $query = "SELECT attuale FROM sx_settings WHERE nome_impostazione = 'ammonizioni'";
                         $result = $conn->query($query);
 
                         if ($result->num_rows > 0) {

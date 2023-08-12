@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idRiga = $_POST['id'];
 
     // Ottieni i dati dell'utente
-    $queryGetUtente = "SELECT * FROM users WHERE id = ?";
+    $queryGetUtente = "SELECT * FROM sx_users WHERE id = ?";
     $stmtGetUtente = $conn->prepare($queryGetUtente);
     $stmtGetUtente->bind_param('i', $idRiga);
     $stmtGetUtente->execute();
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmtGetUtente->close();
 
     // Ottieni gli insegnamenti associati all'utente
-    $queryGetInsegnamentiUtente = "SELECT id_insegnamento FROM partecipazione_sbobine WHERE id_user = ?";
+    $queryGetInsegnamentiUtente = "SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = ?";
     $stmtGetInsegnamentiUtente = $conn->prepare($queryGetInsegnamentiUtente);
     $stmtGetInsegnamentiUtente->bind_param('i', $idRiga);
     $stmtGetInsegnamentiUtente->execute();

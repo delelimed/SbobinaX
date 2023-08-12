@@ -7,13 +7,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 
         <?php
         $user_id = $_SESSION['id'];
-        $query = "SELECT id FROM users WHERE id = ?";
+        $query = "SELECT id FROM sx_users WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $query_nome_cognome = "SELECT matricola, nome, cognome, password, malus, email FROM users WHERE id = ?";
+        $query_nome_cognome = "SELECT matricola, nome, cognome, password, malus, email FROM sx_users WHERE id = ?";
         $stmt_nome_cognome = $conn->prepare($query_nome_cognome);
         $stmt_nome_cognome->bind_param('i', $user_id);
         $stmt_nome_cognome->execute();
@@ -508,7 +508,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                     <?php
                                     include '../db_connector.php';
 
-                                    $query = "SELECT id, materia FROM insegnamenti"; // Query per ottenere gli insegnamenti dal database
+                                    $query = "SELECT id, materia FROM sx_insegnamenti"; // Query per ottenere gli insegnamenti dal database
                                     $result = $conn->query($query);
 
                                     // Controlla se ci sono risultati e assegna i risultati alla variabile $risultati
@@ -523,7 +523,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                         $risultati = array(); // Inizializza l'array vuoto se non ci sono risultati
                                     }
 
-                                    $queryGetSbobinePartecipanti = "SELECT id_insegnamento FROM partecipazione_sbobine WHERE id_user = ?";
+                                    $queryGetSbobinePartecipanti = "SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = ?";
                                     $stmtGetSbobinePartecipanti = $conn->prepare($queryGetSbobinePartecipanti);
                                     $stmtGetSbobinePartecipanti->bind_param('i', $user_id);
                                     $stmtGetSbobinePartecipanti->execute();

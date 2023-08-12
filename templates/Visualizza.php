@@ -421,8 +421,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                         <?php
                         // Ottieni gli insegnamenti a cui l'utente è autorizzato
                         $idUser = $_SESSION['id'];
-                        $query = "SELECT i.id, i.materia FROM insegnamenti AS i
-                  INNER JOIN partecipazione_sbobine AS p ON i.id = p.id_insegnamento
+                        $query = "SELECT i.id, i.materia FROM sx_insegnamenti AS i
+                  INNER JOIN sx_partecipazione_sbobine AS p ON i.id = p.id_insegnamento
                   WHERE p.id_user = $idUser";
                         $result = $conn->query($query);
 
@@ -475,11 +475,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                     $query = "SELECT sc.id AS id_lezione, sc.insegnamento, sc.argomento, sc.data_lezione, sc.posizione_server,
             GROUP_CONCAT(DISTINCT CONCAT(rv.nome, ' ', rv.cognome)) AS revisori,
             GROUP_CONCAT(DISTINCT CONCAT(sb.nome, ' ', sb.cognome)) AS sbobinatori
-            FROM sbobine_calendarizzate AS sc
-            LEFT JOIN revisori_sbobine AS rs ON sc.id = rs.id_sbobina
-            LEFT JOIN users AS rv ON rs.id_revisore = rv.id
-            LEFT JOIN sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
-            LEFT JOIN users AS sb ON ss.id_sbobinatore = sb.id
+            FROM sx_sbobine_calendarizzate AS sc
+            LEFT JOIN sx_revisori_sbobine AS rs ON sc.id = rs.id_sbobina
+            LEFT JOIN sx_users AS rv ON rs.id_revisore = rv.id
+            LEFT JOIN sx_sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
+            LEFT JOIN sx_users AS sb ON ss.id_sbobinatore = sb.id
             WHERE sc.revisione = 1 AND sc.caricata = 1
             GROUP BY sc.id";
 
@@ -496,7 +496,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                         $posizioneServer = $row['posizione_server']; // Percorso del file sul server
 
                                         // Recupera il nome dell'insegnamento dalla tabella insegnamenti utilizzando l'id insegnamento
-                                        $queryInsegnamento = "SELECT materia FROM insegnamenti WHERE id = $insegnamentoId";
+                                        $queryInsegnamento = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamentoId";
                                         $resultInsegnamento = $conn->query($queryInsegnamento);
                                         if ($resultInsegnamento->num_rows > 0) {
                                             $rowInsegnamento = $resultInsegnamento->fetch_assoc();
@@ -511,7 +511,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 
                                         // Verifica se l'utente loggato è associato all'insegnamento per cui è stata fatta la sbobina
                                         $currentUserId = $_SESSION['id'];
-                                        $queryPartecipazione = "SELECT * FROM partecipazione_sbobine 
+                                        $queryPartecipazione = "SELECT * FROM sx_partecipazione_sbobine 
                     WHERE id_user = $currentUserId AND id_insegnamento = $insegnamentoId";
                                         $resultPartecipazione = $conn->query($queryPartecipazione);
                                         $canDownload = $resultPartecipazione->num_rows > 0;
@@ -634,7 +634,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         });
 
     });
-    });
+    })
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

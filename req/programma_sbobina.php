@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepara e esegui la query per inserire i dati nella tabella sbobine_calendarizzate
-    $query = "INSERT INTO sbobine_calendarizzate (insegnamento, data_lezione, progressivo_insegnamento, revisione) VALUES (?, ?, ?, ?)";
+    $query = "INSERT INTO sx_sbobine_calendarizzate (insegnamento, data_lezione, progressivo_insegnamento, revisione) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('sssi', $idInsegnamento, $dataLezioneFormatted, $progressivoSbobina, $revisionata);
 
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sbobinatoriAssociati = $_POST['sbobinatori'];
 
             foreach ($sbobinatoriAssociati as $sbobinatoreId) {
-                $query = "INSERT INTO sbobinatori_sbobine (id_sbobinatore, id_sbobina) VALUES (?, ?)";
+                $query = "INSERT INTO sx_sbobinatori_sbobine (id_sbobinatore, id_sbobina) VALUES (?, ?)";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param('ii', $sbobinatoreId, $sbobinaId);
                 $stmt->execute();
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $revisoriAssociati = $_POST['revisori'];
 
             foreach ($revisoriAssociati as $revisoreId) {
-                $query = "INSERT INTO revisori_sbobine (id_revisore, id_sbobina) VALUES (?, ?)";
+                $query = "INSERT INTO sx_revisori_sbobine (id_revisore, id_sbobina) VALUES (?, ?)";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param('ii', $revisoreId, $sbobinaId);
                 $stmt->execute();

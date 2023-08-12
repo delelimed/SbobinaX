@@ -481,7 +481,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                     <option value="">Seleziona l'insegnamento</option>
                                     <?php
                                     // Esegui la query per ottenere gli insegnamenti dal database
-                                    $query = "SELECT id, materia FROM insegnamenti";
+                                    $query = "SELECT id, materia FROM sx_insegnamenti";
                                     $result = $conn->query($query);
 
                                     // Popola la select con i risultati della query
@@ -513,7 +513,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli sbobinatori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori" id="sbobinatori">
                                     <?php
                                     // Query per ottenere tutti gli utenti dal database
-                                    $query = "SELECT id, nome FROM users";
+                                    $query = "SELECT id, nome FROM sx_users";
                                     $result = mysqli_query($conn, $query);
 
                                     // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
@@ -529,7 +529,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <select class="select2 select2-hidden-accessible" multiple data-placeholder="Seleziona i revisori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori" id="revisori">
                                     <?php
                                     // Query per ottenere tutti gli utenti dal database
-                                    $query = "SELECT id, nome FROM users";
+                                    $query = "SELECT id, nome FROM sx_users";
                                     $result = mysqli_query($conn, $query);
 
                                    //  Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa

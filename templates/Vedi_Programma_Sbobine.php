@@ -455,7 +455,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 </div>
                                 <!-- /.card-header -->
                                 <?php
-                                $query = "SELECT * FROM `sbobine_calendarizzate`";
+                                $query = "SELECT * FROM `sx_sbobine_calendarizzate`";
                                 $result = $conn->query($query);
                                 $risultati = $result->fetch_all(MYSQLI_ASSOC);
                                 // $conn->close();
@@ -479,7 +479,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                         function getMateriaFromId($idInsegnamento) {
                                             include '../db_connector.php';
                                             // Esegui la query per ottenere il nome della materia
-                                            $query = "SELECT materia FROM insegnamenti WHERE id = ?";
+                                            $query = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
                                             $stmt = $conn->prepare($query);
                                             $stmt->bind_param('i', $idInsegnamento);
                                             $stmt->execute();
@@ -499,7 +499,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             $sbobinatori_data = array();
 
                                             // Esegui la query per ottenere gli ID degli sbobinatori associati alla sbobina
-                                            $query = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
+                                            $query = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
                                             $result = $conn->query($query);
 
                                             // Popola l'array con gli ID degli sbobinatori
@@ -510,7 +510,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             // Ottieni i nomi e i cognomi degli sbobinatori associati agli ID
                                             if (!empty($sbobinatori_ids)) {
                                                 $sbobinatori_ids_str = implode(',', $sbobinatori_ids);
-                                                $query_users = "SELECT nome, cognome FROM users WHERE id IN ($sbobinatori_ids_str)";
+                                                $query_users = "SELECT nome, cognome FROM sx_users WHERE id IN ($sbobinatori_ids_str)";
                                                 $result_users = $conn->query($query_users);
 
                                                 // Popola l'array con i nomi completi degli sbobinatori
@@ -528,7 +528,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             $revisori_data = array();
 
                                             // Esegui la query per ottenere gli ID degli revisori associati alla sbobina
-                                            $query = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobina_id";
+                                            $query = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id";
                                             $result = $conn->query($query);
 
                                             // Popola l'array con gli ID degli sbobinatori
@@ -539,7 +539,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             // Ottieni i nomi e i cognomi dei revisori associati agli ID
                                             if (!empty($revisori_ids)) {
                                                 $revisori_ids_str = implode(',', $revisori_ids);
-                                                $query_users = "SELECT nome, cognome FROM users WHERE id IN ($revisori_ids_str)";
+                                                $query_users = "SELECT nome, cognome FROM sx_users WHERE id IN ($revisori_ids_str)";
                                                 $result_users = $conn->query($query_users);
 
                                                 // Popola l'array con i nomi completi dei revisori
@@ -606,7 +606,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                         <option value="">Seleziona l'insegnamento</option>
                                                                         <?php
                                                                         // Esegui la query per ottenere gli insegnamenti dal database
-                                                                        $query = "SELECT id, materia FROM insegnamenti";
+                                                                        $query = "SELECT id, materia FROM sx_insegnamenti";
                                                                         $result = $conn->query($query);
 
                                                                         // Popola la select con i risultati della query
@@ -624,7 +624,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                 </div>
                                                                 <?php
                                                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                                                $query = "SELECT id, nome FROM users";
+                                                                $query = "SELECT id, nome FROM sx_users";
                                                                 $result = $conn->query($query);
 
                                                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
@@ -649,7 +649,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                 <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                                                 <?php
                                                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                                                $query = "SELECT id, nome FROM users";
+                                                                $query = "SELECT id, nome FROM sx_users";
                                                                 $result = $conn->query($query);
 
                                                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati

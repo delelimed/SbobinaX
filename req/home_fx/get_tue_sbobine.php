@@ -6,7 +6,7 @@ session_start();
 // Funzione per ottenere gli ID dei sbobinatori dati l'ID della sbobina
 function get_sbobinatore_ids($sbobina_id, $conn) {
     // Query per recuperare gli ID dei sbobinatori associati alla sbobina
-    $query = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
+    $query = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
     $result = $conn->query($query);
 
     $sbobinatori_ids = array();
@@ -29,11 +29,11 @@ if ($conn->connect_error) {
 $user_id = $_SESSION['id']; // Sostituisci con l'ID utente corrente
 
 // Query per recuperare le righe in base all'utente corrente ($user_id)
-$sql = "SELECT sbobine_calendarizzate.id, sbobine_calendarizzate.insegnamento, sbobine_calendarizzate.data_lezione, sbobine_calendarizzate.caricata, sbobine_calendarizzate.revisione
-        FROM sbobine_calendarizzate
-        LEFT JOIN revisori_sbobine ON sbobine_calendarizzate.id = revisori_sbobine.id_sbobina
-        LEFT JOIN sbobinatori_sbobine ON sbobine_calendarizzate.id = sbobinatori_sbobine.id_sbobina
-        WHERE revisori_sbobine.id_revisore = $user_id OR sbobinatori_sbobine.id_sbobinatore = $user_id";
+$sql = "SELECT sx_sbobine_calendarizzate.id, sx_sbobine_calendarizzate.insegnamento, sx_sbobine_calendarizzate.data_lezione, sx_sbobine_calendarizzate.caricata, sx_sbobine_calendarizzate.revisione
+        FROM sx_sbobine_calendarizzate
+        LEFT JOIN sx_revisori_sbobine ON sx_sbobine_calendarizzate.id = sx_revisori_sbobine.id_sbobina
+        LEFT JOIN sx_sbobinatori_sbobine ON sx_sbobine_calendarizzate.id = sx_sbobinatori_sbobine.id_sbobina
+        WHERE sx_revisori_sbobine.id_revisore = $user_id OR sx_sbobinatori_sbobine.id_sbobinatore = $user_id";
 
 $result = $conn->query($sql);
 

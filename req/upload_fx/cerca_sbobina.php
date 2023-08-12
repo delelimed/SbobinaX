@@ -8,7 +8,7 @@ if (isset($_POST['sbobinaId'])) {
         die('Connessione al database fallita: ' . $conn->connect_error);
     }
 
-    $query = "SELECT insegnamento, data_lezione FROM sbobine_calendarizzate WHERE id = $sbobinaId";
+    $query = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = $sbobinaId";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
@@ -18,7 +18,7 @@ if (isset($_POST['sbobinaId'])) {
         $dataLezione = $row['data_lezione'];
 
         // Esegui la query per ottenere gli sbobinatori associati all'ID sbobina
-        $querySbobinatori = "SELECT id_sbobinatore FROM sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
+        $querySbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
         $resultSbobinatori = $conn->query($querySbobinatori);
         $sbobinatori = array();
 
@@ -30,7 +30,7 @@ if (isset($_POST['sbobinaId'])) {
         }
 
         // Esegui la query per ottenere i revisori associati all'ID sbobina
-        $queryRevisori = "SELECT id_revisore FROM revisori_sbobine WHERE id_sbobina = $sbobinaId";
+        $queryRevisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobinaId";
         $resultRevisori = $conn->query($queryRevisori);
         $revisori = array();
 
@@ -42,7 +42,7 @@ if (isset($_POST['sbobinaId'])) {
         }
 
         // Esegui la query per ottenere tutti gli inserimenti dalla tabella "users"
-        $queryUsers = "SELECT id, nome, cognome FROM users";
+        $queryUsers = "SELECT id, nome, cognome FROM sx_users";
         $resultUsers = $conn->query($queryUsers);
         $allUsers = array();
 

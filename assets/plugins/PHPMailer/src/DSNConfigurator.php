@@ -21,6 +21,9 @@
 
 namespace PHPMailer\PHPMailer;
 
+use function array_keys;
+use const PHP_VERSION_ID;
+
 /**
  * Configure PHPMailer with DSN string.
  *
@@ -184,7 +187,7 @@ class DSNConfigurator
         unset($allowedOptions['Port']);
         unset($allowedOptions['ErrorInfo']);
 
-        $allowedOptions = \array_keys($allowedOptions);
+        $allowedOptions = array_keys($allowedOptions);
 
         foreach ($options as $key => $value) {
             if (!in_array($key, $allowedOptions)) {
@@ -229,7 +232,7 @@ class DSNConfigurator
      */
     protected function parseUrl($url)
     {
-        if (\PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
+        if (PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
             return parse_url($url);
         }
 
