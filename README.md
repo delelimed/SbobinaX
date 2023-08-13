@@ -66,7 +66,7 @@ corrisponde alla matricola. Fai particolare attenzione alla mail, in quanto, all
 
 
 ## Utilizzo
-Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`.
+Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`. Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli) , una serie di video che ne dimostrano il funzionamento.
 
 ## Suggerimenti
 Per ogni suggerimento, segnalazione bug o richiesta di aiuto, è possibile riempire l'apposito form presente
