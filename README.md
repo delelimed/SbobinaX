@@ -66,7 +66,7 @@ corrisponde alla matricola. Fai particolare attenzione alla mail, in quanto, all
 
 
 ## Utilizzo
-Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`.
+Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`. Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli) , una serie di video che ne dimostrano il funzionamento.
 
 ## Suggerimenti
 Per ogni suggerimento, segnalazione bug o richiesta di aiuto, è possibile riempire l'apposito form presente
@@ -79,12 +79,12 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 ## Changelog
 
-- 1.1.0 (12/08/2023)
+- PR 1.1.0 (12/08/2023)
   - Sistemata denominazione tabelle database
   - Aggiunta possibilità di definire numero dei malus
   - Aggiunto blocco automatico ed IRREVOCABILE dell'account al raggiungimento del numero di malus
 
-- 1.0.0 (24/07/2023)
+- PR 1.0.0 (24/07/2023)
   - Prima versione stabile
 
 
