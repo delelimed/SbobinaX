@@ -411,7 +411,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                     </div><!-- /.col -->
                 </div><!-- /.row -->
                 <div>
-                Il presente applicativo è stato programmato da <a href="https://github.com/devdeleli" <strong>Elia del Rosso</strong></a>.
+                Il presente applicativo è stato programmato da <a href="https://github.com/devdeleli" target="_blank" rel="noopener noreferrer" <strong>DEVDELELI</strong></a>.
                 </div>
         <div> Tutti i diritti sono riservati.</div>
         <div> Di seguito l'elenco dei framework e di tutti i componenti utilizzati: <br>
@@ -447,7 +447,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
             Sistema SbobinaX
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/">DEVDELELI</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/" target="_blank" rel="noopener noreferrer">DEVDELELI</a>.</strong> All rights reserved.
     </footer>
 </div>
 <!-- ./wrapper -->
