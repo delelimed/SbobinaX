@@ -447,7 +447,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             Sistema SbobinaX
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2023 <a href="https://github.com/devdeleli">DEVDELELI</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/" target="_blank" rel="noopener noreferrer">DEVDELELI</a>.</strong> All rights reserved.
     </footer>
 </div>
 <!-- ./wrapper -->

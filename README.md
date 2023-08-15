@@ -6,6 +6,10 @@
 ![mysql](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 ![PHPSTORM](https://img.shields.io/badge/PhpStorm-000000.svg?style=for-the-badge&logo=PhpStorm&logoColor=white)
 
+
+![Animation](Docs/IMG/animation.gif)
+
+
 ## Indice
 - [Introduzione](##Introduzione)
 - [Installazione](#installazione)
