@@ -17,7 +17,7 @@
 - [Utilizzo](#utilizzo)
 - [Suggerimenti](#suggerimenti)
 - [Licenza](#licenza)
-- [Future Implementazioni](#FutureImplementazioni)
+- [Future Implementazioni](#future-implementazioni)
 - [Changelog](#changelog)
 
 ## Introduzione
