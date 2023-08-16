@@ -17,6 +17,7 @@
 - [Utilizzo](#utilizzo)
 - [Suggerimenti](#suggerimenti)
 - [Licenza](#licenza)
+- [Future Implementazioni](#Future Implementazioni)
 - [Changelog](#changelog)
 
 ## Introduzione
@@ -79,6 +80,12 @@ su GitHub.
 
 ## Licenza
 Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rimanda alla lettura del file `LICENSE`.
+
+## Future Implementazioni
+- Aggiungere un installer
+- Aggiungere un updater
+- Aggiungere la possibilità di auto prenotare le sbobine e le revisioni
+- Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
 
 
 ## Changelog
