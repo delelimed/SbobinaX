@@ -82,6 +82,9 @@ su GitHub.
 Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rimanda alla lettura del file `LICENSE`.
 
 ## Future Implementazioni
+
+Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.devdeleli.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
+
 - Aggiungere un installer
 - Aggiungere un updater
 - Aggiungere la possibilità di auto prenotare le sbobine e le revisioni
