@@ -93,6 +93,7 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
 - Aggiungere la possibilità di auto prenotare le sbobine e le revisioni
 - Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
 - Aggiungere possibilità di upload diretto su Google Drive o OneDrive 
+- Add PWA
 
 
 ## Changelog
