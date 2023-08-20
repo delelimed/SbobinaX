@@ -9,7 +9,7 @@
 
 ![Animation](Docs/IMG/animation.gif)
 
-ATTENZIONE! APPLICAZIONE NON ANCORA ADATTA AD UN UTILIZZO GENERALIZZATO!
+ATTENZIONE! APPLICAZIONE NON ANCORA ADATTA AD UN UTILIZZO GENERALIZZATO PER MANCANZA DI UN SISTEMA DI SICUREZZA ADEGUATO!
 
 
 ## Indice
@@ -94,6 +94,8 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
 - Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
 - Aggiungere possibilità di upload diretto su Google Drive o OneDrive 
 - Add PWA
+- Aggiungere motivo di rigetto sbobina
+- Aggiungere notifica via web app e pwa
 
 
 ## Changelog
