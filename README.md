@@ -73,7 +73,9 @@ corrisponde alla matricola. Fai particolare attenzione alla mail, in quanto, all
 
 
 ## Utilizzo
-Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`. Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli) , una serie di video che ne dimostrano il funzionamento.
+Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`. 
+Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli) , una serie di video che ne 
+dimostrano il funzionamento.
 
 ## Suggerimenti
 Per ogni suggerimento, segnalazione bug o richiesta di aiuto, è possibile riempire l'apposito form presente
@@ -85,20 +87,21 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 ## Future Implementazioni
 
-Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.devdeleli.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
+Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.delelimed.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
 
 - Implementare una sicurezza maggiore
-- Aggiungere un installer
+- Implementare il REPORT sbobine per segnalare problematiche
 - Aggiungere un updater
-- Aggiungere la possibilità di auto prenotare le sbobine e le revisioni
 - Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
-- Aggiungere possibilità di upload diretto su Google Drive o OneDrive 
-- Add PWA
-- Aggiungere motivo di rigetto sbobina
-- Aggiungere notifica via web app e pwa
 
 
 ## Changelog
+
+- 2.0 (30/09/2023)
+  - Aggiunta una PWA
+  - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
+  - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina
+  - Aggiunto un installer per facilitare la procedura di configurazione del database
 
 - PR 1.1.0 (12/08/2023)
   - Sistemata denominazione tabelle database

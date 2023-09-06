@@ -2,7 +2,7 @@
 session_start();
 if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] == 0){
 
-?>
+    ?>
 
 
 <!DOCTYPE html>
@@ -11,6 +11,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="../manifest.json">
     <title>SbobinaX | Dashboard</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -135,26 +136,85 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                         </a>
                     </li>
 
-                    <?php
-                    $active_menu = 'Calendario';
-                    $page_name = 'Calendario.php';
-                    ?>
+                    <li class="nav-item"> <!-- Calendario -->
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-calendar"></i>
+                            <p>
+                                Calendario
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <?php
+                                $active_menu = 'Calendario';
+                                $page_name = 'Calendario.php';
+                                ?>
+                            <li class="nav-item">
+                                <a href="../templates/Calendario.php" class="nav-link">
+                                    <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Calendario') : ?>
+                                        <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                        <p>
+                                            Visualizza Calendario
+                                        </p>
+                                        <span class="badge bg-success">Active</span>
+                                    <?php else : ?>
+                                        <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                        <p>
+                                            Visualizza Calendario
+                                        </p>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                    </li>
                     <li class="nav-item">
-                        <a href="../templates/Calendario.php" class="nav-link">
-                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Calendario') : ?>
-                                <i class="nav-icon fa fa-calendar" aria-hidden="true"></i>
+                        <?php
+                        $active_menu = 'Prenota_Sbobina';
+                        $page_name = 'Prenota_Sbobina.php';
+                        ?>
+                    <li class="nav-item">
+                        <a href="../templates/Prenota_Sbobina.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Prenota_Sbobina') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Calendario
+                                    Prenota Sbobina
                                 </p>
                                 <span class="badge bg-success">Active</span>
                             <?php else : ?>
-                                <i class="nav-icon fa fa-calendar" aria-hidden="true"></i>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Calendario
+                                    Prenota Sbobina
                                 </p>
                             <?php endif; ?>
                         </a>
                     </li>
+                    <?php
+                    $active_menu = 'Richiedi_Cambio';
+                    $page_name = 'Richiedi_Cambio.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Richiedi_Cambio.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Richiedi_Cambio') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Richiedi Cambio
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Richiedi Cambio
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+
+                    </li>
+
+                </ul>
+                </li> <!-- Calendario -->
+
 
 
                     <?php
@@ -357,6 +417,22 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             <?php endif; ?>
                         </a>
                     </li>
+                <li class="nav-item">
+                    <a href="../templates/Vedi_Rifiuti.php" class="nav-link">
+                        <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                            <p>
+                                Vedi Esiti Rifiuti
+                            </p>
+                            <span class="badge bg-success">Active</span>
+                        <?php else : ?>
+                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                            <p>
+                                Vedi Esiti Rifiuti
+                            </p>
+                        <?php endif; ?>
+                    </a>
+                </li>
                 </ul>
                 </li> <!-- impostazioni -->
 
@@ -400,6 +476,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         </div>
         <!-- /.sidebar -->
     </aside>
+
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -505,7 +582,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 
                                 </tbody>
                             </table>
-                        </div>ar
+                        </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
@@ -542,9 +619,84 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
             Sistema SbobinaX
         </div>
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/" target="_blank" rel="noopener noreferrer">DEVDELELI</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
     </footer>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="sbobinaRifiutataModal" tabindex="-1" aria-labelledby="sbobinaRifiutataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sbobinaRifiutataModalLabel"> <b>Avviso di Sbobina Rifiutata </b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php
+                if (isset($_SESSION['messaggio_sbobina_rifiutata']) && !empty($_SESSION['messaggio_sbobina_rifiutata'])) {
+                    $messaggioSbobinaRifiutata = $_SESSION['messaggio_sbobina_rifiutata'];
+
+                    // Recupera l'ID della sbobina dalla sessione
+                    $idSbobina = $_SESSION['id_sbobina'];
+
+                    // Query per ottenere materia e data della lezione dalla tabella "sx_sbobine_calendarizzate"
+                    include "../db_connector.php";
+                    $queryLezione = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = $idSbobina";
+                    $resultLezione = $conn->query($queryLezione);
+
+                    if ($resultLezione->num_rows === 1) {
+                        $rowLezione = $resultLezione->fetch_assoc();
+                        $insegnamentoLezione = $rowLezione['insegnamento'];
+                        $dataLezione = date('d-m-Y', strtotime($rowLezione['data_lezione'])); // Formatta la data come "DD-MM-YYYY"
+
+                        // Query per ottenere materia dalla tabella "sx_insegnamenti" in base all'ID dell'insegnamento
+                        $queryMateria = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamentoLezione";
+                        $resultMateria = $conn->query($queryMateria);
+
+                        if ($resultMateria->num_rows === 1) {
+                            $rowMateria = $resultMateria->fetch_assoc();
+                            $materiaLezione = $rowMateria['materia'];
+                        }
+
+                        // Recupera altre informazioni necessarie
+                        $nomeUtente = $_SESSION['nome'];
+                        $idRevisore = $_SESSION['id_revisore']; // Recupera l'ID del revisore dalla sessione
+
+                        // Query per ottenere nome e cognome del revisore
+                        $queryRevisore = "SELECT nome, cognome FROM sx_users WHERE id = $idRevisore";
+                        $resultRevisore = $conn->query($queryRevisore);
+
+                        if ($resultRevisore->num_rows === 1) {
+                            $rowRevisore = $resultRevisore->fetch_assoc();
+                            $nomeRevisore = $rowRevisore['nome'];
+                            $cognomeRevisore = $rowRevisore['cognome'];
+
+                            // Messaggio personalizzato
+                            $messaggioPersonalizzato = "Ciao $nomeUtente!,
+            Ti informo che il revisore $nomeRevisore $cognomeRevisore ha rigettato la tua sbobina di $materiaLezione della lezione del $dataLezione con la seguente motivazione:
+
+            $messaggioSbobinaRifiutata.
+
+            Per ulteriori informazioni, puoi contattare direttamente il revisore.
+            Dopo la revisione, ti invito a caricarla nuovamente.
+            Buon Lavoro!";
+
+                            echo '<div class="alert alert-warning">' . nl2br($messaggioPersonalizzato) . '</div>';
+                        }
+                    }
+                }
+                ?>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ./wrapper -->
 <!-- REQUIRED SCRIPTS -->
 
@@ -620,6 +772,18 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         });
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Attiva il popup modale se c'è un messaggio nella sessione
+        <?php
+        if (isset($_SESSION['messaggio_sbobina_rifiutata']) && !empty($_SESSION['messaggio_sbobina_rifiutata'])) {
+            echo '$("#sbobinaRifiutataModal").modal("show");';
+        }
+        ?>
+    });
+</script>
 
 </body>
 </html>
@@ -632,7 +796,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 }
 else
 {
-    echo "Utente NON abilitato. Effettua il login con un accunt abilitato.";
+    header("Location: ../templates/login.php");
     exit();
 }
     ?>

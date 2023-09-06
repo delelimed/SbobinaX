@@ -153,26 +153,84 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                             </a>
                         </li>
 
-                        <?php
-                        $active_menu = 'Calendario';
-                        $page_name = 'Calendario.php';
-                        ?>
+                        <li class="nav-item"> <!-- Calendario -->
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-calendar"></i>
+                                <p>
+                                    Calendario
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <?php
+                                    $active_menu = 'Calendario';
+                                    $page_name = 'Calendario.php';
+                                    ?>
+                                <li class="nav-item">
+                                    <a href="../templates/Calendario.php" class="nav-link">
+                                        <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Calendario') : ?>
+                                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                            <p>
+                                                Visualizza Calendario
+                                            </p>
+                                            <span class="badge bg-success">Active</span>
+                                        <?php else : ?>
+                                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                            <p>
+                                                Visualizza Calendario
+                                            </p>
+                                        <?php endif; ?>
+                                    </a>
+                                </li>
+                        </li>
                         <li class="nav-item">
-                            <a href="../templates/Calendario.php" class="nav-link">
-                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Calendario') : ?>
-                                    <i class="nav-icon fa fa-calendar" aria-hidden="true"></i>
+                            <?php
+                            $active_menu = 'Prenota_Sbobina';
+                            $page_name = 'Prenota_Sbobina.php';
+                            ?>
+                        <li class="nav-item">
+                            <a href="../templates/Prenota_Sbobina.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Prenota_Sbobina') : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                     <p>
-                                        Calendario
+                                        Prenota Sbobina
                                     </p>
                                     <span class="badge bg-success">Active</span>
                                 <?php else : ?>
-                                    <i class="nav-icon fa fa-calendar" aria-hidden="true"></i>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                     <p>
-                                        Calendario
+                                        Prenota Sbobina
                                     </p>
                                 <?php endif; ?>
                             </a>
                         </li>
+                        <?php
+                        $active_menu = 'Richiedi_Cambio';
+                        $page_name = 'Richiedi_Cambio.php';
+                        ?>
+                        <li class="nav-item">
+                            <a href="../templates/Richiedi_Cambio.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Richiedi_Cambio') : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Richiedi Cambio
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Richiedi Cambio
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+
+                        </li>
+
+                    </ul>
+                    </li> <!-- Calendario -->
 
 
                         <?php
@@ -375,6 +433,22 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <?php endif; ?>
                             </a>
                         </li>
+                    <li class="nav-item">
+                        <a href="../templates/Vedi_Rifiuti.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Avanzate') : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Vedi Esiti Rifiuti
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Vedi Esiti Rifiuti
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
                     </ul>
                     </li> <!-- impostazioni -->
 
@@ -471,6 +545,16 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <input type="date" class="form-control" id="data_lezione" name="data_lezione" value="<?php echo date('Y-m-d'); ?>" placeholder="Inserisci la data della lezione">
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="num_sbobinatori">Numero Sbobinatori</label>
+                                    <input type="number" class="form-control" id="num_sbobinatori" name="num_sbobinatori" placeholder="Inserisci il numero di sbobinatori previsto">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="num_revisori">Numero Revisori</label>
+                                    <input type="number" class="form-control" id="num_revisori" name="num_revisori" placeholder="Inserisci il numero di revisori previsto">
+                                </div>
+
 
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
@@ -555,7 +639,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 Sistema SbobinaX
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2023 <a href="https://devdeleli.github.io/" target="_blank" rel="noopener noreferrer">DEVDELELI</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
         </footer>
     </div>
     <!-- ./wrapper -->

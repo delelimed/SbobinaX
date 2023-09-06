@@ -40,30 +40,6 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
                 $_SESSION['admin'] = $row['admin'];
                 $_SESSION['locked'] = $row['locked'];
 
-                if (isset($_SESSION['id'])) {
-                    // Esegui una query per cercare un messaggio non "visto" nella tabella sx_sbobine_rifiutate
-                    $query = "SELECT id, motivo, id_revisore, id_sbobina FROM sx_sbobine_rigettate WHERE id_sbobinatore = " . $_SESSION['id'] . " AND visto = 0";
-                    $result = $conn->query($query);
-
-                    if ($result->num_rows > 0) {
-                        $row = $result->fetch_assoc();
-                        $messaggioId = $row['id'];
-                        $messaggioMotivo = $row['motivo'];
-                        $idRevisore = $row['id_revisore'];
-                        $idSbobina = $row['id_sbobina'];
-
-                        // Mostra il messaggio all'utente
-                        $_SESSION['messaggio_sbobina_rifiutata'] = $messaggioMotivo;
-                        $_SESSION['id_revisore'] = $idRevisore;
-                        $_SESSION['id_sbobina'] = $idSbobina;
-
-
-                        // Aggiorna il campo "visto" nella tabella sx_sbobine_rifiutate
-                        $updateQuery = "UPDATE sx_sbobine_rigettate SET visto = 1 WHERE id = $messaggioId";
-                        $conn->query($updateQuery);
-                    }
-                }
-
                 header("Location: ../../templates/home.php");
                 exit();
             } else {
