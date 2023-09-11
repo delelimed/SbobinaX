@@ -91,6 +91,7 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
 
 - Implementare una sicurezza maggiore
 - Implementare il REPORT sbobine per segnalare problematiche
+- Implementare la possibilità di prenotare esoneri (pubblico)
 - Aggiungere un updater
 - Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
 
