@@ -281,13 +281,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Vedi_Sbobinatori') : ?>
                                         <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                         <p>
-                                            Visualizza Sbobinatori
+                                            Gestisci Sbobinatori
                                         </p>
                                         <span class="badge bg-success">Active</span>
                                     <?php else : ?>
                                         <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                         <p>
-                                            Visualizza Sbobinatori
+                                            Gestisci Sbobinatori
                                         </p>
                                     <?php endif; ?>
                                 </a>
@@ -295,87 +295,27 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                     </li>
                     <li class="nav-item">
                         <?php
-                        $active_menu = 'Inserisci_Sbobinatori';
-                        $page_name = 'Inserisci_Sbobinatori.php';
+                        $active_menu = 'Visualizza_Insegnamenti';
+                        $page_name = 'Visualizza_Insegnamenti.php';
                         ?>
-                    <li class="nav-item">
-                        <a href="../templates/Inserisci_Sbobinatori.php" class="nav-link">
-                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Inserisci_Sbobinatori') : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Inserisci Sbobinatori
-                                </p>
-                                <span class="badge bg-success">Active</span>
-                            <?php else : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Inserisci Sbobinatori
-                                </p>
-                            <?php endif; ?>
-                        </a>
-                    </li>
-                    <?php
-                    $active_menu = 'Inserisci_Insegnamento';
-                    $page_name = 'Inserisci_Insegnamento.php';
-                    ?>
-                    <li class="nav-item">
-                        <a href="../templates/Inserisci_Insegnamento.php" class="nav-link">
-                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Inserisci_Insegnamento') : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Inserisci Insegnamento
-                                </p>
-                                <span class="badge bg-success">Active</span>
-                            <?php else : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Inserisci Insegnamento
-                                </p>
-                            <?php endif; ?>
-                        </a>
-                    </li>
-                    <?php
-                    $active_menu = 'Visualizza_Insegnamenti';
-                    $page_name = 'Visualizza_Insegnamenti.php';
-                    ?>
                     <li class="nav-item">
                         <a href="../templates/Visualizza_Insegnamenti.php" class="nav-link">
                             <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Visualizza_Insegnamenti') : ?>
                                 <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Visualizza Insegnamenti
+                                    Gestisci Insegnamenti
                                 </p>
                                 <span class="badge bg-success">Active</span>
                             <?php else : ?>
                                 <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Visualizza Insegnamenti
+                                    Gestisci Insegnamenti
                                 </p>
                             <?php endif; ?>
                         </a>
                     </li>
                     </li>
                     <li class="nav-item">
-                        <?php
-                        $active_menu = 'Programma_Sbobine';
-                        $page_name = 'Programma_Sbobine.php';
-                        ?>
-                    <li class="nav-item">
-                        <a href="../templates/Programma_Sbobine.php" class="nav-link">
-                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Programma_Sbobine') : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Programma Sbobine
-                                </p>
-                                <span class="badge bg-success">Active</span>
-                            <?php else : ?>
-                                <i class="far fa-circle nav-icon" aria-hidden="true"></i>
-                                <p>
-                                    Programma Sbobine
-                                </p>
-                            <?php endif; ?>
-                        </a>
-                    </li>
 
                     <li class="nav-item">
                         <?php
@@ -387,13 +327,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                             <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Vedi_Programma_Sbobine') : ?>
                                 <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Vedi Programma Sbobine
+                                    Gestisci Sbobine
                                 </p>
                                 <span class="badge bg-success">Active</span>
                             <?php else : ?>
                                 <i class="far fa-circle nav-icon" aria-hidden="true"></i>
                                 <p>
-                                    Vedi Programma Sbobine
+                                    Gestisci Sbobine
                                 </p>
                             <?php endif; ?>
                         </a>

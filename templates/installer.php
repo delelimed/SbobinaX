@@ -136,7 +136,7 @@ include '../db_connector.php';
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="../req/upload_fx/gestione_invio.php" method="post" id="sbobinaForm" enctype="multipart/form-data">
+                        <form action="../req/installer/install_me.php" method="post" id="sbobinaForm" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="indServer">Indirizzo del Server</label>
