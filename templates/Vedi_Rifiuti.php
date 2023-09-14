@@ -1,7 +1,7 @@
 <?php
-session_start();
 include '../db_connector.php';
-if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
+session_start();
+if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1 && $_SESSION['locked'] == 0){
 
     ?>
 
@@ -464,9 +464,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
                                 // Query per recuperare i dati
                                 $sql = "SELECT DISTINCT r.id_sbobina, c.insegnamento, i.materia, DATE_FORMAT(c.data_lezione, '%d-%m-%Y') AS data_lezione_format, r.id_revisore, r.motivo
-        FROM sx_sbobine_rigettate r
-        JOIN sx_sbobine_calendarizzate c ON r.id_sbobina = c.id
-        JOIN sx_insegnamenti i ON c.insegnamento = i.id";
+    FROM sx_sbobine_rigettate r
+    JOIN sx_sbobine_calendarizzate c ON r.id_sbobina = c.id
+    JOIN sx_insegnamenti i ON c.insegnamento = i.id";
 
                                 $result = $conn->query($sql);
 
@@ -477,16 +477,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                         echo "<td>" . $row["id_sbobina"] . "</td>";
                                         echo "<td>" . $row["materia"] . "</td>"; // Materia
                                         echo "<td>" . $row["data_lezione_format"] . "</td>"; // Data Lezione con formato
-                                        // Recupera e mostra i nomi dei sbobinatori
+
                                         // Recupera e mostra i nomi dei sbobinatori
                                         $sbobinatori = [];
-                                        $sbobinatori_sql = "SELECT id_sbobinatore, visto FROM sx_sbobine_rigettate WHERE id_sbobina = " . $row["id_sbobina"];
-                                        $sbobinatori_result = $conn->query($sbobinatori_sql);
+                                        $sbobinatori_sql = "SELECT id_sbobinatore, visto FROM sx_sbobine_rigettate WHERE id_sbobina = ?";
+                                        $sbobinatori_stmt = $conn->prepare($sbobinatori_sql);
+                                        $sbobinatori_stmt->bind_param('i', $row["id_sbobina"]);
+                                        $sbobinatori_stmt->execute();
+                                        $sbobinatori_result = $sbobinatori_stmt->get_result();
+
                                         while ($sbobinatore_row = $sbobinatori_result->fetch_assoc()) {
                                             $sbobinatore_id = $sbobinatore_row["id_sbobinatore"];
-                                            $sbobinatore_query = "SELECT nome, cognome FROM sx_users WHERE id = " . $sbobinatore_id;
-                                            $sbobinatore_result = $conn->query($sbobinatore_query);
-                                            $sbobinatore_data = $sbobinatore_result->fetch_assoc();
+                                            $sbobinatore_query = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                                            $sbobinatore_stmt = $conn->prepare($sbobinatore_query);
+                                            $sbobinatore_stmt->bind_param('i', $sbobinatore_id);
+                                            $sbobinatore_stmt->execute();
+                                            $sbobinatore_data = $sbobinatore_stmt->get_result()->fetch_assoc();
+
                                             if ($sbobinatore_data) {
                                                 $sbobinatore_nome = $sbobinatore_data["nome"] . " " . $sbobinatore_data["cognome"];
                                                 if ($sbobinatore_row["visto"] == 1) {
@@ -496,18 +503,19 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                             }
                                         }
 
-// Mostra i nomi dei sbobinatori come stringa separata da virgola
+                                        // Mostra i nomi dei sbobinatori come stringa separata da virgola
                                         echo "<td>" . implode(", ", $sbobinatori) . "</td>";
-
 
                                         // Recupera e mostra il nome del revisore
                                         $revisore_id = $row["id_revisore"];
-                                        $revisore_query = "SELECT nome, cognome FROM sx_users WHERE id = " . $revisore_id;
-                                        $revisore_result = $conn->query($revisore_query);
-                                        $revisore_data = $revisore_result->fetch_assoc();
+                                        $revisore_query = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                                        $revisore_stmt = $conn->prepare($revisore_query);
+                                        $revisore_stmt->bind_param('i', $revisore_id);
+                                        $revisore_stmt->execute();
+                                        $revisore_data = $revisore_stmt->get_result()->fetch_assoc();
                                         $revisore_nome = ($revisore_data) ? $revisore_data["nome"] . " " . $revisore_data["cognome"] : "";
 
-// Mostra il nome del revisore
+                                        // Mostra il nome del revisore
                                         echo "<td>" . $revisore_nome . "</td>";
 
                                         echo "<td>" . $row["motivo"] . "</td>";
@@ -520,6 +528,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 // Chiudi la connessione al database
                                 $conn->close();
                                 ?>
+
 
 
 

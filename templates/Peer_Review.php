@@ -450,14 +450,30 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 // Recupera l'ID dell'utente dalla sessione (assicurati che l'utente sia loggato)
                                 $userId = $_SESSION['id'];
 
-                                // Query per ottenere le sbobine di cui l'utente è revisore
+                                // Query per ottenere le sbobine di cui l'utente è revisore (utilizzo di prepared statement)
                                 $sql = "SELECT id_sbobina 
-                                FROM sx_revisori_sbobine 
-                                WHERE id_revisore = $userId 
-                                AND id_sbobina IN (SELECT ID FROM sx_sbobine_calendarizzate WHERE caricata = 1)";
-                                $result = $conn->query($sql);
+        FROM sx_revisori_sbobine 
+        WHERE id_revisore = ? 
+        AND id_sbobina IN (SELECT ID FROM sx_sbobine_calendarizzate WHERE caricata = 1)";
 
+                                // Creazione della prepared statement
+                                $stmt = $conn->prepare($sql);
+
+                                if ($stmt) {
+                                    // Associazione del parametro
+                                    $stmt->bind_param('i', $userId);
+
+                                    // Esecuzione della prepared statement
+                                    $stmt->execute();
+
+                                    // Ottieni il risultato della query
+                                    $result = $stmt->get_result();
+
+                                    // Chiudi la prepared statement
+                                    $stmt->close();
+                                }
                                 ?>
+
 
                                 <!-- Tabella HTML -->
                                 <table class="table table-hover text-nowrap">
@@ -474,22 +490,64 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                     </thead>
                                     <tbody>
                                     <?php
+                                    // Esempio di connessione al database
+                                    include "../db_connector.php";
+
+                                    // Verifica la connessione
+                                    if ($conn->connect_error) {
+                                        die("Connessione al database fallita: " . $conn->connect_error);
+                                    }
+
+                                    // Recupera l'ID dell'utente dalla sessione (assicurati che l'utente sia loggato)
+                                    $userId = $_SESSION['id'];
+
+                                    // Query per ottenere le sbobine di cui l'utente è revisore (utilizzo di prepared statement)
+                                    $sql = "SELECT id_sbobina 
+        FROM sx_revisori_sbobine 
+        WHERE id_revisore = ? 
+        AND id_sbobina IN (SELECT ID FROM sx_sbobine_calendarizzate WHERE caricata = 1)";
+
+                                    // Creazione della prepared statement
+                                    $stmt = $conn->prepare($sql);
+
+                                    if ($stmt) {
+                                        // Associazione del parametro
+                                        $stmt->bind_param('i', $userId);
+
+                                        // Esecuzione della prepared statement
+                                        $stmt->execute();
+
+                                        // Ottieni il risultato della query
+                                        $result = $stmt->get_result();
+
+                                        // Chiudi la prepared statement
+                                        $stmt->close();
+                                    }
+
                                     // Mostra le sbobine nella tabella
                                     while ($row = $result->fetch_assoc()) {
                                         $sbobinaId = $row['id_sbobina'];
 
-                                        // Ora puoi eseguire una query per ottenere i dettagli completi della sbobina utilizzando $sbobinaId
-                                        $sbobinaQuery = "SELECT * FROM sx_sbobine_calendarizzate WHERE ID = $sbobinaId";
-                                        $sbobinaResult = $conn->query($sbobinaQuery);
+                                        // Ora puoi eseguire una query per ottenere i dettagli completi della sbobina utilizzando $sbobinaId (utilizzo di prepared statement)
+                                        $sbobinaQuery = "SELECT * FROM sx_sbobine_calendarizzate WHERE ID = ?";
+                                        $stmtSbobina = $conn->prepare($sbobinaQuery);
+                                        $stmtSbobina->bind_param('i', $sbobinaId);
+                                        $stmtSbobina->execute();
+
+                                        $sbobinaResult = $stmtSbobina->get_result();
 
                                         if ($sbobinaResult && $sbobinaResult->num_rows > 0) {
                                             // Stampa i dettagli della sbobina nella riga della tabella
                                             $sbobinaData = $sbobinaResult->fetch_assoc();
 
-                                            // Recupera il nome della materia dalla tabella 'insegnamenti'
+                                            // Recupera il nome della materia dalla tabella 'insegnamenti' (utilizzo di prepared statement)
                                             $insegnamentoId = $sbobinaData['insegnamento'];
-                                            $insegnamentoQuery = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamentoId";
-                                            $insegnamentoResult = $conn->query($insegnamentoQuery);
+                                            $insegnamentoQuery = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
+                                            $stmtInsegnamento = $conn->prepare($insegnamentoQuery);
+                                            $stmtInsegnamento->bind_param('i', $insegnamentoId);
+                                            $stmtInsegnamento->execute();
+
+                                            $insegnamentoResult = $stmtInsegnamento->get_result();
 
                                             $materia = "";
                                             if ($insegnamentoResult && $insegnamentoResult->num_rows > 0) {
@@ -497,9 +555,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                                 $materia = $insegnamentoData['materia'];
                                             }
 
-                                            // Recupera gli ID degli sbobinatori dalla tabella 'sbobinatori_sbobine'
-                                            $sbobinatoriQuery = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
-                                            $sbobinatoriResult = $conn->query($sbobinatoriQuery);
+                                            // Recupera gli ID degli sbobinatori dalla tabella 'sbobinatori_sbobine' (utilizzo di prepared statement)
+                                            $sbobinatoriQuery = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
+                                            $stmtSbobinatori = $conn->prepare($sbobinatoriQuery);
+                                            $stmtSbobinatori->bind_param('i', $sbobinaId);
+                                            $stmtSbobinatori->execute();
+
+                                            $sbobinatoriResult = $stmtSbobinatori->get_result();
                                             $sbobinatori = [];
 
                                             if ($sbobinatoriResult && $sbobinatoriResult->num_rows > 0) {
@@ -508,9 +570,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                                 }
                                             }
 
-                                            // Recupera gli ID dei revisori dalla tabella 'revisori_sbobine'
-                                            $revisoriQuery = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobinaId";
-                                            $revisoriResult = $conn->query($revisoriQuery);
+                                            // Recupera gli ID dei revisori dalla tabella 'revisori_sbobine' (utilizzo di prepared statement)
+                                            $revisoriQuery = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = ?";
+                                            $stmtRevisori = $conn->prepare($revisoriQuery);
+                                            $stmtRevisori->bind_param('i', $sbobinaId);
+                                            $stmtRevisori->execute();
+
+                                            $revisoriResult = $stmtRevisori->get_result();
                                             $revisori = [];
 
                                             if ($revisoriResult && $revisoriResult->num_rows > 0) {
@@ -528,8 +594,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             echo "<td>";
                                             if (!empty($sbobinatori)) {
                                                 foreach ($sbobinatori as $sbobinatoreId) {
-                                                    $sbobinatoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = $sbobinatoreId";
-                                                    $sbobinatoreResult = $conn->query($sbobinatoreQuery);
+                                                    $sbobinatoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                                                    $stmtSbobinatore = $conn->prepare($sbobinatoreQuery);
+                                                    $stmtSbobinatore->bind_param('i', $sbobinatoreId);
+                                                    $stmtSbobinatore->execute();
+
+                                                    $sbobinatoreResult = $stmtSbobinatore->get_result();
+
                                                     if ($sbobinatoreResult && $sbobinatoreResult->num_rows > 0) {
                                                         $sbobinatoreData = $sbobinatoreResult->fetch_assoc();
                                                         echo $sbobinatoreData['nome'] . " " . $sbobinatoreData['cognome'] . "<br>";
@@ -542,8 +613,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             echo "<td>";
                                             if (!empty($revisori)) {
                                                 foreach ($revisori as $revisoreId) {
-                                                    $revisoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = $revisoreId";
-                                                    $revisoreResult = $conn->query($revisoreQuery);
+                                                    $revisoreQuery = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                                                    $stmtRevisore = $conn->prepare($revisoreQuery);
+                                                    $stmtRevisore->bind_param('i', $revisoreId);
+                                                    $stmtRevisore->execute();
+
+                                                    $revisoreResult = $stmtRevisore->get_result();
+
                                                     if ($revisoreResult && $revisoreResult->num_rows > 0) {
                                                         $revisoreData = $revisoreResult->fetch_assoc();
                                                         echo $revisoreData['nome'] . " " . $revisoreData['cognome'] . "<br>";
@@ -558,8 +634,12 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             // Aggiungiamo il link per il download del file
                                             // Effettua il controllo sulla tabella "revisori_sbobine" per vedere se l'utente è autorizzato ad approvare
                                             $currentUserId = $_SESSION['id'];
-                                            $queryEsito = "SELECT esito FROM sx_revisori_sbobine WHERE id_revisore = $currentUserId AND id_sbobina = " . $sbobinaData['id'];
-                                            $resultEsito = $conn->query($queryEsito);
+                                            $queryEsito = "SELECT esito FROM sx_revisori_sbobine WHERE id_revisore = ? AND id_sbobina = ?";
+                                            $stmtEsito = $conn->prepare($queryEsito);
+                                            $stmtEsito->bind_param('ii', $currentUserId, $sbobinaData['id']);
+                                            $stmtEsito->execute();
+
+                                            $resultEsito = $stmtEsito->get_result();
                                             $approvato = false;
 
                                             if ($resultEsito && $resultEsito->num_rows > 0) {
@@ -576,20 +656,21 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             } else {
                                                 echo '<a href="../req/peer_review_fx/gestisci_PR.php?download_sbobina=' . $sbobinaData['id'] . '" class="btn btn-primary">Download</a>';
                                                 echo '<a href="#" class="btn btn-success btn-approva" data-sbobina-id="' . $sbobinaData['id'] . '">Approva</a>';
-                                            }                                          echo '</td>';
-                                            echo '</tr>';
+                                            }
                                             echo '</td>';
-                                            echo "</tr>";
+                                            echo '</tr>';
                                         }
                                     }
+
                                     if ($result->num_rows === 0) {
                                         echo "<tr>";
                                         echo "<td colspan='7'>Non hai sbobine assegnate per la revisione disponibili. <br> 
-                                        Questo può accadere perchè non sei un revisore o perchè la sbobina 
-                                        non è ancora stata caricata.</td>"; // Colspan 7 per occupare tutte le colonne della tabella
+    Questo può accadere perché non sei un revisore o perché la sbobina 
+    non è ancora stata caricata.</td>"; // Colspan 7 per occupare tutte le colonne della tabella
                                         echo "</tr>";
                                     }
                                     ?>
+
                                     </tbody>
 
                                 </table>

@@ -461,9 +461,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <select class="form-control" id="insegnamento" name="insegnamento">
                                         <option value="">Seleziona l'insegnamento</option>
                                         <?php
-                                        // Esegui la query per ottenere gli insegnamenti dal database
+                                        // Esegui la query per ottenere gli insegnamenti dal database utilizzando prepared statement
                                         $query = "SELECT id, materia FROM sx_insegnamenti";
-                                        $result = $conn->query($query);
+                                        $stmt = $conn->prepare($query);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
 
                                         // Popola la select con i risultati della query
                                         while ($row = $result->fetch_assoc()) {
@@ -471,7 +473,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             $nomeInsegnamento = $row['materia'];
                                             echo "<option value=\"$idInsegnamento\">$nomeInsegnamento</option>";
                                         }
+
+                                        // Chiudi il prepared statement
+                                        $stmt->close();
                                         ?>
+
                                     </select>
                                 </div>
 
@@ -497,9 +503,21 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
 
                                 <?php
-                                // Esegui la query per ottenere gli sbobinatori (utenti) dal database
+                                // Esegui la query per ottenere gli sbobinatori (utenti) dal database utilizzando un prepared statement
                                 $query = "SELECT id, nome FROM sx_users";
-                                $result = $conn->query($query);
+                                $stmt = $conn->prepare($query);
+
+                                if ($stmt === false) {
+                                    die("Errore nella preparazione dello statement: " . $conn->error);
+                                }
+
+                                // Esegui lo statement
+                                if ($stmt->execute() === false) {
+                                    die("Errore nell'esecuzione dello statement: " . $stmt->error);
+                                }
+
+                                // Ottieni il risultato
+                                $result = $stmt->get_result();
 
                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
                                 $sbobinatori = array();
@@ -508,7 +526,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 while ($row = $result->fetch_assoc()) {
                                     $sbobinatori[] = $row;
                                 }
+
+                                // Chiudi lo statement
+                                $stmt->close();
                                 ?>
+
 
                                 <!-- Codice HTML/PHP per visualizzare gli sbobinatori nella selezione multipla -->
                                 <div class="form-group" data-select2-id="43">
@@ -522,9 +544,21 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                 <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                 <?php
-                                // Esegui la query per ottenere gli sbobinatori (utenti) dal database
+                                // Esegui la query per ottenere gli sbobinatori (utenti) dal database utilizzando un prepared statement
                                 $query = "SELECT id, nome FROM sx_users";
-                                $result = $conn->query($query);
+                                $stmt = $conn->prepare($query);
+
+                                if ($stmt === false) {
+                                    die("Errore nella preparazione dello statement: " . $conn->error);
+                                }
+
+                                // Esegui lo statement
+                                if ($stmt->execute() === false) {
+                                    die("Errore nell'esecuzione dello statement: " . $stmt->error);
+                                }
+
+                                // Ottieni il risultato
+                                $result = $stmt->get_result();
 
                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
                                 $revisori = array();
@@ -533,7 +567,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 while ($row = $result->fetch_assoc()) {
                                     $revisori[] = $row;
                                 }
+
+                                // Chiudi lo statement
+                                $stmt->close();
                                 ?>
+
                                 <div class="form-group" data-select2-id="44">
                                     <label>Seleziona i Revisori</label>
                                     <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i Revisori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori[]">

@@ -479,19 +479,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         }
 
                         // Query per ottenere il valore delle ammonizioni
-                        $query = "SELECT attuale FROM sx_settings WHERE nome_impostazione = 'ammonizioni'";
-                        $result = $conn->query($query);
+                        $nome_impostazione = 'ammonizioni';
+                        $query = "SELECT attuale FROM sx_settings WHERE nome_impostazione = ?";
+                        $stmt = $conn->prepare($query);
+                        $stmt->bind_param('s', $nome_impostazione);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
                         if ($result->num_rows > 0) {
-                            // Estrai il valore
                             $row = $result->fetch_assoc();
                             $valoreAmmonizioni = $row['attuale'];
                         } else {
                             $valoreAmmonizioni = "Valore non trovato";
                         }
 
-                        // Chiudi la connessione al database
+                        $stmt->close();
                         $conn->close();
+
                         ?>
 
                         <form method="POST">
@@ -740,7 +744,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 // Effettua una richiesta AJAX al tuo script PHP
                 $.ajax({
                     type: "POST",
-                    url: "../req/avanzate_fx/download_zip.php", // Sostituisci con il percorso del tuo script PHP
+                    url: "../req/avanzate_fx/download_zip.php",
                     success: function(data) {
                         // Crea un link temporaneo per scaricare il file ZIP
                         var link = document.createElement("a");

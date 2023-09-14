@@ -581,19 +581,43 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                     // Recupera l'ID della sbobina dalla sessione
                     $idSbobina = $_SESSION['id_sbobina'];
 
-                    // Query per ottenere materia e data della lezione dalla tabella "sx_sbobine_calendarizzate"
+                    // Include il file di connessione al database
                     include "../db_connector.php";
-                    $queryLezione = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = $idSbobina";
-                    $resultLezione = $conn->query($queryLezione);
+
+                    // Query per ottenere materia e data della lezione dalla tabella "sx_sbobine_calendarizzate" (utilizzo di prepared statement)
+                    $queryLezione = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = ?";
+
+                    // Creazione della prepared statement
+                    $stmtLezione = $conn->prepare($queryLezione);
+
+                    // Associazione del parametro
+                    $stmtLezione->bind_param('i', $idSbobina);
+
+                    // Esecuzione della query
+                    $stmtLezione->execute();
+
+                    // Ottieni il risultato
+                    $resultLezione = $stmtLezione->get_result();
 
                     if ($resultLezione->num_rows === 1) {
                         $rowLezione = $resultLezione->fetch_assoc();
                         $insegnamentoLezione = $rowLezione['insegnamento'];
                         $dataLezione = date('d-m-Y', strtotime($rowLezione['data_lezione'])); // Formatta la data come "DD-MM-YYYY"
 
-                        // Query per ottenere materia dalla tabella "sx_insegnamenti" in base all'ID dell'insegnamento
-                        $queryMateria = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamentoLezione";
-                        $resultMateria = $conn->query($queryMateria);
+                        // Query per ottenere materia dalla tabella "sx_insegnamenti" in base all'ID dell'insegnamento (utilizzo di prepared statement)
+                        $queryMateria = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
+
+                        // Creazione della prepared statement
+                        $stmtMateria = $conn->prepare($queryMateria);
+
+                        // Associazione del parametro
+                        $stmtMateria->bind_param('i', $insegnamentoLezione);
+
+                        // Esecuzione della query
+                        $stmtMateria->execute();
+
+                        // Ottieni il risultato
+                        $resultMateria = $stmtMateria->get_result();
 
                         if ($resultMateria->num_rows === 1) {
                             $rowMateria = $resultMateria->fetch_assoc();
@@ -604,9 +628,20 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                         $nomeUtente = $_SESSION['nome'];
                         $idRevisore = $_SESSION['id_revisore']; // Recupera l'ID del revisore dalla sessione
 
-                        // Query per ottenere nome e cognome del revisore
-                        $queryRevisore = "SELECT nome, cognome FROM sx_users WHERE id = $idRevisore";
-                        $resultRevisore = $conn->query($queryRevisore);
+                        // Query per ottenere nome e cognome del revisore (utilizzo di prepared statement)
+                        $queryRevisore = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+
+                        // Creazione della prepared statement
+                        $stmtRevisore = $conn->prepare($queryRevisore);
+
+                        // Associazione del parametro
+                        $stmtRevisore->bind_param('i', $idRevisore);
+
+                        // Esecuzione della query
+                        $stmtRevisore->execute();
+
+                        // Ottieni il risultato
+                        $resultRevisore = $stmtRevisore->get_result();
 
                         if ($resultRevisore->num_rows === 1) {
                             $rowRevisore = $resultRevisore->fetch_assoc();
@@ -614,7 +649,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             $cognomeRevisore = $rowRevisore['cognome'];
 
                             // Messaggio personalizzato
-                            $messaggioPersonalizzato = "Ciao $nomeUtente!,
+                            $messaggioPersonalizzato = "Ciao $nomeUtente!
             Ti informo che il revisore $nomeRevisore $cognomeRevisore ha rigettato la tua sbobina di $materiaLezione della lezione del $dataLezione con la seguente motivazione:
 
             $messaggioSbobinaRifiutata.
@@ -626,8 +661,17 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             echo '<div class="alert alert-warning">' . nl2br($messaggioPersonalizzato) . '</div>';
                         }
                     }
+
+                    // Chiudi le prepared statement
+                    $stmtLezione->close();
+                    $stmtMateria->close();
+                    $stmtRevisore->close();
+
+                    // Chiudi la connessione al database
+                    $conn->close();
                 }
                 ?>
+
 
 
 

@@ -464,44 +464,54 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 // Query per ottenere i dati dalla tabella sx_sbobine_calendarizzate
                                 $sql = "SELECT id, insegnamento, num_sbobinatori, data_lezione, num_revisori 
         FROM sx_sbobine_calendarizzate
-        WHERE insegnamento IN (SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = " . $_SESSION['id'] . ")";
-                                $result = $conn->query($sql);
-
+        WHERE insegnamento IN (SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = ?)";
+                                $stmt = $conn->prepare($sql);
+                                $stmt->bind_param('i', $_SESSION['id']);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
 
                                 if ($result->num_rows > 0) {
                                     // Inizio della tabella HTML
                                     echo '<div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Insegnamento</th>
-                        <th>Data Lezione</th>
-                        <th>Sbobinatori Mancanti</th>
-                        <th>Revisori Mancanti</th>
-                        <th>Prenota come...</th>
-                    </tr>
-                </thead>
-                <tbody>';
+        <table class="table table-hover text-nowrap">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Insegnamento</th>
+                    <th>Data Lezione</th>
+                    <th>Sbobinatori Mancanti</th>
+                    <th>Revisori Mancanti</th>
+                    <th>Prenota come...</th>
+                </tr>
+            </thead>
+            <tbody>';
 
                                     while ($row = $result->fetch_assoc()) {
                                         $sbobinaId = $row['id'];
                                         $revisoreId = $row['id'];
 
                                         $insegnamento = $row['insegnamento'];
-                                        $sql_materia = "SELECT materia FROM sx_insegnamenti WHERE id = '$insegnamento'";
-
-                                        $result_materia = $conn->query($sql_materia);
+                                        $sql_materia = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
+                                        $stmt_materia = $conn->prepare($sql_materia);
+                                        $stmt_materia->bind_param('i', $insegnamento);
+                                        $stmt_materia->execute();
+                                        $result_materia = $stmt_materia->get_result();
                                         $row_materia = $result_materia->fetch_assoc();
-
                                         $materia = $row_materia['materia'];
+
                                         // Query per contare il numero di inserimenti corrispondenti nelle tabelle sx_revisori_sbobine e s_sbobinatori_sbobine
                                         $sbobina_id = $row['id'];
-                                        $sql_revisori = "SELECT COUNT(*) as num_revisori FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id";
-                                        $sql_sbobinatori = "SELECT COUNT(*) as num_sbobinatori FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
+                                        $sql_revisori = "SELECT COUNT(*) as num_revisori FROM sx_revisori_sbobine WHERE id_sbobina = ?";
+                                        $stmt_revisori = $conn->prepare($sql_revisori);
+                                        $stmt_revisori->bind_param('i', $sbobina_id);
+                                        $stmt_revisori->execute();
+                                        $result_revisori = $stmt_revisori->get_result();
 
-                                        $result_revisori = $conn->query($sql_revisori);
-                                        $result_sbobinatori = $conn->query($sql_sbobinatori);
+                                        $sql_sbobinatori = "SELECT COUNT(*) as num_sbobinatori FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
+                                        $stmt_sbobinatori = $conn->prepare($sql_sbobinatori);
+                                        $stmt_sbobinatori->bind_param('i', $sbobina_id);
+                                        $stmt_sbobinatori->execute();
+                                        $result_sbobinatori = $stmt_sbobinatori->get_result();
 
                                         $row_revisori = $result_revisori->fetch_assoc();
                                         $row_sbobinatori = $result_sbobinatori->fetch_assoc();
@@ -513,20 +523,24 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                         $revisori_mancanti = $row['num_revisori'] - $num_revisori;
                                         $sbobinatori_mancanti = $row['num_sbobinatori'] - $num_sbobinatori;
 
-
-
                                         // Se il numero di inserimenti è inferiore al numero di sbobinatori o revisori, mostra la riga
                                         if ($revisori_mancanti > 0 || $sbobinatori_mancanti > 0) {
-
                                             // Verifica se l'utente è già uno sbobinatore per questa lezione
-                                            $query_verifica_sbobinatore = "SELECT COUNT(*) as num_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobinaId AND id_sbobinatore = " . $_SESSION['id'];
-                                            $query_verifica_revisore = "SELECT COUNT(*) as num_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $revisoreId AND id_revisore = " . $_SESSION['id'];
-
-                                            $result_verifica_sbobinatore = $conn->query($query_verifica_sbobinatore);
-                                            $result_verifica_revisore = $conn->query($query_verifica_revisore);
+                                            $query_verifica_sbobinatore = "SELECT COUNT(*) as num_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = ? AND id_sbobinatore = ?";
+                                            $stmt_verifica_sbobinatore = $conn->prepare($query_verifica_sbobinatore);
+                                            $stmt_verifica_sbobinatore->bind_param('ii', $sbobinaId, $_SESSION['id']);
+                                            $stmt_verifica_sbobinatore->execute();
+                                            $result_verifica_sbobinatore = $stmt_verifica_sbobinatore->get_result();
                                             $row_verifica_sbobinatore = $result_verifica_sbobinatore->fetch_assoc();
-                                            $row_verifica_revisore = $result_verifica_revisore->fetch_assoc();
                                             $num_sbobinatore = $row_verifica_sbobinatore['num_sbobinatore'];
+
+                                            // Verifica se l'utente è già un revisore per questa lezione
+                                            $query_verifica_revisore = "SELECT COUNT(*) as num_revisore FROM sx_revisori_sbobine WHERE id_sbobina = ? AND id_revisore = ?";
+                                            $stmt_verifica_revisore = $conn->prepare($query_verifica_revisore);
+                                            $stmt_verifica_revisore->bind_param('ii', $revisoreId, $_SESSION['id']);
+                                            $stmt_verifica_revisore->execute();
+                                            $result_verifica_revisore = $stmt_verifica_revisore->get_result();
+                                            $row_verifica_revisore = $result_verifica_revisore->fetch_assoc();
                                             $num_revisore = $row_verifica_revisore['num_revisore'];
 
                                             // Disabilita il pulsante "sbobinatore" se l'utente è già uno sbobinatore per questa lezione
@@ -542,11 +556,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                     <td>
                         <button class="btn btn-primary sbobinatore-btn" data-id="' . $row['id'] . '" ' . ($sbobinatori_mancanti <= 0 ? 'disabled' : '') . ' ' . $sbobinatore_disabled . '>Sbobinatore</button>
                         <button class="btn btn-success revisore-btn" data-id="' . $row['id'] . '" ' . ($revisori_mancanti <= 0 ? 'disabled' : '') . ' ' . $revisori_disabled . '>Revisore</button>
-                </td>
+                    </td>
                 </tr>';
                                         }
                                     }
-
                                     // Chiusura della tabella HTML
                                     echo '</tbody>
         </table>
@@ -556,12 +569,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 }
 
                                 // Chiudi la connessione al database
+                                $stmt->close();
                                 $conn->close();
                                 ?>
-
-
-
-
 
                                 </table>
                                     <div id="avvisoMaschera" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); z-index: 9999;">

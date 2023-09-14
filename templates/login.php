@@ -19,9 +19,8 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <img src="../assets/dist/img/logo.png" style="width:200px;height:200px;>
-        <a href="">Sbobina<b>X</b></a>
-
+        <img src="../assets/dist/img/logo.png" style="width:200px;height:200px;">
+        <a>Sbobina<b>X</b></a>
     </div>
     <!-- /.login-logo -->
     <div class="card">
@@ -29,8 +28,8 @@
             <p class="login-box-msg">Inserisci le credenziali per entrare</p>
 
             <form class="login"
-                method="post"
-                action="../req/login_fx/login.php">
+                  method="post"
+                  action="../req/login_fx/login.php">
 
                 <?php if (isset($_GET['error'])) { ?>
                     <div class="alert alert-danger" role="alert">
@@ -70,12 +69,13 @@
                     <!-- /.col -->
                 </div>
             </form>
-
-
         </div>
         <!-- /.login-card-body -->
     </div>
+    <div style="margin-top: 20px;"></div>
+    <button type="button"  class="btn btn-info btn-block" onclick="window.location.href='./Prenota_Esonero.php'">Prenota Esonero (Non presente su IS)</button>
 </div>
+
 <!-- /.login-box -->
 
 <!-- jQuery -->

@@ -494,9 +494,21 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <select class="form-control" id="insegnamento" name="insegnamento">
                                     <option value="">Seleziona l'insegnamento</option>
                                     <?php
-                                    // Esegui la query per ottenere gli insegnamenti dal database
+                                    // Esegui la query per ottenere gli insegnamenti dal database utilizzando un prepared statement
                                     $query = "SELECT id, materia FROM sx_insegnamenti";
-                                    $result = $conn->query($query);
+                                    $stmt = $conn->prepare($query);
+
+                                    if ($stmt === false) {
+                                        die("Errore nella preparazione dello statement: " . $conn->error);
+                                    }
+
+                                    // Esegui lo statement
+                                    if ($stmt->execute() === false) {
+                                        die("Errore nell'esecuzione dello statement: " . $stmt->error);
+                                    }
+
+                                    // Ottieni il risultato
+                                    $result = $stmt->get_result();
 
                                     // Popola la select con i risultati della query
                                     while ($row = $result->fetch_assoc()) {
@@ -504,7 +516,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                         $nomeInsegnamento = $row['materia'];
                                         echo "<option value=\"$idInsegnamento\">$nomeInsegnamento</option>";
                                     }
+
+                                    // Chiudi lo statement
+                                    $stmt->close();
                                     ?>
+
                                 </select>
                             </div>
 
@@ -526,15 +542,31 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <label>Seleziona gli Sbobinatori</label>
                                 <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli sbobinatori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori" id="sbobinatori">
                                     <?php
-                                    // Query per ottenere tutti gli utenti dal database
+                                    // Query per ottenere tutti gli utenti dal database utilizzando un prepared statement
                                     $query = "SELECT id, nome FROM sx_users";
-                                    $result = mysqli_query($conn, $query);
+                                    $stmt = $conn->prepare($query);
+
+                                    if ($stmt === false) {
+                                        die("Errore nella preparazione dello statement: " . $conn->error);
+                                    }
+
+                                    // Esegui lo statement
+                                    if ($stmt->execute() === false) {
+                                        die("Errore nell'esecuzione dello statement: " . $stmt->error);
+                                    }
+
+                                    // Ottieni il risultato
+                                    $result = $stmt->get_result();
 
                                     // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
-                                    while ($row = mysqli_fetch_assoc($result)) {
+                                    while ($row = $result->fetch_assoc()) {
                                         echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
                                     }
+
+                                    // Chiudi lo statement
+                                    $stmt->close();
                                     ?>
+
                                 </select>
                             </div>
 
@@ -542,15 +574,31 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <label>Seleziona i Revisori</label>
                                 <select class="select2 select2-hidden-accessible" multiple data-placeholder="Seleziona i revisori partecipanti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori" id="revisori">
                                     <?php
-                                    // Query per ottenere tutti gli utenti dal database
+                                    // Query per ottenere tutti gli utenti dal database utilizzando un prepared statement
                                     $query = "SELECT id, nome FROM sx_users";
-                                    $result = mysqli_query($conn, $query);
+                                    $stmt = $conn->prepare($query);
 
-                                   //  Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        echo '<option value="' . $row['id'] . '">' . $row['nome'] . '</option>';
+                                    if ($stmt === false) {
+                                        die("Errore nella preparazione dello statement: " . $conn->error);
                                     }
+
+                                    // Esegui lo statement
+                                    if ($stmt->execute() === false) {
+                                        die("Errore nell'esecuzione dello statement: " . $stmt->error);
+                                    }
+
+                                    // Associa le colonne del risultato a delle variabili
+                                    $stmt->bind_result($id, $nome);
+
+                                    // Ciclo attraverso i risultati della query e genero le opzioni per il menu a discesa
+                                    while ($stmt->fetch()) {
+                                        echo '<option value="' . $id . '">' . $nome . '</option>';
+                                    }
+
+                                    // Chiudi lo statement
+                                    $stmt->close();
                                     ?>
+
                                 </select>
                             </div>
 

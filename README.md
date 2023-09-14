@@ -89,11 +89,10 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.delelimed.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
 
-- Implementare una sicurezza maggiore
-- Implementare il REPORT sbobine per segnalare problematiche
-- Implementare la possibilità di prenotare esoneri (pubblico)
-- Aggiungere un updater
-- Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione)
+- Implementare una sicurezza maggiore (1)
+- Implementare il REPORT sbobine per segnalare problematiche (4)
+- Implementare la possibilità di prenotare esoneri (pubblico) (2)
+- Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione) (3)
 
 
 ## Changelog

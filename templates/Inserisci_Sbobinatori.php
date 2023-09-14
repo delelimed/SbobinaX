@@ -476,11 +476,32 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <input type="email" class="form-control" id="email" name="email" placeholder="Inserisci la email">
                                 </div>
                                 <?php
+                                include "../db_connector.php";
+
+                                // Query per ottenere tutti i risultati da sx_insegnamenti
                                 $query = "SELECT * FROM `sx_insegnamenti`";
-                                $result = $conn->query($query);
-                                $risultati = $result->fetch_all(MYSQLI_ASSOC);
+
+                                // Creazione della prepared statement
+                                $stmt = $conn->prepare($query);
+
+                                if ($stmt) {
+                                    // Esecuzione della prepared statement
+                                    $stmt->execute();
+
+                                    // Ottieni il risultato della query
+                                    $result = $stmt->get_result();
+
+                                    // Estrai i risultati come un array associativo
+                                    $risultati = $result->fetch_all(MYSQLI_ASSOC);
+
+                                    // Chiudi la prepared statement
+                                    $stmt->close();
+                                }
+
+                                // Chiudi la connessione al database
                                 $conn->close();
                                 ?>
+
 
                                 <div class="form-group">
                                     <label for="Password">Password</label>
