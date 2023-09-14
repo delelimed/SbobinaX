@@ -1,8 +1,8 @@
 <?php
-// Connettiti al tuo database MySQL (modifica le credenziali con quelle del tuo database)
-include "../../db_connector.php";
+// Connessione al database (sostituisci con i tuoi dati di connessione)
+include '../../db_connector.php';
 
-// Controlla la connessione
+// Verifica la connessione
 if ($conn->connect_error) {
     die("Connessione al database fallita: " . $conn->connect_error);
 }
@@ -13,8 +13,6 @@ $sql = "SELECT sx_sbobine_calendarizzate.id AS id_sbobina, sx_sbobine_calendariz
         FROM sx_sbobine_calendarizzate
         JOIN sx_insegnamenti ON sx_sbobine_calendarizzate.insegnamento = sx_insegnamenti.id";
 
-
-
 $result = $conn->query($sql);
 
 $events = array();
@@ -24,8 +22,11 @@ if ($result->num_rows > 0) {
         $id_sbobina = $row["id_sbobina"];
 
         // Query per ottenere gli ID degli sbobinatori corrispondenti all'id_sbobina dalla tabella "sbobinatori_sbobine"
-        $sql_sbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = '$id_sbobina'";
-        $result_sbobinatori = $conn->query($sql_sbobinatori);
+        $sql_sbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
+        $stmt_sbobinatori = $conn->prepare($sql_sbobinatori);
+        $stmt_sbobinatori->bind_param("i", $id_sbobina);
+        $stmt_sbobinatori->execute();
+        $result_sbobinatori = $stmt_sbobinatori->get_result();
 
         $id_sbobinatori = array();
         if ($result_sbobinatori->num_rows > 0) {
@@ -33,8 +34,11 @@ if ($result->num_rows > 0) {
                 $id_sbobinatore = $row_sbobinatori["id_sbobinatore"];
 
                 // Query per ottenere il nome e il cognome dell'utente corrispondente all'id_sbobinatore dalla tabella "users"
-                $sql_sbobinatore_info = "SELECT nome, cognome FROM sx_users WHERE id = '$id_sbobinatore'";
-                $result_sbobinatore_info = $conn->query($sql_sbobinatore_info);
+                $sql_sbobinatore_info = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                $stmt_sbobinatore_info = $conn->prepare($sql_sbobinatore_info);
+                $stmt_sbobinatore_info->bind_param("i", $id_sbobinatore);
+                $stmt_sbobinatore_info->execute();
+                $result_sbobinatore_info = $stmt_sbobinatore_info->get_result();
 
                 if ($result_sbobinatore_info->num_rows > 0) {
                     while ($row_sbobinatore_info = $result_sbobinatore_info->fetch_assoc()) {
@@ -51,8 +55,11 @@ if ($result->num_rows > 0) {
         }
 
         // Query per ottenere gli ID dei revisori corrispondenti all'id_sbobina dalla tabella "revisori_sbobine"
-        $sql_revisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = '$id_sbobina'";
-        $result_revisori = $conn->query($sql_revisori);
+        $sql_revisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = ?";
+        $stmt_revisori = $conn->prepare($sql_revisori);
+        $stmt_revisori->bind_param("i", $id_sbobina);
+        $stmt_revisori->execute();
+        $result_revisori = $stmt_revisori->get_result();
 
         $id_revisori = array();
         if ($result_revisori->num_rows > 0) {
@@ -60,8 +67,11 @@ if ($result->num_rows > 0) {
                 $id_revisore = $row_revisori["id_revisore"];
 
                 // Query per ottenere il nome e il cognome dell'utente corrispondente all'id_revisore dalla tabella "users"
-                $sql_revisore_info = "SELECT nome, cognome FROM sx_users WHERE id = '$id_revisore'";
-                $result_revisore_info = $conn->query($sql_revisore_info);
+                $sql_revisore_info = "SELECT nome, cognome FROM sx_users WHERE id = ?";
+                $stmt_revisore_info = $conn->prepare($sql_revisore_info);
+                $stmt_revisore_info->bind_param("i", $id_revisore);
+                $stmt_revisore_info->execute();
+                $result_revisore_info = $stmt_revisore_info->get_result();
 
                 if ($result_revisore_info->num_rows > 0) {
                     while ($row_revisore_info = $result_revisore_info->fetch_assoc()) {

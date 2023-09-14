@@ -11,14 +11,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Ottieni il valore di ricerca inviato dal modulo
     $search_term = $_POST["search_text"];
 
-    // Esegui la query per cercare le bobine nel database
+    // Esegui la query per cercare le bobine nel database utilizzando un prepared statement
     $sql = "SELECT sx_sbobine_calendarizzate.*, sx_insegnamenti.materia AS nome_materia
             FROM sx_sbobine_calendarizzate
             INNER JOIN sx_insegnamenti ON sx_sbobine_calendarizzate.insegnamento = sx_insegnamenti.id
-            WHERE sx_insegnamenti.materia LIKE '%$search_term%'
-            OR sx_sbobine_calendarizzate.data_lezione LIKE '%$search_term%'";
+            WHERE sx_insegnamenti.materia LIKE ? OR sx_sbobine_calendarizzate.data_lezione LIKE ?";
 
-    $result = $conn->query($sql);
+    // Prepara la query
+    $stmt = $conn->prepare($sql);
+
+    // Lega i parametri e imposta i tipi di dati
+    $search_term_param = "%" . $search_term . "%";
+    $stmt->bind_param("ss", $search_term_param, $search_term_param);
+
+    // Esegui la query
+    $stmt->execute();
+
+    // Ottieni il risultato
+    $result = $stmt->get_result();
+
+    // Chiudi il prepared statement
+    $stmt->close();
 
     // Chiudi la connessione al database
     $conn->close();
@@ -28,8 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $sbobinatori_data = array();
 
         // Esegui la query per ottenere gli ID degli sbobinatori associati alla sbobina
-        $query = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobina_id";
-        $result = $conn->query($query);
+        $query = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $sbobina_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         // Popola l'array con gli ID degli sbobinatori
         while ($row = $result->fetch_assoc()) {
@@ -55,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($result->num_rows > 0) {
         echo '<table class="table">'; // Inizia la tabella
 
-
         // Inizia il corpo della tabella
         echo '<tbody>';
 
@@ -79,3 +94,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+

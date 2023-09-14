@@ -18,8 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $dataOggi = $oggi->format('Y-m-d');
 
     // Fetch "progressivo_insegnamento" from the database
-    $query = "SELECT progressivo_insegnamento, caricata FROM sx_sbobine_calendarizzate WHERE id = '$idSbobina'";
-    $result = $conn->query($query);
+    $query = "SELECT progressivo_insegnamento, caricata FROM sx_sbobine_calendarizzate WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $idSbobina);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         // The query returned results, proceed with fetching the data
@@ -48,15 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
             $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
 
-            $query = "UPDATE sx_sbobine_calendarizzate SET posizione_server = '$filePosizione', caricata = '1', argomento = '$argomento' WHERE id = '$idSbobina'";
-            $result = $conn->query($query);
-
-            if ($result) {
+            $query = "UPDATE sx_sbobine_calendarizzate SET posizione_server = ?, caricata = '1', argomento = ? WHERE id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("ssi", $filePosizione, $argomento, $idSbobina);
+            if ($stmt->execute()) {
                 // Tutto è andato a buon fine, mostra un messaggio di successo e reindirizza alla pagina di upload
                 echo "<script>alert('Invio completato con successo!'); window.location.href = '../../templates/home.php';</script>";
             } else {
                 // Gestisci l'errore in caso di fallimento dell'aggiornamento della posizione del file
-                echo "<script>alert('Errore nell\'aggiornamento della posizione del file: " . $conn->error . "'); window.location.href = '../../templates/home.php';</script>";
+                echo "<script>alert('Errore nell\'aggiornamento della posizione del file: " . $stmt->error . "'); window.location.href = '../../templates/home.php';</script>";
             }
         } else {
             // Handle the case when the file move fails
@@ -68,6 +71,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "<script>alert('Record not found in the database.'); window.location.href = '../../templates/home.php';</script>";
         exit(); // Stop the execution here
     }
+
+    // Chiudi il prepared statement
+    $stmt->close();
 }
 ?>
+
 

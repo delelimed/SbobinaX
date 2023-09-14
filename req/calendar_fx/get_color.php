@@ -12,7 +12,9 @@ $sql = "SELECT sx_sbobine_calendarizzate.id AS id_sbobina,
         sx_sbobine_calendarizzate.caricata, sx_sbobine_calendarizzate.revisione
         FROM sx_sbobine_calendarizzate";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $colors = array();
 
@@ -39,6 +41,7 @@ if ($result->num_rows > 0) {
 }
 
 // Chiudi la connessione al database
+$stmt->close();
 $conn->close();
 
 // Imposta l'header per consentire al JavaScript di accedere ai dati
@@ -48,3 +51,4 @@ header('Access-Control-Allow-Origin: *');
 header("Content-Type: application/json");
 echo json_encode($colors);
 ?>
+

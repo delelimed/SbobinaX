@@ -8,9 +8,14 @@ session_start();
 
 // Esempio di verifica dei permessi: controlla se l'utente loggato ha partecipato alla sbobina con questo ID
 $currentUserId = $_SESSION['id']; // Sostituisci con il tuo modo per ottenere l'ID dell'utente loggato
+
+// Utilizza prepared statement per evitare SQL injection
 $queryPartecipazione = "SELECT * FROM sx_partecipazione_sbobine 
-                        WHERE id_user = $currentUserId AND id_insegnamento = $idPartecipazione";
-$resultPartecipazione = $conn->query($queryPartecipazione);
+                        WHERE id_user = ? AND id_insegnamento = ?";
+$stmtPartecipazione = $conn->prepare($queryPartecipazione);
+$stmtPartecipazione->bind_param("ii", $currentUserId, $idPartecipazione);
+$stmtPartecipazione->execute();
+$resultPartecipazione = $stmtPartecipazione->get_result();
 $utenteAutorizzato = $resultPartecipazione->num_rows > 0;
 
 // Se l'utente è autorizzato, fornisci il download del file
@@ -18,8 +23,11 @@ $utenteAutorizzato = $resultPartecipazione->num_rows > 0;
 if ($utenteAutorizzato) {
     // Ottieni il percorso del file dal database in base all'ID della sbobina
     // Sostituisci questa parte con il codice per ottenere il percorso del file e il valore di "revisione" dal database
-    $queryFile = "SELECT posizione_server, revisione FROM sx_sbobine_calendarizzate WHERE id = $idSbobina";
-    $resultFile = $conn->query($queryFile);
+    $queryFile = "SELECT posizione_server, revisione FROM sx_sbobine_calendarizzate WHERE id = ?";
+    $stmtFile = $conn->prepare($queryFile);
+    $stmtFile->bind_param("i", $idSbobina);
+    $stmtFile->execute();
+    $resultFile = $stmtFile->get_result();
 
     if ($resultFile->num_rows > 0) {
         $rowFile = $resultFile->fetch_assoc();
@@ -59,3 +67,4 @@ if ($utenteAutorizzato) {
     echo json_encode($response);
 }
 ?>
+

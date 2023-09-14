@@ -42,10 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $em = "Sbobinatore Registrato con Successo!";
         header("Location: ../templates/Inserisci_Sbobinatori.php?status=$em");
         exit();
-        $conn->close();
     } else {
         echo "Errore durante la registrazione.";
     }
+
+    // Chiudi la connessione al database
+    $conn->close();
 }
 ?>
+
 

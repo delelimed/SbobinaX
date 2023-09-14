@@ -11,9 +11,12 @@ if ($conn->connect_error) {
 if (isset($_GET['sbobina_id'])) {
     $sbobina_id = $_GET['sbobina_id'];
 
-    // Query per recuperare gli ID dei revisori associati all'ID della sbobina
-    $query = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobina_id";
-    $result = $conn->query($query);
+    // Query parametrizzata per recuperare gli ID dei revisori associati all'ID della sbobina
+    $query = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $sbobina_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     $revisori_ids = array();
 
@@ -33,6 +36,8 @@ if (isset($_GET['sbobina_id'])) {
 }
 
 // Chiudi la connessione al database
+$stmt->close();
 $conn->close();
 ?>
+
 

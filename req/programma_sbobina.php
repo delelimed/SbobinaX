@@ -20,10 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Connessione al database fallita: " . $conn->connect_error);
     }
 
-    // Prepara e esegui la query per inserire i dati nella tabella sbobine_calendarizzate
+    // Prepara e esegui la query per inserire i dati nella tabella sbobine_calendarizzate utilizzando prepared statements
     $query = "INSERT INTO sx_sbobine_calendarizzate (insegnamento, data_lezione, progressivo_insegnamento, revisione, num_sbobinatori, num_revisori) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('sssiii', $idInsegnamento, $dataLezioneFormatted, $progressivoSbobina, $revisionata, $numSbobinatori, $numRevisori);
+    $stmt->bind_param('sssiis', $idInsegnamento, $dataLezioneFormatted, $progressivoSbobina, $revisionata, $numSbobinatori, $numRevisori);
 
     // Esegui l'inserimento nella tabella sbobine_calendarizzate
     if ($stmt->execute()) {
@@ -67,8 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         );
     }
 
-    // Chiudi lo statement e la connessione al database
-    $stmt->close();
+    // Chiudi la connessione al database
     $conn->close();
 
     // Redirect alla pagina di origine con il messaggio di successo o errore
@@ -77,3 +76,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 ?>
+

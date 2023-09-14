@@ -10,12 +10,16 @@ if ($conn->connect_error) {
 // Ottenere l'ID dell'utente corrente (supponiamo che tu abbia già questa informazione)
 $current_user_id = 1; // Sostituisci con l'ID dell'utente corrente
 
-// Query per ottenere gli ID delle sbobine assegnate all'utente corrente
-$sql = "SELECT sbobina_id FROM sx_revisori_sbobine WHERE id_revisore = $current_user_id";
-$result = $conn->query($sql);
+// Utilizza prepared statement per ottenere gli ID delle sbobine assegnate all'utente corrente
+$sql = "SELECT sbobina_id FROM sx_revisori_sbobine WHERE id_revisore = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $current_user_id);
+$stmt->execute();
 
 // Array per memorizzare gli ID delle sbobine
 $sbobine_ids = array();
+
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // Memorizza gli ID delle sbobine nell'array
@@ -24,7 +28,8 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Chiudi la connessione al database
+// Chiudi il prepared statement e la connessione al database
+$stmt->close();
 $conn->close();
 ?>
 

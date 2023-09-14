@@ -11,9 +11,20 @@ if ($conn->connect_error) {
 if (isset($_GET['id'])) {
     $userId = $_GET['id'];
 
-    // Query per ottenere i dati dell'utente dal database
-    $query = "SELECT * FROM sx_users WHERE id = $userId";
-    $result = $conn->query($query);
+    // Query parametrizzata per ottenere i dati dell'utente dal database
+    $query = "SELECT * FROM sx_users WHERE id = ?";
+
+    // Prepara la query
+    $stmt = $conn->prepare($query);
+
+    // Lega il parametro
+    $stmt->bind_param("i", $userId);
+
+    // Esegui la query
+    $stmt->execute();
+
+    // Ottieni il risultato
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // Estrai i dati dell'utente e restituiscili come JSON
@@ -23,6 +34,9 @@ if (isset($_GET['id'])) {
         // Nessun utente trovato con quell'ID, restituisci un oggetto JSON vuoto
         echo json_encode((object)array());
     }
+
+    // Chiudi il prepared statement
+    $stmt->close();
 } else {
     // L'ID dell'utente non è stato fornito nella richiesta GET, restituisci un oggetto JSON vuoto
     echo json_encode((object)array());
@@ -31,3 +45,4 @@ if (isset($_GET['id'])) {
 // Chiudi la connessione al database
 $conn->close();
 ?>
+

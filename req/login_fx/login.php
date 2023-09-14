@@ -32,6 +32,12 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
             // Verifica la password utilizzando password_verify()
             if (password_verify($password, $row['password'])) {
+                if ($row['locked'] == 1) {
+                    $em = "Account bloccato. Contatta l'amministratore.";
+                    header("Location: ../../templates/login.php?error=$em");
+                    exit();
+                }
+
                 // Password corretta, autentica l'utente e impostane le variabili di sessione
                 $_SESSION['matricola'] = $row['matricola'];
                 $_SESSION['nome'] = $row['nome'];
@@ -41,9 +47,12 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
                 $_SESSION['locked'] = $row['locked'];
 
                 if (isset($_SESSION['id'])) {
-                    // Esegui una query per cercare un messaggio non "visto" nella tabella sx_sbobine_rifiutate
-                    $query = "SELECT id, motivo, id_revisore, id_sbobina FROM sx_sbobine_rigettate WHERE id_sbobinatore = " . $_SESSION['id'] . " AND visto = 0";
-                    $result = $conn->query($query);
+                    // Esegui una query parametrica per cercare un messaggio non "visto" nella tabella sx_sbobine_rifiutate
+                    $query = "SELECT id, motivo, id_revisore, id_sbobina FROM sx_sbobine_rigettate WHERE id_sbobinatore = ? AND visto = 0";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("i", $_SESSION['id']);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
 
                     if ($result->num_rows > 0) {
                         $row = $result->fetch_assoc();
@@ -57,10 +66,11 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
                         $_SESSION['id_revisore'] = $idRevisore;
                         $_SESSION['id_sbobina'] = $idSbobina;
 
-
                         // Aggiorna il campo "visto" nella tabella sx_sbobine_rifiutate
-                        $updateQuery = "UPDATE sx_sbobine_rigettate SET visto = 1 WHERE id = $messaggioId";
-                        $conn->query($updateQuery);
+                        $updateQuery = "UPDATE sx_sbobine_rigettate SET visto = 1 WHERE id = ?";
+                        $stmt = $conn->prepare($updateQuery);
+                        $stmt->bind_param("i", $messaggioId);
+                        $stmt->execute();
                     }
                 }
 
@@ -81,3 +91,4 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
     header("Location: ../../templates/login.php");
     exit;
 }
+?>

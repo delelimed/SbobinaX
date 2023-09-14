@@ -14,10 +14,12 @@ if (isset($_GET['id'])) {
     die("ID insegnamento non fornito.");
 }
 
-// Query per recuperare l'insegnamento in base all'ID fornito
-$sql = "SELECT materia FROM sx_insegnamenti WHERE id = $insegnamento_id";
-
-$result = $conn->query($sql);
+// Query parametrica per recuperare l'insegnamento in base all'ID fornito
+$sql = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $insegnamento_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Verifica se l'insegnamento è stato trovato
 if ($result->num_rows > 0) {
@@ -25,6 +27,7 @@ if ($result->num_rows > 0) {
     $insegnamento = $result->fetch_assoc();
 
     // Chiudi la connessione al database
+    $stmt->close();
     $conn->close();
 
     // Restituisci il risultato come JSON
@@ -32,7 +35,9 @@ if ($result->num_rows > 0) {
     echo json_encode($insegnamento);
 } else {
     // L'insegnamento non è stato trovato
+    $stmt->close();
     $conn->close();
     die("Insegnamento non trovato.");
 }
 ?>
+

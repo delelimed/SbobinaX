@@ -11,11 +11,16 @@ if ($conn->connect_error) {
 if (isset($_GET['sbobina_id'])) {
     $sbobina_id = $_GET['sbobina_id'];
 
-    // Query per recuperare i nomi dei revisori associati all'ID della sbobina
+    // Query parametrica per recuperare i nomi dei revisori associati all'ID della sbobina
     $query = "SELECT nome, cognome FROM sx_users
               INNER JOIN sx_revisori_sbobine ON sx_users.id = sx_revisori_sbobine.id_revisore
-              WHERE sx_revisori_sbobine.id_sbobina = $sbobina_id";
-    $result = $conn->query($query);
+              WHERE sx_revisori_sbobine.id_sbobina = ?";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $sbobina_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
 
     $revisori_names = array();
 
@@ -35,7 +40,9 @@ if (isset($_GET['sbobina_id'])) {
     echo json_encode(array("error" => "ID della sbobina non fornito."));
 }
 
-// Chiudi la connessione al database
+// Chiudi il prepared statement e la connessione al database
+$stmt->close();
 $conn->close();
 ?>
+
 

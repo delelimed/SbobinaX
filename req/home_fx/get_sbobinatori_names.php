@@ -6,12 +6,20 @@ include '../../db_connector.php';
 if (isset($_GET['sbobinatori_ids'])) {
     $sbobinatori_ids = $_GET['sbobinatori_ids'];
 
-    // Converti l'array di ID degli sbobinatori in una stringa separata da virgole per la query SQL
-    $sbobinatori_ids_string = implode(',', $sbobinatori_ids);
+    // Creiamo un array con un numero uguale di marcatori "?" quanti sono gli ID degli sbobinatori
+    $markers = str_repeat("?,", count($sbobinatori_ids) - 1) . "?";
 
-    // Query per recuperare i nomi degli sbobinatori associati agli ID specificati
-    $query = "SELECT nome, cognome FROM sx_users WHERE id IN ($sbobinatori_ids_string)";
-    $result = $conn->query($query);
+    // Query parametrica per recuperare i nomi degli sbobinatori associati agli ID specificati
+    $query = "SELECT nome, cognome FROM sx_users WHERE id IN ($markers)";
+    $stmt = $conn->prepare($query);
+
+    // Bindiamo i parametri dinamici
+    $types = str_repeat("i", count($sbobinatori_ids)); // "i" rappresenta l'intero
+    $stmt->bind_param($types, ...$sbobinatori_ids); // Utilizziamo l'operatore di propagazione (...) per passare gli ID come parametri separati
+
+    $stmt->execute();
+
+    $result = $stmt->get_result();
 
     $sbobinatori_names = array();
 
@@ -31,6 +39,8 @@ if (isset($_GET['sbobinatori_ids'])) {
     echo json_encode(array("error" => "ID degli sbobinatori non forniti."));
 }
 
-// Chiudi la connessione al database
+// Chiudi il prepared statement e la connessione al database
+$stmt->close();
 $conn->close();
 ?>
+

@@ -9,8 +9,6 @@
 
 ![Animation](Docs/IMG/animation.gif)
 
-ATTENZIONE! APPLICAZIONE NON ANCORA ADATTA AD UN UTILIZZO GENERALIZZATO PER MANCANZA DI UN SISTEMA DI SICUREZZA ADEGUATO!
-
 
 ## Indice
 - [Introduzione](##Introduzione)
@@ -89,9 +87,7 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.delelimed.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
 
-- Implementare una sicurezza maggiore (1)
 - Implementare il REPORT sbobine per segnalare problematiche (4)
-- Implementare la possibilità di prenotare esoneri (pubblico) (2)
 - Aggiungere possibilità di auto cambiare il turno di sbobina (con meccanismo di protezione) (3)
 
 
@@ -102,6 +98,8 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
   - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
   - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina
   - Aggiunto un installer per facilitare la procedura di configurazione del database
+  - Aumentata la sicurezza generale
+  - Aggiunta la possibilità di gestire la prenotazione degli esoneri
 
 - PR 1.1.0 (12/08/2023)
   - Sistemata denominazione tabelle database

@@ -254,6 +254,65 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             <?php endif; ?>
                         </a>
                     </li>
+
+                <li class="nav-item"> <!-- Esoneri -->
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa fa-calculator"></i>
+                        <p>
+                            Esoneri
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <?php
+                            $active_menu = 'Prenota_Esonero_R';
+                            $page_name = 'Prenota_Esonero_R.php';
+                            ?>
+                        <li class="nav-item">
+                            <a href="../templates/Prenota_Esonero_R.php" class="nav-link">
+                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Calendario') : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Prenota Esonero
+                                    </p>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else : ?>
+                                    <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                                    <p>
+                                        Prenota Esonero
+                                    </p>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                </li>
+                <li class="nav-item">
+                    <?php
+                    $active_menu = 'Gestisci_Esoneri';
+                    $page_name = 'Gestisci_Esoneri.php';
+                    ?>
+                <li class="nav-item">
+                    <a href="../templates/Gestisci_Esoneri.php" class="nav-link">
+                        <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Prenota_Sbobina') : ?>
+                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                            <p>
+                                Gestisci Esoneri
+                            </p>
+                            <span class="badge bg-success">Active</span>
+                        <?php else : ?>
+                            <i class="far fa-circle nav-icon" aria-hidden="true"></i>
+                            <p>
+                                Gestisci Esoneri
+                            </p>
+                        <?php endif; ?>
+                    </a>
+                </li>
+                </li>
+
+                </ul>
+                </li> <!-- Esoneri -->
+
                     <?php
                     $active_menu = 'Account';
                     $page_name = 'Account.php';

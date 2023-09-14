@@ -8,8 +8,20 @@ if (isset($_POST['sbobinaId'])) {
         die('Connessione al database fallita: ' . $conn->connect_error);
     }
 
-    $query = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = $sbobinaId";
-    $result = $conn->query($query);
+    // Query parametrizzata per ottenere i dati della sbobina
+    $query = "SELECT insegnamento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = ?";
+
+    // Prepara la query
+    $stmt = $conn->prepare($query);
+
+    // Lega il parametro e imposta il tipo di dati
+    $stmt->bind_param("i", $sbobinaId);
+
+    // Esegui la query
+    $stmt->execute();
+
+    // Ottieni il risultato
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // ID sbobina trovato, ottieni i dati associati
@@ -17,9 +29,21 @@ if (isset($_POST['sbobinaId'])) {
         $idInsegnamento = $row['insegnamento'];
         $dataLezione = $row['data_lezione'];
 
-        // Esegui la query per ottenere gli sbobinatori associati all'ID sbobina
-        $querySbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = $sbobinaId";
-        $resultSbobinatori = $conn->query($querySbobinatori);
+        // Esegui la query parametrizzata per ottenere gli sbobinatori associati all'ID sbobina
+        $querySbobinatori = "SELECT id_sbobinatore FROM sx_sbobinatori_sbobine WHERE id_sbobina = ?";
+
+        // Prepara la query
+        $stmtSbobinatori = $conn->prepare($querySbobinatori);
+
+        // Lega il parametro e imposta il tipo di dati
+        $stmtSbobinatori->bind_param("i", $sbobinaId);
+
+        // Esegui la query
+        $stmtSbobinatori->execute();
+
+        // Ottieni il risultato
+        $resultSbobinatori = $stmtSbobinatori->get_result();
+
         $sbobinatori = array();
 
         if ($resultSbobinatori->num_rows > 0) {
@@ -29,9 +53,21 @@ if (isset($_POST['sbobinaId'])) {
             }
         }
 
-        // Esegui la query per ottenere i revisori associati all'ID sbobina
-        $queryRevisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = $sbobinaId";
-        $resultRevisori = $conn->query($queryRevisori);
+        // Esegui la query parametrizzata per ottenere i revisori associati all'ID sbobina
+        $queryRevisori = "SELECT id_revisore FROM sx_revisori_sbobine WHERE id_sbobina = ?";
+
+        // Prepara la query
+        $stmtRevisori = $conn->prepare($queryRevisori);
+
+        // Lega il parametro e imposta il tipo di dati
+        $stmtRevisori->bind_param("i", $sbobinaId);
+
+        // Esegui la query
+        $stmtRevisori->execute();
+
+        // Ottieni il risultato
+        $resultRevisori = $stmtRevisori->get_result();
+
         $revisori = array();
 
         if ($resultRevisori->num_rows > 0) {
@@ -41,9 +77,18 @@ if (isset($_POST['sbobinaId'])) {
             }
         }
 
-        // Esegui la query per ottenere tutti gli inserimenti dalla tabella "users"
+        // Esegui la query parametrizzata per ottenere tutti gli inserimenti dalla tabella "users"
         $queryUsers = "SELECT id, nome, cognome FROM sx_users";
-        $resultUsers = $conn->query($queryUsers);
+
+        // Prepara la query
+        $stmtUsers = $conn->prepare($queryUsers);
+
+        // Esegui la query
+        $stmtUsers->execute();
+
+        // Ottieni il risultato
+        $resultUsers = $stmtUsers->get_result();
+
         $allUsers = array();
 
         if ($resultUsers->num_rows > 0) {
@@ -55,7 +100,6 @@ if (isset($_POST['sbobinaId'])) {
             }
         }
 
-
         // Invia i dati al client in formato JSON
         echo json_encode(['success' => true, 'idInsegnamento' => $idInsegnamento, 'dataLezione' => $dataLezione, 'sbobinatori' => $sbobinatori, 'revisori' => $revisori, 'allUsers' => $allUsers]);
     } else {
@@ -63,7 +107,12 @@ if (isset($_POST['sbobinaId'])) {
         echo json_encode(['success' => false, 'message' => 'ID sbobina non trovato']);
     }
 
+    // Chiudi le connessioni
+    $stmt->close();
+    $stmtSbobinatori->close();
+    $stmtRevisori->close();
+    $stmtUsers->close();
     $conn->close();
 }
-
 ?>
+
