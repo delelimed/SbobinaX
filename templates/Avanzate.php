@@ -571,26 +571,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Sistema di Aggiornamento Software</h3>
-                        </div>
-                        <div class="card-body">
-                            <td>
-                                <button type="button" id="update" class="btn btn-block btn-secondary" onclick="avviaAggiornamento()">Avvia il Sistema di Aggiornamento</button>
-                            </td>
-                            <script>
-                                function avviaAggiornamento() {
-                                    window.location.href = '../templates/updater.php'; // Reindirizza all'URL desiderato
-                                }
-                            </script>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div class="card card-primary">
-                        <div class="card-header">
                             <h3 class="card-title">Preparazione per Cambio Semestre</h3>
                         </div>
                         <!-- /.card-header -->
