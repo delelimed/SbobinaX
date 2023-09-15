@@ -902,7 +902,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 }
             };
             xhr.send();
-        }, 10 * 1000); // 10 minuti in millisecondi
+        }, 10 * 60 * 1000); // 10 minuti in millisecondi
     </script>
 
     <script>

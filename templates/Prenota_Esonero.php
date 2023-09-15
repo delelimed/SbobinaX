@@ -305,7 +305,7 @@ include '../db_connector.php';
                 }
             };
             xhr.send();
-        }, 10 * 1000); // 10 minuti in millisecondi
+        }, 10 * 60 * 1000); // 10 minuti in millisecondi
     </script>
 
     <script>

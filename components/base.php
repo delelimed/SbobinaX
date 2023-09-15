@@ -533,6 +533,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
+
+<script>
+    // Avvia il timer di 10 minuti
+    var timeout = setTimeout(function() {
+        // Esegui una richiesta AJAX per eseguire il logout
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "logout.php", true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Reindirizza alla pagina di login dopo il logout forzato
+                window.location.href = "login.php";
+            }
+        };
+        xhr.send();
+    }, 10 * 60 * 1000); // 10 minuti in millisecondi
+</script>
+
 </body>
 </html>
 
