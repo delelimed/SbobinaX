@@ -19,11 +19,10 @@ $resultPartecipazione = $stmtPartecipazione->get_result();
 $utenteAutorizzato = $resultPartecipazione->num_rows > 0;
 
 // Se l'utente è autorizzato, fornisci il download del file
-// ...
 if ($utenteAutorizzato) {
     // Ottieni il percorso del file dal database in base all'ID della sbobina
-    // Sostituisci questa parte con il codice per ottenere il percorso del file e il valore di "revisione" dal database
-    $queryFile = "SELECT posizione_server, revisione FROM sx_sbobine_calendarizzate WHERE id = ?";
+    // Sostituisci questa parte con il codice per ottenere il percorso del file, il valore di "revisione" e "auth_token" dal database
+    $queryFile = "SELECT posizione_server, revisione, auth_token FROM sx_sbobine_calendarizzate WHERE id = ?";
     $stmtFile = $conn->prepare($queryFile);
     $stmtFile->bind_param("i", $idSbobina);
     $stmtFile->execute();
@@ -33,15 +32,30 @@ if ($utenteAutorizzato) {
         $rowFile = $resultFile->fetch_assoc();
         $percorsoFile = $rowFile['posizione_server'];
         $revisione = $rowFile['revisione'];
+        $authToken = $rowFile['auth_token'];
 
         // Verifica se la revisione è uguale a 1 per permettere il download del file
         if ($revisione == 1) {
-            $nomeFile = basename($percorsoFile); // Ottieni solo il nome del file da tutto il percorso
+            // Decodifica il file utilizzando la chiave di decodifica (auth_token)
+            $fileDecodificato = openssl_decrypt(file_get_contents($percorsoFile), 'aes-256-cbc', $authToken, 0);
 
-            // Fornisci il download del file con il nome corretto
-            header("Content-Disposition: attachment; filename=\"$nomeFile\"");
-            readfile($percorsoFile);
-            exit;
+            if ($fileDecodificato !== false) {
+                // Cambia l'estensione da ".PDFCRYPT" a ".pdf"
+                $nomeFile = pathinfo($percorsoFile, PATHINFO_FILENAME) . ".pdf";
+
+                // Fornisci il download del file decriptato con il nome corretto
+                header("Content-Disposition: attachment; filename=\"$nomeFile\"");
+                header("Content-Type: application/pdf");
+                echo $fileDecodificato;
+                exit;
+            } else {
+                // Se la decodifica fallisce, invia un messaggio di errore
+                $response = array(
+                    "authorized" => false,
+                    "message" => "Errore durante la decodifica del file."
+                );
+                echo json_encode($response);
+            }
         } else {
             // Se il valore della revisione non è uguale a 1, invia una risposta JSON con il messaggio di errore
             $response = array(
@@ -67,4 +81,3 @@ if ($utenteAutorizzato) {
     echo json_encode($response);
 }
 ?>
-

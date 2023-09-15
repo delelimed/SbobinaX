@@ -54,6 +54,24 @@ function get_file_path_from_database($sbobina_id, $conn)
     }
 }
 
+// Funzione per ottenere l'auth_token dal database
+function get_auth_token_from_database($sbobina_id, $conn) {
+    // Esegui una query per ottenere l'auth_token dal database utilizzando $sbobina_id
+    // Restituisci l'auth_token o false in caso di errore
+    $query = "SELECT auth_token FROM sx_sbobine_calendarizzate WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $sbobina_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        return $row['auth_token'];
+    } else {
+        return false;
+    }
+}
+
 // Define the function to approve the sbobina in the database
 function approve_sbobina_in_database($sbobina_id, $conn) {
     $sessionId = $_SESSION['id'];
@@ -97,22 +115,66 @@ function approve_sbobina_in_database($sbobina_id, $conn) {
 
 // Controlla se è stata richiesta l'azione di download
 if (isset($_GET['download_sbobina'])) {
+    // Include il file di configurazione del database
+    include "../../db_connector.php";
+
+    // Funzione per cambiare l'estensione di un file
+    function change_file_extension($file_path, $new_extension) {
+        $info = pathinfo($file_path);
+        return $info['dirname'] . '/' . $info['filename'] . '.' . $new_extension;
+    }
+
     $sbobina_id = $_GET['download_sbobina'];
 
     // Controlla se l'utente è autorizzato a scaricare la sbobina
     if (is_user_authorized_to_download_sbobina($_SESSION['id'], $sbobina_id, $conn)) {
-        // Esegui il codice per scaricare la sbobina dal server
-        // Assicurati di sostituire il percorso corretto in base al tuo progetto
+        // Ottieni il percorso del file cifrato dal database
         $file_path = get_file_path_from_database($sbobina_id, $conn);
+
         if ($file_path) {
-            header("Content-Type: application/octet-stream");
-            header("Content-Transfer-Encoding: Binary");
-            header("Content-Disposition: attachment; filename=\"" . basename($file_path) . "\"");
-            readfile($file_path);
-            exit;
+            // Leggi il contenuto cifrato del file
+            $file_content = file_get_contents($file_path);
+
+            // Decifra il contenuto utilizzando la chiave "auth_token" dal database
+            $auth_token = get_auth_token_from_database($sbobina_id, $conn);
+
+            if ($auth_token) {
+                $file_content_decrypted = openssl_decrypt($file_content, 'aes-256-cbc', $auth_token, 0);
+
+                if ($file_content_decrypted !== false) {
+                    // Cambia l'estensione del file in ".pdf"
+                    $pdf_file_path = change_file_extension($file_path, 'pdf');
+
+                    // Scrivi il contenuto decifrato in un nuovo file PDF
+                    file_put_contents($pdf_file_path, $file_content_decrypted);
+
+                    // Imposta gli header per il download del file PDF
+                    header("Content-Type: application/pdf");
+                    header("Content-Disposition: attachment; filename=\"" . basename($pdf_file_path) . "\"");
+                    header("Content-Length: " . filesize($pdf_file_path));
+
+                    // Leggi e restituisci il file PDF al browser
+                    readfile($pdf_file_path);
+
+                    // Rimuovi il file PDF temporaneo
+                    unlink($pdf_file_path);
+
+                    exit;
+                } else {
+                    // Gestisci il caso in cui la decifrazione fallisce
+                    echo "Errore nella decifrazione del file.";
+                    exit;
+                }
+            } else {
+                // Gestisci il caso in cui l'auth_token non sia stato trovato nel database
+                echo "Chiave di autenticazione non valida.";
+                exit;
+            }
         } else {
-            // Gestisci il caso in cui il file non sia stato trovato o altre eccezioni
+            // Gestisci il caso in cui il file cifrato non sia stato trovato o altre eccezioni
             // Potresti mostrare un messaggio di errore o reindirizzarlo a una pagina di errore
+            echo "File cifrato non trovato.";
+            exit;
         }
     } else {
         // L'utente non è autorizzato a scaricare la sbobina, mostra un messaggio di accesso negato o reindirizzalo a una pagina appropriata
@@ -139,5 +201,3 @@ if (isset($_GET['approva_sbobina'])) {
     exit;
 }
 ?>
-
-

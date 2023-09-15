@@ -558,6 +558,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                             <th>Progr.</th>
                                             <th>Insegnamento</th>
                                             <th>Data Lezione</th>
+                                            <th>Data Caricamento</th>
                                             <th>Sbobinatori</th>
                                             <th>Revisori</th>
                                             <th>Azioni</th>
@@ -674,6 +675,18 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                 <td><?php echo $row['progressivo_insegnamento']; ?></td> <!-- Qui mostriamo il progressivo_sbobina -->
                                                 <td><?php echo getMateriaFromId($row['insegnamento']); ?></td>
                                                 <td><?php echo $row['data_lezione']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    $dataCaricamento = $row['data_caricamento'];
+
+                                                    if (empty($dataCaricamento) || $dataCaricamento === '0000-00-00 00:00:00') {
+                                                        echo "N/D";
+                                                    } else {
+                                                        $formattedDate = date("d-m-Y H:i:s", strtotime($dataCaricamento));
+                                                        echo $formattedDate;
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     // Ottieni i nomi completi ma solo l'iniziale del cognome degli sbobinatori associati a questa sbobina
