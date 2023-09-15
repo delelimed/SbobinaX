@@ -666,7 +666,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             <div class="input-group">
                                 <div class="custom-file">
                                     <!-- Aggiunta l'attributo "name" per permettere l'elaborazione del file -->
-                                    <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina">
+                                    <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina" accept="application/pdf">
                                     <label class="custom-file-label" for="exampleInputFile" id="fileLabel">Seleziona il file PDF della sbobina</label>
                                 </div>
                             </div>
@@ -746,6 +746,22 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 <script src="../assets/plugins/dropzone/min/dropzone.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
+
+<script>
+    // Avvia il timer di 10 minuti
+    var timeout = setTimeout(function() {
+        // Esegui una richiesta AJAX per eseguire il logout
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "logout.php", true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Reindirizza alla pagina di login dopo il logout forzato
+                window.location.href = "login.php";
+            }
+        };
+        xhr.send();
+    }, 10 * 1000); // 10 minuti in millisecondi
+</script>
 
 <script>
     $(document).ready(function() {

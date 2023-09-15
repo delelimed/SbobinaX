@@ -1,9 +1,5 @@
 <?php
-// Imposta la durata massima della sessione a 15 minuti (900 secondi)
-ini_set('session.gc_maxlifetime', 15);
 
-// Imposta i parametri del cookie di sessione per scadere dopo 15 minuti (900 secondi)
-session_set_cookie_params(15);
 session_start();
 
 if (isset($_POST['uname']) && isset($_POST['password'])) {
@@ -20,24 +16,11 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
     $uname = validate($_POST['uname']);
     $password = validate($_POST['password']);
 
-    // Verifica se è stata impostata una variabile di sessione per i tentativi errati
-    if (!isset($_SESSION['login_attempts'])) {
-        $_SESSION['login_attempts'] = 0;
-    }
-
     if (empty($uname) || empty($password)) {
         $em = "Matricola and Password are Required";
         header("Location: ../../templates/login.php?error=$em");
         exit;
     } else {
-        // Controlla il numero di tentativi errati
-        if ($_SESSION['login_attempts'] >= 3) {
-            // Limite di tentativi errati superato, blocca l'accesso
-            $em = "Raggiunto limite tentativi. Riprova piu' tardi.";
-            header("Location: ../../templates/login.php?error=$em");
-            exit();
-        }
-
         // Query utilizzando prepared statements per ottenere l'hash dell'utente dal database
         $sql = "SELECT id, matricola, nome, cognome, email, password, admin, locked FROM sx_users WHERE matricola=?";
         $stmt = $conn->prepare($sql);
@@ -63,11 +46,8 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['admin'] = $row['admin'];
-                $_SESSION['login_time'] = time();
                 $_SESSION['locked'] = $row['locked'];
 
-                // Azzera i tentativi errati
-                $_SESSION['login_attempts'] = 0;
 
                 if (isset($_SESSION['id'])) {
                     // Esegui una query parametrica per cercare un messaggio non "visto" nella tabella sx_sbobine_rifiutate
@@ -100,17 +80,11 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
                 header("Location: ../../templates/home.php");
                 exit();
             } else {
-                // Incrementa il numero di tentativi errati
-                $_SESSION['login_attempts']++;
-
                 $em = "Password non valida";
                 header("Location: ../../templates/login.php?error=$em");
                 exit();
             }
         } else {
-            // Incrementa il numero di tentativi errati
-            $_SESSION['login_attempts']++;
-
             $em = "Utente non trovato";
             header("Location: ../../templates/login.php?error=$em");
             exit();
@@ -121,4 +95,3 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
     exit;
 }
 ?>
-

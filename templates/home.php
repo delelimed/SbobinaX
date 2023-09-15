@@ -751,6 +751,22 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 <script src="../assets/dist/js/adminlte.min.js"></script>
 <!-- Include jQuery library if not already included -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Avvia il timer di 10 minuti
+    var timeout = setTimeout(function() {
+        // Esegui una richiesta AJAX per eseguire il logout
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "logout.php", true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Reindirizza alla pagina di login dopo il logout forzato
+                window.location.href = "login.php";
+            }
+        };
+        xhr.send();
+    }, 10 * 1000); // 10 minuti in millisecondi
+</script>
+
 
 <script>
     $(document).ready(function() {
