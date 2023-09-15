@@ -13,7 +13,7 @@ include '../db_connector.php';
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SbobinaX | Dashboard</title>
+        <title>SbobinaX | Prenota Esonero</title>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -117,14 +117,140 @@ include '../db_connector.php';
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">{% block title %} {% endblock %}</h1>
+                            <h1 class="m-0">Prenota Esonero</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
 
                         </div><!-- /.col -->
                     </div><!-- /.row -->
-                    {% block content %}
-                    {% endblock %}
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Esoneri Prenotabili</h3>
+
+                                    <div class="card-tools">
+                                        <div class="input-group input-group-sm" style="width: 150px;">
+                                            <input type="text" id="tableSearch" name="table_search" class="form-control float-right" placeholder="Search">
+
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-default">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0">
+                                    <?php
+                                    // Connessione al database
+                                    include '../db_connector.php';
+
+                                    // Verifica la connessione
+                                    if ($conn->connect_error) {
+                                        die("Connessione fallita: " . $conn->connect_error);
+                                    }
+
+                                    // Data odierna
+                                    $currentDate = date("Y-m-d");
+
+                                    // Query per ottenere i dati dalla tabella
+                                    $sql = "SELECT id, insegnamento, docente, data_esonero, data_scadiscrizioni FROM sx_esamidisponibili WHERE data_scadiscrizioni >= '$currentDate'";
+                                    $result = $conn->query($sql);
+
+                                    // Genera la tabella HTML
+                                    echo '<table class="table table-hover text-nowrap">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Insegnamento</th>
+                <th>Docente</th>
+                <th>Data Esonero</th>
+                <th>Data Fine Prenotazione</th>
+                <th>Prenota</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo '<tr>';
+                                            echo '<td>' . $row['id'] . '</td>';
+                                            echo '<td>' . $row['insegnamento'] . '</td>';
+                                            echo '<td>' . $row['docente'] . '</td>';
+                                            echo '<td>' . $row['data_esonero'] . '</td>';
+                                            echo '<td>' . $row['data_scadiscrizioni'] . '</td>';
+                                            echo '<td><button class="btn btn-success prenota-button" data-id-esame="' . $row['id'] . '">Prenota</button></td>';
+                                            echo '</tr>';
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="6">Nessun risultato trovato</td></tr>';
+                                    }
+
+                                    echo '</tbody></table>';
+
+                                    // Chiudi la connessione al database
+                                    $conn->close();
+                                    ?>
+
+
+
+
+                                    <div id="avvisoMaschera" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #f0f0f0; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); z-index: 9999;">
+                                        <p id="avvisoMessaggio"></p>
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="prenotaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Prenotazione Esonero</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Form per la prenotazione -->
+                                    <form id="prenotazioneForm">
+                                        <div class="form-group">
+                                            <label for="nome">Nome</label>
+                                            <input type="text" class="form-control" id="nome" name="nome" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cognome">Cognome</label>
+                                            <input type="text" class="form-control" id="cognome" name="cognome" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="matricola">Matricola</label>
+                                            <input type="text" class="form-control" id="matricola" name="matricola" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                                    <button type="button" class="btn btn-primary" id="confermaPrenotazione">Conferma Prenotazione</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
@@ -165,5 +291,107 @@ include '../db_connector.php';
     <script src="../assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../assets/dist/js/adminlte.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Gestisce il clic sul pulsante "Prenota"
+            $('.prenota-button').on('click', function () {
+                // Recupera l'ID dell'esame dalla riga
+                var idEsame = $(this).data('id-esame');
+
+                // Assegna l'ID dell'esame alla modale
+                $('#prenotaModal').data('id-esame', idEsame);
+
+                // Aggiorna il nome dell'insegnamento nell'intestazione della modale
+                $.ajax({
+                    url: '../req/gestione_esoneri/get_insegnamento.php', // Sostituisci con il percorso del tuo script PHP per ottenere l'insegnamento e la data
+                    method: 'POST',
+                    data: { idEsame: idEsame },
+                    success: function (result) {
+                        var dataEsonero = result.dataEsonero;
+                        var insegnamento = result.insegnamento;
+                        $('#exampleModalLabel').text('Prenotazione Esonero per ' + insegnamento + ' del ' + dataEsonero);
+                    },
+                    error: function () {
+                        alert('Errore durante il recupero del nome dell\'insegnamento e della data.');
+                    }
+                });
+
+                // Apri la modale
+                $('#prenotaModal').modal('show');
+            });
+
+            // Gestisce il clic sul pulsante "Conferma Prenotazione" nella modale
+            $('#confermaPrenotazione').on('click', function () {
+                // Recupera l'ID dell'esame dalla modale
+                var idEsame = $('#prenotaModal').data('id-esame');
+
+                // Raccogli i dati dal modulo
+                var nome = $('#nome').val();
+                var cognome = $('#cognome').val();
+                var matricola = $('#matricola').val();
+                var email = $('#email').val();
+
+                // Esegui una richiesta AJAX per inviare i dati al tuo script di backend
+                $.ajax({
+                    url: '../req/gestione_esoneri/non_registrato.php', // Sostituisci con il percorso del tuo script di backend
+                    method: 'POST',
+                    data: {
+                        nome: nome,
+                        cognome: cognome,
+                        matricola: matricola,
+                        email: email,
+                        idEsame: idEsame // Utilizza l'ID dell'esame recuperato
+                    },
+                    success: function (response) {
+                        // Chiudi la modale
+                        $('#prenotaModal').modal('hide');
+                        // Aggiorna la pagina o effettua altre azioni
+                        window.location.reload();
+                    },
+                    error: function () {
+                        // Gestisci eventuali errori
+                        alert('Errore durante la prenotazione dell\'esame.');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+    <script>
+        // Aggiungiamo l'evento input all'input di ricerca
+        const inputSearch = document.getElementById('tableSearch');
+        inputSearch.addEventListener('input', function () {
+            const searchText = inputSearch.value.toLowerCase(); // Ottieni il testo di ricerca in minuscolo
+
+            // Recupera tutte le righe della tabella
+            const rows = document.querySelectorAll('.table tbody tr');
+
+            // Filtra le righe in base al testo di ricerca
+            rows.forEach(row => {
+                const columns = row.getElementsByTagName('td');
+                let shouldShowRow = false;
+                for (let i = 0; i < columns.length; i++) {
+                    const columnText = columns[i].textContent.toLowerCase();
+                    if (columnText.includes(searchText)) {
+                        shouldShowRow = true;
+                        break;
+                    }
+                }
+
+                // Mostra o nascondi la riga in base al risultato del filtro
+                if (shouldShowRow) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
     </body>
     </html>

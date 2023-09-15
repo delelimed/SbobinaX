@@ -12,7 +12,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SbobinaX | Dashboard</title>
+        <title>SbobinaX | Inserisci Sbobinatori</title>
 
 
         <!-- Google Font: Source Sans Pro -->
