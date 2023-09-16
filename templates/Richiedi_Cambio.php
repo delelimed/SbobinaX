@@ -486,6 +486,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <h1 class="m-0">Richiedi Cambio Turno</h1>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#authCambio">Autorizza Cambio</button>
+
                         </div><!-- /.col -->
                         <div class="col-sm-6">
 
@@ -494,12 +496,12 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Dati della Sbobina</h3>
+                            <h3 class="card-title">Dati della Sbobina di partenza</h3>
 
                         </div>
                         <!-- /.card-header -->
                         <div class="cd-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap">
+                            <table id="tabellaPartenza" class="table table-hover text-nowrap">
                                 <thead>
                                 <tr>
                                     <th>Id Sbobina</th>
@@ -507,7 +509,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     <th>Data Lezione</th>
                                     <th>Sbobinatori</th>
                                     <th>Revisori</th>
-                                    <th>Richiedi Cambio</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -519,6 +520,36 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                         <!-- /.card-body -->
                     </div>
 
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Dati della Sbobina di arrivo</h3>
+
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="cd-body table-responsive p-0">
+                            <table id="tabellaArrivo" class="table table-hover text-nowrap">
+                                <thead>
+                                <tr>
+                                    <th>Id Sbobina</th>
+                                    <th>Insegnamento</th>
+                                    <th>Data Lezione</th>
+                                    <th>Sbobinatori</th>
+                                    <th>Revisori</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <div id="pulsanteInoltra" style="display: none;">
+                        <button type="button" class="btn btn-success" onclick="inoltraRichiesta();">Inoltra Richiesta</button>
+                        <div id="risultato"></div>
+                    </div>
+
+
 
                 </div><!-- /.container-fluid -->
             </div>
@@ -529,15 +560,43 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Inserisci l'ID Sbobina</h4>
+                            <h4 class="modal-title">Acquisizione dati sbobine</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
+
                         <div class="modal-body">
-                            <input type="text" id="inputID" class="form-control">
+                            <label for="inputIDpartenza">
+                                Per procedere con la proposta di cambio, inserisci di seguito gli ID delle sbobine
+                                di partenza e di arrivo. Puoi trovare gli ID di tutte le sbobine in "Calendario -> Visualizza
+                                Calendario". Assicurati che i valori mostrati nella schermata successiva siano corretti prima
+                                di procedere. Se devi autorizzare un cambio, chiudi questa schermata e seleziona il pulsante "Autorizza Cambio".
+                            </label>
+
+                            <input type="number" id="inputIDpartenza" class="form-control" placeholder="ID della sbobina di partenza (che vuoi cambiare)">
+                        </div>
+                        <div class="modal-body">
+                            <input type="number" id="inputIDarrivo" class="form-control" placeholder="ID della sbobina di arrivo (che vuoi svolgere)">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" onclick="cercaSbobina()">Conferma</button>
+                            <button type="button" class="btn btn-primary" onclick="cercaSbobina(); cercaSbobinaArrivo(); mostraPulsanteInoltra();">Conferma</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Messaggio</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Chiudi">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="messaggio"></p>
                         </div>
                     </div>
                 </div>
@@ -608,9 +667,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
             apriFinestraModale();
         });
 
+
         function cercaSbobina() {
             // Ottieni l'id_sbobina dalla casella di input
-            var idSbobina = document.getElementById("inputID").value;
+            var idSbobina = document.getElementById("inputIDpartenza").value;
 
             // Effettua una richiesta AJAX al tuo server per ottenere i dati
             // Sostituisci 'URL_DEL_TUO_ENDPOINT' con l'URL del tuo endpoint API
@@ -683,6 +743,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                         console.error('Errore durante la richiesta per i nomi e cognomi:', error);
                                     });
                             })
+
                             .catch(function(error) {
                                 console.error('Errore durante la richiesta per gli sbobinatori:', error);
                             });
@@ -719,9 +780,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 console.error('Errore durante la richiesta per i revisori:', error);
                             });
 
-                        // Aggiungi un pulsante "richiedi" nella colonna "Azione"
-                        azioneCell.innerHTML = '<button class="btn btn-primary" onclick="richiedi()">Richiedi</button>';
-                    });
+                        });
                 })
                 .catch(function(error) {
                     console.error('Errore durante la richiesta:', error);
@@ -730,6 +789,169 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         }
     </script>
 
+    <script>
+        function cercaSbobinaArrivo() {
+            // Ottieni l'id_sbobina di arrivo dalla casella di input
+            var idSbobinaArrivo = document.getElementById("inputIDarrivo").value;
+
+            // Effettua una richiesta AJAX al tuo server per ottenere i dati
+            // Sostituisci 'URL_DEL_TUO_ENDPOINT' con l'URL del tuo endpoint API
+            fetch('../req/richiedi_cambio/trova_sbobina.php?id_sbobina=' + idSbobinaArrivo)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Popola la nuova tabella con i dati ricevuti
+                    var tableBody = document.querySelector("#tabellaArrivo tbody");
+                    tableBody.innerHTML = ""; // Cancella il contenuto precedente della tabella
+
+                    data.forEach(function(row) {
+                        var newRow = tableBody.insertRow(tableBody.rows.length);
+                        var idCell = newRow.insertCell(0);
+                        var insegnamentoCell = newRow.insertCell(1);
+                        var dataLezioneCell = newRow.insertCell(2);
+                        var sbobinatoriCell = newRow.insertCell(3);
+                        var revisoriCell = newRow.insertCell(4);
+
+                        idCell.innerHTML = idSbobinaArrivo;
+
+                        fetch('../req/richiedi_cambio/trova_materia.php?insegnamento=' + row.insegnamento)
+                            .then(function(response) {
+                                return response.text();
+                            })
+                            .then(function(materia) {
+                                insegnamentoCell.innerHTML = materia;
+                            })
+                            .catch(function(error) {
+                                console.error('Errore durante la richiesta per la materia:', error);
+                            });
+
+                        var dataLezione = new Date(row.data_lezione);
+                        var giorno = String(dataLezione.getDate()).padStart(2, '0');
+                        var mese = String(dataLezione.getMonth() + 1).padStart(2, '0');
+                        var anno = dataLezione.getFullYear();
+                        var dataFormattata = giorno + '-' + mese + '-' + anno;
+
+                        dataLezioneCell.innerHTML = dataFormattata;
+
+                        fetch('../req/richiedi_cambio/trova_sbobinatori.php?id_sbobina=' + idSbobinaArrivo)
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(sbobinatori) {
+                                var sbobinatoriStr = sbobinatori.map(function(sbobinatore) {
+                                    return sbobinatore.id_sbobinatore;
+                                }).join(", ");
+
+                                fetch('../req/richiedi_cambio/trova_nomi_cognomi.php?ids=' + sbobinatoriStr)
+                                    .then(function(response) {
+                                        return response.json();
+                                    })
+                                    .then(function(nomiCognomi) {
+                                        var nomiCognomiStr = nomiCognomi.map(function(nc) {
+                                            return nc.nome + ' ' + nc.cognome;
+                                        }).join("<br>");
+
+                                        sbobinatoriCell.innerHTML = nomiCognomiStr;
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Errore durante la richiesta per i nomi e cognomi:', error);
+                                    });
+
+                                // Ora, chiamata a trova_revisori per ottenere i revisori basati sull'id_sbobina
+                                fetch('../req/richiedi_cambio/trova_revisori.php?id_sbobina=' + idSbobinaArrivo)
+                                    .then(function(response) {
+                                        return response.json();
+                                    })
+                                    .then(function(revisori) {
+                                        var revisoriStr = revisori.map(function(revisore) {
+                                            return revisore.id_revisore;
+                                        }).join(", ");
+
+                                        fetch('../req/richiedi_cambio/trova_nomi_cognomi.php?ids=' + revisoriStr)
+                                            .then(function(response) {
+                                                return response.json();
+                                            })
+                                            .then(function(nomiCognomi) {
+                                                var nomiCognomiStr = nomiCognomi.map(function(nc) {
+                                                    return nc.nome + ' ' + nc.cognome;
+                                                }).join("<br>");
+
+                                                revisoriCell.innerHTML = nomiCognomiStr;
+                                            })
+                                            .catch(function(error) {
+                                                console.error('Errore durante la richiesta per i nomi e cognomi dei revisori:', error);
+                                            });
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Errore durante la richiesta per i revisori:', error);
+                                    });
+                            })
+                            .catch(function(error) {
+                                console.error('Errore durante la richiesta per gli sbobinatori:', error);
+                            });
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Errore durante la richiesta:', error);
+                });
+        }
+        function mostraPulsanteInoltra() {
+            var pulsanteInoltra = document.getElementById("pulsanteInoltra");
+            pulsanteInoltra.style.display = "block"; // Mostra il pulsante
+        }
+
+    </script>
+
+    <script>
+        function inoltraRichiesta() {
+            // Ottieni il valore dalla prima colonna della tabella "tabellaArrivo"
+            var tabellaArrivo = document.getElementById("tabellaArrivo");
+            var valoreDaRecuperareArrivo = tabellaArrivo.rows[1].cells[0].innerText;
+
+            // Ottieni il valore dalla prima colonna della tabella "tabellaPartenza"
+            var tabellaPartenza = document.getElementById("tabellaPartenza");
+            var valoreDaRecuperarePartenza = tabellaPartenza.rows[1].cells[0].innerText;
+
+            console.log("Valore da tabella Arrivo:", valoreDaRecuperareArrivo);
+            console.log("Valore da tabella Partenza:", valoreDaRecuperarePartenza);
+
+            // Esegui la richiesta AJAX al server con questi valori
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "../req/richiedi_cambio/verifica_prop.php?inputIDpartenza=" + valoreDaRecuperarePartenza + "&inputIDarrivo=" + valoreDaRecuperareArrivo, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    var risultato = document.getElementById("risultato");
+                    var maschera = document.getElementById("maschera");
+
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.ok) {
+                            risultato.innerHTML = "OK!";
+                            // Mostra la finestra modale di Bootstrap con il messaggio "Ciao"
+                            $("#myModal2").modal('show');
+                            document.getElementById("messaggio").innerHTML = "Ciao";
+                        } else {
+                            risultato.innerHTML = "ERROR!";
+                            // Mostra la finestra modale di Bootstrap con il messaggio "Errore"
+                            $("#myModal2").modal('show');
+                            document.getElementById("messaggio").innerHTML = "Errore. Per questo cambio rivolgiti ai responsabili";
+                        }
+                    } else {
+                        // Mostra la finestra modale di Bootstrap con un messaggio di errore generico
+                        risultato.innerHTML = "Errore di connessione al server";
+                        $("#myModal2").modal('show');
+                        document.getElementById("messaggio").innerHTML = "Errore di connessione al server";
+                    }
+
+                }
+            };
+
+
+            xhr.send();
+        }
+    </script>
 
 
 
