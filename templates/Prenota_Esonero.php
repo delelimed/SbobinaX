@@ -181,8 +181,8 @@ include '../db_connector.php';
                                             echo '<td>' . $row['id'] . '</td>';
                                             echo '<td>' . $row['insegnamento'] . '</td>';
                                             echo '<td>' . $row['docente'] . '</td>';
-                                            echo '<td>' . $row['data_esonero'] . '</td>';
-                                            echo '<td>' . $row['data_scadiscrizioni'] . '</td>';
+                                            echo '<td>' . date("d-m-Y", strtotime($row['data_esonero'])) . '</td>';
+                                            echo '<td>' . date("d-m-Y", strtotime($row['data_scadiscrizioni'])) . '</td>';
                                             echo '<td><button class="btn btn-success prenota-button" data-id-esame="' . $row['id'] . '">Prenota</button></td>';
                                             echo '</tr>';
                                         }

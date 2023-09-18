@@ -521,13 +521,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     }
 
                                     // Data odierna
-                                    $currentDate = date("d-m-Y"); // Formatta la data nel formato "dd-mm-yyyy"
+                                    $currentDate = date("Y-m-d"); // Formatta la data nel formato "dd-mm-yyyy"
 
                                     // Query SQL per ottenere i dati dalla tabella
                                     $sql = "SELECT ex.id, ex.insegnamento, ex.docente, DATE_FORMAT(ex.data_esonero, '%d-%m-%Y') AS data_esonero, DATE_FORMAT(ex.data_scadiscrizioni, '%d-%m-%Y') AS data_scadiscrizioni, sp.matricola
         FROM sx_esamidisponibili AS ex
         LEFT JOIN sx_prenesami AS sp ON ex.id = sp.id_esame AND sp.matricola = ?
-        WHERE DATE_FORMAT(ex.data_scadiscrizioni, '%d-%m-%Y') >= ?";
+        WHERE ex.data_scadiscrizioni >= ?";
                                     $stmt = $conn->prepare($sql);
                                     $stmt->bind_param("ss", $_SESSION["matricola"], $currentDate);
                                     $stmt->execute();
@@ -581,11 +581,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                     $stmt->close();
                                     $conn->close();
                                     ?>
-
-
-
-
-
 
 
 
