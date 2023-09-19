@@ -56,23 +56,9 @@ programmare almeno una sbobina ed assegnare la stessa ad almeno uno sbobinatore 
 Tutte queste operazioni sono effettuabili solamente dal SuperUser. L'accesso tramite un account normale comporterà
 la comparsa di un messaggio di errore.
 
-### Creazione di un insegnamento
-Per creare un insegnamento, è necessario selezionare la voce "Impostazioni", e successivamente "Inserisci Insegnamento".
-Puoi visualizzare gli insegnamenti già presenti selezionando "Visualizza Insegnamenti".
-
-### Programmazione ed assegnazione di una sbobina
-Per programmare una sbobina, recarsi in "Impostazioni" e selezionare "Programma Sbobina". 
-Da qui sarà anche possibile assegnare una sbobina ad uno sbobinatore o revisore.
-
-
-### Creazione di un account utente
-Per creare un account utente, recarsi su "Impostazioni", "Inserisci Sbobinatore". Per il primo accesso, la password 
-corrisponde alla matricola. Fai particolare attenzione alla mail, in quanto, alla versione attuale, non è modificabile.
-
-
 ## Utilizzo
 Per ogni informazione, si rimanda alla lettura dei manuali utente presenti nella cartella `Docs`. 
-Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli) , una serie di video che ne 
+Sono inoltre presenti, al canale [YouTube](https://www.youtube.com/@devdeleli), una serie di video che ne 
 dimostrano il funzionamento.
 
 ## Suggerimenti
@@ -87,7 +73,8 @@ Il progetto è rilasciato sotto licenza MIT. Per ulteriori informazioni, si rima
 
 Di seguito inserisco le funzionalità che intendo implementare nelle successive versioni. È possibile proporre funzionalità compilando [questo link](https://www.delelimed.github.io/request-informations) oppure tramite l'apposito form su GitHub. NON sono previsti rilasci fissi, l'applicazione verrà aggiornata "a tempo perso".
 
-- Implementare il REPORT sbobine per segnalare problematiche (5)
+- Implementare il REPORT sbobine per segnalare problematiche
+- Implementare la possibilità di cambiare il turno in autonomia (in corso...)
 
 ## Changelog
 
@@ -96,8 +83,8 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
   - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
   - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina
   - Aumentata la sicurezza generale
+  - Aggiunta criptazione delle sbobine caricate (con cambio di estensione: .pdf -> .PDFCRYPT)
   - Aggiunta la possibilità di gestire la prenotazione degli esoneri (registrati o non registrati) e di cancellare la propria prenotazione (registrati)
-  - Aggiunta la possibilità di cambiare il turno in autonomia
 
 - PR 1.1.0 (12/08/2023)
   - Sistemata denominazione tabelle database
