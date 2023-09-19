@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Prenotazione avvenuta con successo.";
     } else {
         // Errore durante la prenotazione
-        echo "Errore durante la prenotazione dell'esame: " . $stmt->error;
+        echo "Errore durante la prenotazione dell'esame 1: " . $stmt->error;
     }
 
     // Chiudi la connessione al database se necessario
