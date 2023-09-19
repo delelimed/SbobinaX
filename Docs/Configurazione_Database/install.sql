@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2023 at 11:07 PM
+-- Generation Time: Sep 19, 2023 at 02:46 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,35 +18,57 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sbobinax`
+-- Database: `base`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `insegnamenti`
+-- Table structure for table `sx_cambioturno`
 --
 
-CREATE TABLE `insegnamenti` (
+CREATE TABLE `sx_cambioturno` (
+  `id` int(11) NOT NULL,
+  `id_richiedente` int(11) NOT NULL,
+  `id_cambio` int(11) NOT NULL,
+  `id_sbob_originale` int(11) NOT NULL,
+  `id_sbob_arrivo` int(11) NOT NULL,
+  `cs_code` int(11) NOT NULL,
+  `eseguito` binary(1) NOT NULL DEFAULT '\0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sx_esamidisponibili`
+--
+
+CREATE TABLE `sx_esamidisponibili` (
+  `id` int(11) NOT NULL,
+  `insegnamento` varchar(255) NOT NULL,
+  `docente` varchar(255) NOT NULL,
+  `data_esonero` date NOT NULL,
+  `data_scadiscrizioni` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sx_insegnamenti`
+--
+
+CREATE TABLE `sx_insegnamenti` (
   `id` int(11) NOT NULL,
   `materia` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `insegnamenti`
---
-
-INSERT INTO `insegnamenti` (`id`, `materia`) VALUES
-(1, 'Anatomia1'),
-(2, 'Fisiologia');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `partecipazione_sbobine`
+-- Table structure for table `sx_partecipazione_sbobine`
 --
 
-CREATE TABLE `partecipazione_sbobine` (
+CREATE TABLE `sx_partecipazione_sbobine` (
   `id` int(11) NOT NULL,
   `id_user` varchar(255) NOT NULL,
   `id_insegnamento` varchar(255) NOT NULL
@@ -55,10 +77,40 @@ CREATE TABLE `partecipazione_sbobine` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `revisori_sbobine`
+-- Table structure for table `sx_prenesami`
 --
 
-CREATE TABLE `revisori_sbobine` (
+CREATE TABLE `sx_prenesami` (
+  `id` int(11) NOT NULL,
+  `id_esame` int(11) DEFAULT NULL,
+  `matricola` varchar(255) DEFAULT NULL,
+  `nome` varchar(255) DEFAULT NULL,
+  `cognome` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `dataora_prenotazione` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sx_report`
+--
+
+CREATE TABLE `sx_report` (
+  `id` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_sbobina` int(11) NOT NULL,
+  `id_motivo` int(11) NOT NULL,
+  `commento` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sx_revisori_sbobine`
+--
+
+CREATE TABLE `sx_revisori_sbobine` (
   `id` int(255) NOT NULL,
   `id_sbobina` int(255) NOT NULL,
   `id_revisore` int(255) NOT NULL,
@@ -68,10 +120,10 @@ CREATE TABLE `revisori_sbobine` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sbobinatori_sbobine`
+-- Table structure for table `sx_sbobinatori_sbobine`
 --
 
-CREATE TABLE `sbobinatori_sbobine` (
+CREATE TABLE `sx_sbobinatori_sbobine` (
   `id` int(255) NOT NULL,
   `id_sbobina` int(255) NOT NULL,
   `id_sbobinatore` int(255) NOT NULL
@@ -80,41 +132,72 @@ CREATE TABLE `sbobinatori_sbobine` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sbobine_calendarizzate`
+-- Table structure for table `sx_sbobine_calendarizzate`
 --
 
-CREATE TABLE `sbobine_calendarizzate` (
+CREATE TABLE `sx_sbobine_calendarizzate` (
   `id` int(255) NOT NULL,
   `progressivo_insegnamento` int(255) NOT NULL,
   `insegnamento` varchar(255) NOT NULL,
-  `argomento` varchar(255) NOT NULL,
-  `posizione_server` varchar(255) NOT NULL,
+  `argomento` varchar(255) DEFAULT NULL,
+  `posizione_server` varchar(255) DEFAULT NULL,
+  `auth_token` varchar(255) DEFAULT NULL,
   `data_lezione` varchar(255) NOT NULL,
-  `data_caricamento` varchar(255) NOT NULL,
-  `caricata` tinyint(1) NOT NULL,
-  `revisione` tinyint(1) NOT NULL
+  `data_caricamento` datetime DEFAULT NULL,
+  `num_sbobinatori` int(11) NOT NULL,
+  `num_revisori` int(11) NOT NULL,
+  `caricata` tinyint(11) NOT NULL DEFAULT 0,
+  `revisione` tinyint(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `settings`
+-- Table structure for table `sx_sbobine_rigettate`
 --
 
-CREATE TABLE `settings` (
+CREATE TABLE `sx_sbobine_rigettate` (
+  `id` int(11) NOT NULL,
+  `id_sbobina` int(11) NOT NULL,
+  `id_sbobinatore` int(11) NOT NULL,
+  `id_revisore` int(11) NOT NULL,
+  `motivo` varchar(255) NOT NULL,
+  `visto` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sx_settings`
+--
+
+CREATE TABLE `sx_settings` (
   `id` int(11) NOT NULL,
   `nome_impostazione` varchar(255) NOT NULL,
   `attuale` varchar(255) NOT NULL,
   `predefinita` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `sx_settings`
+--
+
+INSERT INTO `sx_settings` (`id`, `nome_impostazione`, `attuale`, `predefinita`) VALUES
+(1, 'ServerSMTP', '', ''),
+(2, 'NPorta', '', ''),
+(3, 'UtenteSMTP', '', ''),
+(4, 'PSSWSMTP', '', ''),
+(5, 'MailSMTP', '', ''),
+(6, 'smtp_attivo', 'off', 'off'),
+(7, 'ammonizioni', '3', '3');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `sx_users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `sx_users` (
   `id` int(11) NOT NULL,
   `matricola` varchar(255) NOT NULL,
   `nome` varchar(255) NOT NULL,
@@ -127,56 +210,86 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `sx_users`
 --
 
-INSERT INTO `users` (`id`, `matricola`, `nome`, `cognome`, `email`, `password`, `malus`, `locked`, `admin`) VALUES
-(1, '123', 'SUPERUSER', 'ELIMINAMI', '123@EMAIL.IT', '$2y$15$fzxhLXvwJUa2U2AaFSlD4u0jdEPMOFWyx1x6Fd8.KcdtUp1pfK6Hu', '0', 0, 1);
+INSERT INTO `sx_users` (`id`, `matricola`, `nome`, `cognome`, `email`, `password`, `malus`, `locked`, `admin`) VALUES
+(1, '123', 'ELIMINAMI', 'ELIMINAMI', 'eliminami@eliminami.eliminami', '$2y$15$V4Imm9XKnTzT4/jyBpwrEe/MteyexSNaFQjy/7Hc897squt6pKspO', '0', 0, 1);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `insegnamenti`
+-- Indexes for table `sx_cambioturno`
 --
-ALTER TABLE `insegnamenti`
+ALTER TABLE `sx_cambioturno`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `partecipazione_sbobine`
+-- Indexes for table `sx_esamidisponibili`
 --
-ALTER TABLE `partecipazione_sbobine`
+ALTER TABLE `sx_esamidisponibili`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `revisori_sbobine`
+-- Indexes for table `sx_insegnamenti`
 --
-ALTER TABLE `revisori_sbobine`
+ALTER TABLE `sx_insegnamenti`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `sbobinatori_sbobine`
+-- Indexes for table `sx_partecipazione_sbobine`
 --
-ALTER TABLE `sbobinatori_sbobine`
+ALTER TABLE `sx_partecipazione_sbobine`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `sbobine_calendarizzate`
+-- Indexes for table `sx_prenesami`
 --
-ALTER TABLE `sbobine_calendarizzate`
+ALTER TABLE `sx_prenesami`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `settings`
+-- Indexes for table `sx_report`
 --
-ALTER TABLE `settings`
+ALTER TABLE `sx_report`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `sx_revisori_sbobine`
 --
-ALTER TABLE `users`
+ALTER TABLE `sx_revisori_sbobine`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sx_sbobinatori_sbobine`
+--
+ALTER TABLE `sx_sbobinatori_sbobine`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sx_sbobine_calendarizzate`
+--
+ALTER TABLE `sx_sbobine_calendarizzate`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sx_sbobine_rigettate`
+--
+ALTER TABLE `sx_sbobine_rigettate`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sx_settings`
+--
+ALTER TABLE `sx_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sx_users`
+--
+ALTER TABLE `sx_users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -184,46 +297,76 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `insegnamenti`
+-- AUTO_INCREMENT for table `sx_cambioturno`
 --
-ALTER TABLE `insegnamenti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `partecipazione_sbobine`
---
-ALTER TABLE `partecipazione_sbobine`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=332;
-
---
--- AUTO_INCREMENT for table `revisori_sbobine`
---
-ALTER TABLE `revisori_sbobine`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
-
---
--- AUTO_INCREMENT for table `sbobinatori_sbobine`
---
-ALTER TABLE `sbobinatori_sbobine`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
-
---
--- AUTO_INCREMENT for table `sbobine_calendarizzate`
---
-ALTER TABLE `sbobine_calendarizzate`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
-
---
--- AUTO_INCREMENT for table `settings`
---
-ALTER TABLE `settings`
+ALTER TABLE `sx_cambioturno`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `sx_esamidisponibili`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+ALTER TABLE `sx_esamidisponibili`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_insegnamenti`
+--
+ALTER TABLE `sx_insegnamenti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_partecipazione_sbobine`
+--
+ALTER TABLE `sx_partecipazione_sbobine`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_prenesami`
+--
+ALTER TABLE `sx_prenesami`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_report`
+--
+ALTER TABLE `sx_report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_revisori_sbobine`
+--
+ALTER TABLE `sx_revisori_sbobine`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_sbobinatori_sbobine`
+--
+ALTER TABLE `sx_sbobinatori_sbobine`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_sbobine_calendarizzate`
+--
+ALTER TABLE `sx_sbobine_calendarizzate`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_sbobine_rigettate`
+--
+ALTER TABLE `sx_sbobine_rigettate`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sx_settings`
+--
+ALTER TABLE `sx_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `sx_users`
+--
+ALTER TABLE `sx_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
