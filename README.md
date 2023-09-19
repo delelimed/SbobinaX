@@ -95,9 +95,8 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
   - Aggiunta una PWA
   - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
   - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina
-  - Aggiunto un installer per facilitare la procedura di configurazione del database
   - Aumentata la sicurezza generale
-  - Aggiunta la possibilità di gestire la prenotazione degli esoneri (registrati o non registrati)
+  - Aggiunta la possibilità di gestire la prenotazione degli esoneri (registrati o non registrati) e di cancellare la propria prenotazione (registrati)
   - Aggiunta la possibilità di cambiare il turno in autonomia
 
 - PR 1.1.0 (12/08/2023)
