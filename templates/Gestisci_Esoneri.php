@@ -843,7 +843,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         var a = document.createElement('a');
                         a.style.display = 'none';
                         a.href = url;
-                        a.download = 'okkkkk.pdf';
+                        a.download = 'esame_' + id + '.pdf';
                         document.body.appendChild(a);
                         a.click();
 

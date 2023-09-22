@@ -83,7 +83,7 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
   - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
   - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina
   - Aumentata la sicurezza generale
-  - Aggiunta criptazione delle sbobine caricate (con cambio di estensione: .pdf -> .PDFCRYPT)
+  - Aggiunta criptazione delle sbobine caricate (con cambio di estensione: .pdf -> .SBOBI)
   - Aggiunta la possibilità di gestire la prenotazione degli esoneri (registrati o non registrati) e di cancellare la propria prenotazione (registrati)
 
 - PR 1.1.0 (12/08/2023)

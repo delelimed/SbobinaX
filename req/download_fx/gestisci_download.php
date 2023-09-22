@@ -40,7 +40,7 @@ if ($utenteAutorizzato) {
             $fileDecodificato = openssl_decrypt(file_get_contents($percorsoFile), 'aes-256-cbc', $authToken, 0);
 
             if ($fileDecodificato !== false) {
-                // Cambia l'estensione da ".PDFCRYPT" a ".pdf"
+                // Cambia l'estensione da ".SBOBI" a ".pdf"
                 $nomeFile = pathinfo($percorsoFile, PATHINFO_FILENAME) . ".pdf";
 
                 // Fornisci il download del file decriptato con il nome corretto

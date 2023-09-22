@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Generate the new filename using "progressivo_insegnamento", "argomento", and ".PDFCRYPT" extension
-        $nuovoNomeFile = $progressivoInsegnamento . "." . $argomento . ".PDFCRYPT";
+        $nuovoNomeFile = $progressivoInsegnamento . "." . $argomento . ".SBOBI";
 
         // Crea il percorso di destinazione in cui salvare il file
         $cartellaDestinazione = "../../sbobine";
