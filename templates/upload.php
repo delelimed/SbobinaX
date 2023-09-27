@@ -584,6 +584,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             </div>
 
                         <input type="hidden" id="id_sbobina" name="id_sbobina" value="">
+                        <input type="hidden" id="sender" name="sender" value="<?php echo $_SESSION['nome'] . ' ' . $_SESSION['cognome']; ?>">
 
                         <div class="form-group">
                                 <label for="Argomento">Argomento</label>
@@ -678,7 +679,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                             <label>ATTENZIONE! Il file caricato deve essere in PDF. E' inoltre in corso di attivazione un sistema di rilevamento automatico di IA.</label>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Invia in Revisione</button>
+                            <button type="submit" class="btn btn-primary" id="inviaRevisione">Invia in Revisione</button>
                         </div>
                     </form>
                 </div>
@@ -762,6 +763,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         xhr.send();
     }, 10 * 60 * 1000); // 10 minuti in millisecondi
 </script>
+
+
 
 <script>
     $(document).ready(function() {

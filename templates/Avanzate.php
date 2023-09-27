@@ -602,7 +602,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Configurazione Server SMTP - Invio Email (attivata in una prossima versione)</h3>
+                            <h3 class="card-title">Configurazione Invio Messaggi Telegram</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -611,28 +611,16 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="ServerSMTP">Server SMTP Primario</label>
-                                    <input type="text" class="form-control" id="ServerSMTP" name="ServerSMTP" placeholder="Inserisci il Nome del Server" value="<?php echo isset($data['ServerSMTP']) ? $data['ServerSMTP'] : ''; ?>">
+                                    <label for="PSSWSMTP">ID Gruppo</label>
+                                    <input type="number" class="form-control" id="ID_GRUPPO" name="ID_GRUPPO" placeholder="Inserisci l'ID del gruppo" value="<?php echo isset($data['ID_GRUPPO']) ? $data['ID_GRUPPO'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="NPorta">Numero Porta</label>
-                                    <input type="number" class="form-control" id="NPorta" name="NPorta" placeholder="Inserisci il Numero della Porta (1 - 65535)" value="<?php echo isset($data['NPorta']) ? $data['NPorta'] : ''; ?>">
+                                    <label for="MailSMTP">Token del Bot</label>
+                                    <input type="password" class="form-control" id="TOKEN" name="TOKEN" placeholder="Inserisci il TOKEN del Bot" value="<?php echo isset($data['TOKEN']) ? $data['TOKEN'] : ''; ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="UtenteSMPT">Utente SMTP</label>
-                                    <input type="text" class="form-control" id="UtenteSMTP" name="UtenteSMTP" placeholder="Inserisci il Nome Utente" value="<?php echo isset($data['UtenteSMTP']) ? $data['UtenteSMTP'] : ''; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="PSSWSMTP">Password SMTP</label>
-                                    <input type="password" class="form-control" id="PSSWSMTP" name="PSSWSMTP" placeholder="Inserisci la Password" value="<?php echo isset($data['PSSWSMTP']) ? $data['PSSWSMTP'] : ''; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="MailSMTP">Email di Invio</label>
-                                    <input type="email" class="form-control" id="MailSMTP" name="MailSMTP" placeholder="Inserisci la Mail di invio" value="<?php echo isset($data['MailSMTP']) ? $data['MailSMTP'] : ''; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <input type="hidden" name="smtp_attivo" value="off">
-                                    <label for="SwitchEmailProva">Abilita SMTP (ON: invio email; OFF: non invio email)</label>
+                                    <input type="hidden" name="telegram_attivo" value="off">
+                                    <label for="SwitchEmailProva">Abilita Telegram (ON: invio Messaggi; OFF: non invio messaggi)</label>
                                     <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-focused bootstrap-switch-animate bootstrap-switch-on" style="width: 86px;">
                                         <div class="bootstrap-switch-container" style="width: 126px; margin-left: 0px;">
                                             <input type="checkbox" id="smtp_attivo" name="smtp_attivo" <?php echo isset($data['smtp_attivo']) && $data['smtp_attivo'] == 1 ? 'checked' : ''; ?> data-bootstrap-switch="" data-off-color="danger" data-on-color="success">
@@ -644,7 +632,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <button type="submit" class="btn btn-primary">Salva i Dati</button>
                             </div>
                             <div class="card-footer">
-                                <button type="button" class="btn btn-info" id="btnInviaEmail">Invia EMAIL di prova</button>
+                                <button type="button" class="btn btn-info" id="btnInviaEmail">Invia Messaggio di prova</button>
                             </div>
 
                         </form>
@@ -717,13 +705,12 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <script>
         $('#btnInviaEmail').on('click', function() {
             // Invia una richiesta POST a mail_prova.php
-            $.post('../req/email_fx/mail_prova.php', function(data) {
-                // Questa funzione verrà eseguita quando la richiesta POST avrà successo
-                // Puoi aggiungere ulteriori azioni qui, ad esempio, mostrare un messaggio di conferma
-                alert('Email di prova inviata con successo!');
+            $.post('../req/email_fx/mail_prova.php', function() {
+
+                alert('Messaggio di prova inviato con successo!');
             }).fail(function() {
                 // Questa funzione verrà eseguita se la richiesta POST fallisce
-                alert('Errore nell\'invio dell\'email di prova.');
+                alert('Errore nell\'invio del messaggio di prova.');
             });
         });
         // Inizializza gli switch bootstrap quando il documento è pronto
@@ -739,11 +726,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                     success: function (response) {
                         // Popola il form con i dati ricevuti dal server
                         var data = JSON.parse(response);
-                        $("#ServerSMTP").val(data.ServerSMTP || '');
-                        $("#NPorta").val(data.NPorta || '');
-                        $("#UtenteSMTP").val(data.UtenteSMTP || '');
-                        $("#PSSWSMTP").val(data.PSSWSMTP || '');
-                        $("#MailSMTP").val(data.MailSMTP || '');
+                        $("#TOKEN").val(data.TOKEN || '');
+                        $("#ID_GRUPPO").val(data.ID_GRUPPO || '');
                         $("#smtp_attivo").bootstrapSwitch('state', data.smtp_attivo === 'on' ? true : false, true);
                     },
                     error: function () {

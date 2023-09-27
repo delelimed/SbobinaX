@@ -78,7 +78,11 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
 
 ## Changelog
 
-- 2.0 (30/09/2023)
+- 2.1(27/09/2023)
+  - Aggiunto invio di notifiche automatiche su un gruppo telegram quando ho un upload o un'approvazione
+  di sbobina, oppure all'inserimento di un nuovo esonero
+
+- 2.0 (21/09/2023)
   - Aggiunta una PWA
   - Aggiunta la possibilità di prenotare le sbobine come revisore o sbobinatore
   - Aggiunto l'obbligo di indicare il motivo del rigetto di una sbobina

@@ -1,6 +1,8 @@
 <?php
-// gestisci_PR.php
+// Connessione al database
 
+?>
+<?php
 // Includi il file per la connessione al database
 include "../../db_connector.php";
 
@@ -99,12 +101,81 @@ function approve_sbobina_in_database($sbobina_id, $conn) {
         $total_row = $stmt_total_entries->get_result()->fetch_assoc();
         $total_entries = $total_row['total_entries'];
 
+
         if ($num_entries === $total_entries) {
             // Update the revisione field in sbobine_calendarizzate to 1 for the corresponding sbobina_id
             $update_revisione_sql = "UPDATE sx_sbobine_calendarizzate SET revisione = '1' WHERE id = ?";
             $stmt_update_revisione = $conn->prepare($update_revisione_sql);
             $stmt_update_revisione->bind_param("i", $sbobina_id);
             $stmt_update_revisione->execute();
+
+            $query1 = "SELECT insegnamento, argomento, data_lezione FROM sx_sbobine_calendarizzate WHERE id = ?";
+            $stmt1 = $conn->prepare($query1);
+
+            if ($stmt1 === false) {
+                die("Errore nella preparazione dello statement: " . $conn->error);
+            }
+            $stmt1->bind_param("i", $sbobina_id);
+            if ($stmt1->execute() === false) {
+                die("Errore nell'esecuzione dello statement: " . $stmt1->error);
+            }
+            $stmt1->bind_result($insegnamento, $argomento, $data_lezione);
+            $stmt1->fetch();
+            $stmt1->close();
+            $datamessaggio = date("d-m-Y", strtotime($data_lezione));
+
+            $query2 = "SELECT materia FROM sx_insegnamenti WHERE id = ?";
+            $stmt2 = $conn->prepare($query2);
+            if ($stmt2 === false) {
+                die("Errore nella preparazione dello statement: " . $conn->error);
+            }
+            $stmt2->bind_param("i", $insegnamento);
+            if ($stmt2->execute() === false) {
+                die("Errore nell'esecuzione dello statement: " . $stmt2->error);
+            }
+            $stmt2->bind_result($materia);
+            $stmt2->fetch();
+            $stmt2->close();
+            include '../../db_connector.php';
+
+// Verifica se "smtp_attivo" è impostato su "on" nella tabella "sx_settings"
+            $querySmtpAttivo = "SELECT attuale FROM sx_settings WHERE nome_impostazione = 'smtp_attivo'";
+            $stmtSmtpAttivo = $conn->prepare($querySmtpAttivo);
+            if ($stmtSmtpAttivo === false) {
+                die("Errore nella preparazione dello statement: " . $conn->error);
+            }
+            $stmtSmtpAttivo->execute();
+            $stmtSmtpAttivo->bind_result($smtpAttivo);
+            $stmtSmtpAttivo->fetch();
+            $stmtSmtpAttivo->close();
+
+            if ($smtpAttivo === 'on') {
+                // SMTP attivo, includi il codice
+                $queryConfig = "SELECT nome_impostazione, attuale FROM sx_settings WHERE nome_impostazione IN ('TOKEN', 'ID_GRUPPO')";
+                $stmtConfig = $conn->prepare($queryConfig);
+                if ($stmtConfig === false) {
+                    die("Errore nella preparazione dello statement: " . $conn->error);
+                }
+                $stmtConfig->execute();
+                $stmtConfig->bind_result($nomeImpostazione, $valore);
+                $configValues = array();
+                while ($stmtConfig->fetch()) {
+                    $configValues[$nomeImpostazione] = $valore;
+                }
+                $stmtConfig->close();
+                $botToken = $configValues['TOKEN'];
+                $chatId = $configValues['ID_GRUPPO'];
+
+                // Ora puoi utilizzare $botToken e $chatId
+            }
+
+// Chiudi la connessione al database
+            $conn->close();
+
+            require_once '../../vendor/autoload.php';
+            $bot = new TelegramBot\Api\BotApi($botToken);
+            $message = "*SBOBINAX - Approvazione:* \nLa sbobina di *$materia* del *$datamessaggio*, con argomento *$argomento*  è stata approvata da tutti i revisori. \nE' ora visibile a tutti gli sbobinatori abilitati.";
+            $bot->sendMessage($chatId, $message, 'Markdown');
         }
 
         return true; // Approval successful
