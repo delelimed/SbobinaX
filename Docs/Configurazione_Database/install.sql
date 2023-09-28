@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2023 at 02:46 PM
+-- Generation Time: Sep 28, 2023 at 10:24 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `base`
+-- Database: `sbobinax`
 --
 
 -- --------------------------------------------------------
@@ -82,12 +82,12 @@ CREATE TABLE `sx_partecipazione_sbobine` (
 
 CREATE TABLE `sx_prenesami` (
   `id` int(11) NOT NULL,
-  `id_esame` int(11) DEFAULT NULL,
-  `matricola` varchar(255) DEFAULT NULL,
-  `nome` varchar(255) DEFAULT NULL,
-  `cognome` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `dataora_prenotazione` datetime DEFAULT NULL
+  `id_esame` int(11) NOT NULL,
+  `matricola` int(11) NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `cognome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `dataora_prenotazione` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -139,15 +139,15 @@ CREATE TABLE `sx_sbobine_calendarizzate` (
   `id` int(255) NOT NULL,
   `progressivo_insegnamento` int(255) NOT NULL,
   `insegnamento` varchar(255) NOT NULL,
-  `argomento` varchar(255) DEFAULT NULL,
-  `posizione_server` varchar(255) DEFAULT NULL,
-  `auth_token` varchar(255) DEFAULT NULL,
+  `argomento` varchar(255) NOT NULL,
+  `posizione_server` varchar(255) NOT NULL,
+  `auth_token` varchar(255) NOT NULL,
   `data_lezione` varchar(255) NOT NULL,
-  `data_caricamento` datetime DEFAULT NULL,
+  `data_caricamento` datetime NOT NULL,
   `num_sbobinatori` int(11) NOT NULL,
   `num_revisori` int(11) NOT NULL,
-  `caricata` tinyint(11) NOT NULL DEFAULT 0,
-  `revisione` tinyint(11) NOT NULL DEFAULT 0
+  `caricata` tinyint(1) NOT NULL,
+  `revisione` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -183,13 +183,10 @@ CREATE TABLE `sx_settings` (
 --
 
 INSERT INTO `sx_settings` (`id`, `nome_impostazione`, `attuale`, `predefinita`) VALUES
-(1, 'ServerSMTP', '', ''),
-(2, 'NPorta', '', ''),
-(3, 'UtenteSMTP', '', ''),
-(4, 'PSSWSMTP', '', ''),
-(5, 'MailSMTP', '', ''),
-(6, 'smtp_attivo', 'off', 'off'),
-(7, 'ammonizioni', '3', '3');
+(26, 'TOKEN', '', ''),
+(27, 'ID_GRUPPO', '', ''),
+(31, 'smtp_attivo', 'off', 'off'),
+(50, 'ammonizioni', '3', '3');
 
 -- --------------------------------------------------------
 
@@ -360,13 +357,13 @@ ALTER TABLE `sx_sbobine_rigettate`
 -- AUTO_INCREMENT for table `sx_settings`
 --
 ALTER TABLE `sx_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `sx_users`
 --
 ALTER TABLE `sx_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
