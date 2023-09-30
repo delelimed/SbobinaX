@@ -275,7 +275,7 @@ include '../db_connector.php';
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX
+                Sistema SbobinaX v2.1
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
