@@ -166,18 +166,84 @@ function approve_sbobina_in_database($sbobina_id, $conn) {
                 $botToken = $configValues['TOKEN'];
                 $chatId = $configValues['ID_GRUPPO'];
 
-                // Ora puoi utilizzare $botToken e $chatId
+                require '../../vendor/autoload.php';
+                $bot = new TelegramBot\Api\BotApi($botToken);
+                $message = "*SBOBINAX - Approvazione:* \nLa sbobina di *$materia* del *$datamessaggio*, con argomento *$argomento*  è stata approvata da tutti i revisori. \nE' ora visibile da tutti gli sbobinatori abilitati. \nE' inoltre visualizzabile nella cartella Drive del corso.";
+                $bot->sendMessage($chatId, $message, 'Markdown');
             }
 
+            require '../../vendor/autoload.php';
+
+// Inizializza il client Google Drive
+            $client = new Google_Client();
+            $client->setAuthConfig('../../gdrive_conf.json'); // Sostituisci con il tuo JSON di autenticazione
+            $client->setScopes([Google_Service_Drive::DRIVE]);
+            $client->setAccessType('offline');
+            $client->setPrompt('select_account consent');
+
+// Inizializza l'oggetto Google Drive
+            $driveService = new Google_Service_Drive($client);
+
+
+// Ottieni l'ID dell'insegnamento associato all'ID della sbobina
+            $insegnamentoQuery = "SELECT insegnamento FROM sx_sbobine_calendarizzate WHERE id = ?";
+            $stmtInsegnamento = $conn->prepare($insegnamentoQuery);
+            $stmtInsegnamento->bind_param("i", $sbobina_id);
+            $stmtInsegnamento->execute();
+            $stmtInsegnamento->bind_result($insegnamento);
+            $stmtInsegnamento->fetch();
+            $stmtInsegnamento->close();
+
+            // Ottieni l'ID della cartella di destinazione dalla tabella "sx_insegnamenti"
+            $cartellaQuery = "SELECT drive FROM sx_insegnamenti WHERE id = ?";
+            $stmtCartella = $conn->prepare($cartellaQuery);
+            $stmtCartella->bind_param("i", $insegnamento);
+            $stmtCartella->execute();
+            $stmtCartella->bind_result($cartella_destinazione_id);
+            $stmtCartella->fetch();
+            $stmtCartella->close();
+
+            $fileQuery = "SELECT posizione_server, auth_token FROM sx_sbobine_calendarizzate WHERE id = ?";
+            $stmtFile = $conn->prepare($fileQuery);
+            $stmtFile->bind_param("i", $sbobina_id);
+            $stmtFile->execute();
+            $stmtFile->bind_result($posizione_server, $auth_token);
+            $stmtFile->fetch();
+            $stmtFile->close();
+
+
+            $nome_file = pathinfo($posizione_server, PATHINFO_FILENAME) . ".pdf";
+
+            $fileDecodificato = openssl_decrypt(file_get_contents($posizione_server), 'aes-256-cbc', $auth_token, 0);
+
+
+
+            if ($fileDecodificato === false) {
+                error_log("Errore durante la decriptazione del file.");
+                return false; // Decriptazione fallita
+            }
+
+            $file = new Google_Service_Drive_DriveFile();
+            $file->setName("$nome_file");
+            $file->setParents([$cartella_destinazione_id]);
+
+            try {
+                $uploadedFile = $driveService->files->create($file, [
+                    'data' => $fileDecodificato
+                ]);
+
+                error_log("File caricato con successo. ID del file: " . $uploadedFile->getId());
+
+                return true; // Approvazione riuscita
+            } catch (Google_Service_Exception $e) {
+                error_log("Errore durante il caricamento del file in Google Drive: " . $e->getMessage());
+                return false; // Approvazione fallita
+            }
 // Chiudi la connessione al database
-            $conn->close();
 
-            require_once '../../vendor/autoload.php';
-            $bot = new TelegramBot\Api\BotApi($botToken);
-            $message = "*SBOBINAX - Approvazione:* \nLa sbobina di *$materia* del *$datamessaggio*, con argomento *$argomento*  è stata approvata da tutti i revisori. \nE' ora visibile a tutti gli sbobinatori abilitati.";
-            $bot->sendMessage($chatId, $message, 'Markdown');
+
         }
-
+        $conn->close();
         return true; // Approval successful
     } else {
         return false; // Approval failed
