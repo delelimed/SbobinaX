@@ -75,11 +75,13 @@ Di seguito inserisco le funzionalità che intendo implementare nelle successive 
 
 - Implementare il REPORT sbobine per segnalare problematiche
 - Implementare la possibilità di cambiare il turno in autonomia (in corso...)
-- Implementare auto upload ed auto fetching da Google drive
+- Implementare auto upload da Google drive
 - Nascondere id generale e mostrare solo progressivo sbobina (in corso...)
 - Facilità upload con pulsanti, senza necessità di ricordare ID (in corso...)
 - Rigetto postumo da admin, in caso di file corrotto (con notifica su telegram)
 - Report per lezione non svolta
+- Implementazione sistema di notifiche
+- Implementazione di "counter" per indicare le sbobine caricate dall'ultimo login
 
 ## Changelog
 
