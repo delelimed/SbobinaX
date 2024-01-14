@@ -4,7 +4,7 @@ $sName = "localhost"; // server name per MySQL
 $uName = "root"; // username per MySQL
 $pass = ""; // password per MySQL
 
-$db_name = "sbobinax"; // nome del database
+$db_name = "sbobine"; // nome del database
 
 // NON MODIFICARE NULLA QUI SOTTO!!!
 
