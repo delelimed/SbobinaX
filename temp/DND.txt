@@ -1,2 +1,0 @@
-questo file non serve a niente, ma non lo eliminare.
-se lo fai, non sarai più in grado di aggiornare questa applicazione all'uscita di nuove versioni.
