@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include '../db_connector.php';
@@ -66,7 +67,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -516,22 +517,20 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                     <div class="card-tools">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <form id="formRicerca" method="post" action="../req/vedi_programma_sbobine_fx/ricerca_sbobine.php" class="input-group input-group-sm" style="width: 150px;">
-                                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-default">
-                                                        <i class="fas fa-search"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <input type="text" id="tableSearch" name="table_search" class="form-control float-right" placeholder="Search">
 
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-default">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
                                 <?php
                                 // Dichiarazione della query SQL con un segnaposto (?)
-                                $query = "SELECT * FROM `sx_sbobine_calendarizzate`";
+                                $query = "SELECT * FROM `sx_sbobine_calendarizzate` ORDER BY data_lezione";
 
                                 // Preparazione della statement
                                 $stmt = $conn->prepare($query);
@@ -674,7 +673,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                 <td><?php echo $row['id']; ?></td>
                                                 <td><?php echo $row['progressivo_insegnamento']; ?></td> <!-- Qui mostriamo il progressivo_sbobina -->
                                                 <td><?php echo getMateriaFromId($row['insegnamento']); ?></td>
-                                                <td><?php echo $row['data_lezione']; ?></td>
+                                                <td><?php echo date('d-m-Y', strtotime($row['data_lezione'])); ?></td>
                                                 <td>
                                                     <?php
                                                     $dataCaricamento = $row['data_caricamento'];
@@ -752,7 +751,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                 </div>
                                                                 <?php
                                                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                                                $query = "SELECT id, nome FROM sx_users";
+                                                                $query = "SELECT id, nome, cognome FROM sx_users";
                                                                 $result = $conn->query($query);
 
                                                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
@@ -769,7 +768,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                     <label>Seleziona gli Sbobinatori</label>
                                                                     <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli Sbobinatori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori[]">
                                                                         <?php foreach ($sbobinatori as $sbobinatore): ?>
-                                                                            <option value="<?php echo $sbobinatore['id']; ?>"><?php echo $sbobinatore['nome']; ?></option>
+                                                                            <option value="<?php echo $sbobinatore['id']; ?>"><?php echo $sbobinatore['nome'] . ' ' . $sbobinatore['cognome']; ?></option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
@@ -777,7 +776,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                 <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                                                 <?php
                                                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database
-                                                                $query = "SELECT id, nome FROM sx_users";
+                                                                $query = "SELECT id, nome, cognome FROM sx_users";
                                                                 $result = $conn->query($query);
 
                                                                 // Inizializza un array vuoto per memorizzare gli sbobinatori recuperati
@@ -792,7 +791,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                                                     <label>Seleziona i Revisori</label>
                                                                     <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i Revisori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori[]">
                                                                         <?php foreach ($revisori as $revisore): ?>
-                                                                            <option value="<?php echo $revisore['id']; ?>"><?php echo $revisore['nome']; ?></option>
+                                                                            <option value="<?php echo $revisore['id']; ?>"><?php echo $revisore['nome'] . ' ' . $revisore['cognome']; ?></option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
@@ -866,7 +865,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.1
+                Sistema SbobinaX v2.2 HT-res
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
@@ -1042,32 +1041,34 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         });
     </script>
     <script>
-        // Codice JavaScript per gestire il click sul pulsante "Search"
-        document.querySelector('.btn-default').addEventListener('click', function (event) {
-            event.preventDefault(); // Ferma l'azione predefinita del pulsante
+        // Aggiungiamo l'evento input all'input di ricerca
+        const inputSearch = document.getElementById('tableSearch');
+        inputSearch.addEventListener('input', function () {
+            const searchText = inputSearch.value.toLowerCase(); // Ottieni il testo di ricerca in minuscolo
 
-            // Ottieni il valore di ricerca inserito dall'utente
-            var searchText = document.querySelector('input[name="table_search"]').value;
+            // Recupera tutte le righe della tabella
+            const rows = document.querySelectorAll('.table tbody tr');
 
-            // Invia la richiesta di ricerca tramite AJAX
-            fetch('../req/vedi_programma_sbobine_fx/ricerca_sbobine.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'search_text=' + encodeURIComponent(searchText),
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Aggiorna la tabella con i risultati della ricerca
-                    document.querySelector('tbody').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Errore durante la richiesta di ricerca:', error);
-                    alert('Si è verificato un errore durante la ricerca degli sbobinatori.');
-                });
+            // Filtra le righe in base al testo di ricerca
+            rows.forEach(row => {
+                const columns = row.getElementsByTagName('td');
+                let shouldShowRow = false;
+                for (let i = 0; i < columns.length; i++) {
+                    const columnText = columns[i].textContent.toLowerCase();
+                    if (columnText.includes(searchText)) {
+                        shouldShowRow = true;
+                        break;
+                    }
+                }
+
+                // Mostra o nascondi la riga in base al risultato del filtro
+                if (shouldShowRow) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
-
     </script>
 
     </body>

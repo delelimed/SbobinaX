@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include "../db_connector.php";
@@ -68,7 +69,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
         <!-- Brand Logo -->
         <a href="" class="brand-link">
             <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -668,7 +669,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                 <div class="custom-file">
                                     <!-- Aggiunta l'attributo "name" per permettere l'elaborazione del file -->
                                     <input type="file" class="custom-file-input" id="file_sbobina" name="file_sbobina" accept="application/pdf">
-                                    <label class="custom-file-label" for="exampleInputFile" id="fileLabel">Seleziona il file PDF della sbobina</label>
+									<label class="custom-file-label" for="file_sbobina" id="fileLabel">Choose file</label>
                                 </div>
                             </div>
                         </div>
@@ -712,7 +713,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-            Sistema SbobinaX v2.1
+            Sistema SbobinaX v2.2
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
@@ -806,9 +807,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
             selectSbobinatori.select2();
             selectRevisori.select2();
         }
-
-
-
 
 
         function cercaSbobina() {
@@ -931,6 +929,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         }
     });
 </script>
+
+<script>
+    document.getElementById('sbobinaForm').addEventListener('submit', function (event) {
+        // Ottieni il valore dell'argomento
+        var argomentoValue = document.getElementById('argomento').value.trim();
+
+        // Verifica se l'argomento è vuoto
+        if (argomentoValue === '') {
+            // Impedisci l'invio del modulo
+            event.preventDefault();
+
+            // Mostra un messaggio di errore o esegui altre azioni desiderate
+            alert('Il campo Argomento non può essere vuoto.');
+        }
+    });
+</script>
+
 
 
 </body>

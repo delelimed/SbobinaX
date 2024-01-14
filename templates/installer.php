@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include '../db_connector.php';

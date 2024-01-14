@@ -120,14 +120,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $filePosizione = $percorsoDestinazione; // Assign the path to the uploaded file to $filePosizione
         $idSbobina = $_POST['id_sbobina']; // Retrieve the value of "id_sbobina" from the form
 
-        $query = "UPDATE sx_sbobine_calendarizzate SET posizione_server = ?, caricata = '1', argomento = ?, auth_token = ?, data_caricamento = ? WHERE id = ?";
+        $query = "UPDATE sx_sbobine_calendarizzate SET posizione_server = ?, caricata = '1', revisione = '1', argomento = ?, auth_token = ?, data_caricamento = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ssssi", $filePosizione, $argomento, $chiaveSegreta, $dataOggi, $idSbobina);
         if ($stmt->execute()) {
             // Tutto è andato a buon fine, mostra un messaggio di successo e reindirizza alla pagina di upload
             echo "<script>alert('Invio completato con successo!'); window.location.href = '../../templates/home.php';</script>";
             $bot = new TelegramBot\Api\BotApi($botToken);
-            $message = "*SBOBINAX - Upload:* \nLo sbobinatore *$sender* ha appena caricato la sbobina del *$datamessaggio* per l'insegnamento *'$materia'*.\nL'argomento della lezione era: *'$argomento'*.\nE' ora in attesa di revisione.";
+            $message = "*SBOBINAX - Upload:* \nLo sbobinatore *$sender* ha appena caricato la sbobina del *$datamessaggio* per l'insegnamento *'$materia'*.\nL'argomento della lezione era: *'$argomento'*.\nE' ora visibile da tutti gli sbobinatori.";
             $response = $bot->sendMessage($chatId, $message, 'Markdown');
 
         } else {

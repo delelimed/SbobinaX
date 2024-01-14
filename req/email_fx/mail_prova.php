@@ -15,7 +15,7 @@ $stmtConfig->close();
 $conn->close();
 $botToken = $configValues['TOKEN'];
 $chatId = $configValues['ID_GRUPPO'];
-require_once '../../vendor/autoload.php';
+require '../../vendor/autoload.php';
 //include '../../TgConfigurator.php';
 $bot = new TelegramBot\Api\BotApi($botToken);
 $message = "*SBOBINAX - Prova Configurazione:* \nIl presente è un messaggio di prova.";

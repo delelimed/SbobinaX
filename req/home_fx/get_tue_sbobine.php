@@ -37,7 +37,7 @@ $sql = "SELECT sx_sbobine_calendarizzate.id, sx_sbobine_calendarizzate.insegname
         FROM sx_sbobine_calendarizzate
         LEFT JOIN sx_revisori_sbobine ON sx_sbobine_calendarizzate.id = sx_revisori_sbobine.id_sbobina
         LEFT JOIN sx_sbobinatori_sbobine ON sx_sbobine_calendarizzate.id = sx_sbobinatori_sbobine.id_sbobina
-        WHERE sx_revisori_sbobine.id_revisore = ? OR sx_sbobinatori_sbobine.id_sbobinatore = ?";
+        WHERE sx_revisori_sbobine.id_revisore = ? OR sx_sbobinatori_sbobine.id_sbobinatore = ? ORDER BY data_lezione";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $user_id, $user_id);
 $stmt->execute();

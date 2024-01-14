@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include '../db_connector.php';
@@ -66,7 +67,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -552,18 +553,18 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
 
                                 <div class="form-group">
                                     <label for="num_sbobinatori">Numero Sbobinatori</label>
-                                    <input type="number" class="form-control" id="num_sbobinatori" name="num_sbobinatori" placeholder="Inserisci il numero di sbobinatori previsto">
+                                    <input type="number" class="form-control" id="num_sbobinatori" name="num_sbobinatori" placeholder="Inserisci il numero di sbobinatori previsto" value='0'>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="num_revisori">Numero Revisori</label>
-                                    <input type="number" class="form-control" id="num_revisori" name="num_revisori" placeholder="Inserisci il numero di revisori previsto">
+                                    <input type="number" class="form-control" id="num_revisori" name="num_revisori" placeholder="Inserisci il numero di revisori previsto" value='0'>
                                 </div>
 
 
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database utilizzando un prepared statement
-                                $query = "SELECT id, nome FROM sx_users";
+                                $query = "SELECT id, nome, cognome FROM sx_users";
                                 $stmt = $conn->prepare($query);
 
                                 if ($stmt === false) {
@@ -596,7 +597,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <label>Seleziona gli Sbobinatori</label>
                                     <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli Sbobinatori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="sbobinatori[]">
                                         <?php foreach ($sbobinatori as $sbobinatore): ?>
-                                            <option value="<?php echo $sbobinatore['id']; ?>"><?php echo $sbobinatore['nome']; ?></option>
+                                            <option value="<?php echo $sbobinatore['id']; ?>"><?php echo $sbobinatore['nome'] . ' ' . $sbobinatore['cognome']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -604,7 +605,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                 <!-- Codice HTML/PHP per visualizzare i revisori nella selezione multipla -->
                                 <?php
                                 // Esegui la query per ottenere gli sbobinatori (utenti) dal database utilizzando un prepared statement
-                                $query = "SELECT id, nome FROM sx_users";
+                                $query = "SELECT id, nome, cognome FROM sx_users";
                                 $stmt = $conn->prepare($query);
 
                                 if ($stmt === false) {
@@ -635,7 +636,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                                     <label>Seleziona i Revisori</label>
                                     <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona i Revisori" style="width: 100%;" tabindex="-1" aria-hidden="true" name="revisori[]">
                                         <?php foreach ($revisori as $revisore): ?>
-                                            <option value="<?php echo $revisore['id']; ?>"><?php echo $revisore['nome']; ?></option>
+                                            <option value="<?php echo $revisore['id']; ?>"><?php echo $revisore['nome'] . ' ' . $revisore['cognome']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -673,7 +674,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.1
+                Sistema SbobinaX v2.2 HT-res
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.

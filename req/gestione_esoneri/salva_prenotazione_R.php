@@ -11,19 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $dataora_prenotazione = $_POST['dataora_prenotazione'];
 
-    // Esegui l'inserimento dei dati nella tabella 'sx_prenesami'
-    // Assicurati di adattare questa query al tuo schema del database
-    $sql = "INSERT INTO sx_prenesami (id_esame, matricola, nome, cognome, email, dataora_prenotazione) 
-            VALUES (?, ?, ?, ?, ?, ?)";
-
-    // Prepara la query
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        die("Errore nella preparazione della query: " . $conn->error);
-    }
-
-    // Associa i parametri
-    $stmt->bind_param("isssss", $idEsame, $matricola, $nome, $cognome, $email, $dataora_prenotazione);
+    // Esegui una query per inserire i dati nel tuo database
+$sql = "INSERT INTO sx_prenesami (id_esame, nome, cognome, matricola, email, dataora_prenotazione) VALUES (?, ?, ?, ?, ?, NOW())";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("issss", $idEsame, $nome, $cognome, $matricola, $email);
 
     // Esegui la query
     if ($stmt->execute()) {

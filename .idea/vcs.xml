@@ -2,20 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/firebase/php-jwt" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/guzzlehttp/guzzle" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/guzzlehttp/promises" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/guzzlehttp/psr7" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/monolog/monolog" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/paragonie/constant_time_encoding" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/paragonie/random_compat" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/phpseclib/phpseclib" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/psr/cache" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/psr/http-client" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/psr/http-factory" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/psr/http-message" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/psr/log" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/ralouphie/getallheaders" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/wdd/symfony/deprecation-contracts" vcs="Git" />
   </component>
 </project>

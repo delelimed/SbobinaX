@@ -1,11 +1,11 @@
 <meta name="robots" content="noindex">
 <?php
-session_start();
 include '../db_connector.php';
+session_start();
 if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 1 && $_SESSION['locked'] == 0){
 
-
     ?>
+
 
     <!DOCTYPE html>
 
@@ -13,8 +13,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SbobinaX | Inserisci Sbobinatori</title>
-
+        <title>SbobinaX | Vedi Sbobinatori</title>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -39,6 +38,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <link rel="stylesheet" href="../assets/plugins/dropzone/min/dropzone.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     </head>
     <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -68,7 +69,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -89,7 +90,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
+                        <!-- Add icons to the links using the .nav-icon class
+                             with font-awesome or any other icon font library -->
                         <?php
                         $active_menu = 'Home';
                         $page_name = 'home.php';
@@ -234,26 +236,26 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                     </li> <!-- Calendario -->
 
 
-                        <?php
-                        $active_menu = 'Visualizza';
-                        $page_name = 'Visualizza.php';
-                        ?>
-                        <li class="nav-item">
-                            <a href="../templates/Visualizza.php" class="nav-link">
-                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Visualizza') : ?>
-                                    <i class="fa fa-folder-open nav-icon" aria-hidden="true"></i>
-                                    <p>
-                                        Visualizza Sbobine
-                                    </p>
-                                    <span class="badge bg-success">Active</span>
-                                <?php else : ?>
-                                    <i class="fa fa-folder-open nav-icon" aria-hidden="true"></i>
-                                    <p>
-                                        Visualizza Sbobine
-                                    </p>
-                                <?php endif; ?>
-                            </a>
-                        </li>
+                    <?php
+                    $active_menu = 'Visualizza';
+                    $page_name = 'Visualizza.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Visualizza.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Visualizza') : ?>
+                                <i class="fa fa-folder-open nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Sbobine
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="fa fa-folder-open nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Visualizza Sbobine
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
 
                     <li class="nav-item"> <!-- Esoneri -->
                         <a href="#" class="nav-link">
@@ -313,26 +315,26 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                     </ul>
                     </li> <!-- Esoneri -->
 
-                        <?php
-                        $active_menu = 'Account';
-                        $page_name = 'Account.php';
-                        ?>
-                        <li class="nav-item">
-                            <a href="../templates/Account.php" class="nav-link">
-                                <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
-                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
-                                    <p>
-                                        Account Utente
-                                    </p>
-                                    <span class="badge bg-success">Active</span>
-                                <?php else : ?>
-                                    <i class="nav-icon fas fa-user" aria-hidden="true"></i>
-                                    <p>
-                                        Account Utente
-                                    </p>
-                                <?php endif; ?>
-                            </a>
-                        </li>
+                    <?php
+                    $active_menu = 'Account';
+                    $page_name = 'Account.php';
+                    ?>
+                    <li class="nav-item">
+                        <a href="../templates/Account.php" class="nav-link">
+                            <?php if ($_SERVER['REQUEST_URI'] == $page_name && $active_menu == 'Account') : ?>
+                                <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                <p>
+                                    Account Utente
+                                </p>
+                                <span class="badge bg-success">Active</span>
+                            <?php else : ?>
+                                <i class="nav-icon fas fa-user" aria-hidden="true"></i>
+                                <p>
+                                    Account Utente
+                                </p>
+                            <?php endif; ?>
+                        </a>
+                    </li>
 
 
                     <li class="nav-item"> <!-- impostazioni -->
@@ -483,6 +485,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         </a>
                     </li> <!-- logout -->
 
+
+
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -497,138 +502,75 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Gestione Credenziali</h1>
+                            <h1 class="m-0">Richieste di Recupero Password</h1>
+
                         </div><!-- /.col -->
                         <div class="col-sm-6">
 
                         </div><!-- /.col -->
                     </div><!-- /.row -->
-                    <!-- block content -->
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Aggiungi Sbobinatore</h3>
+                    <div class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                        <!-- main content -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title mt-1">Richieste Pervenute</h3>
+                                        <div class="card-tools">
+                                            <div class="input-group input-group-sm" style="width: 150px;">
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
                         </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form action="../req/register_sbobinator.php" method="post">
-                            <?php if (isset($_GET['status'])) { ?>
-                                <div class="alert alert-success" role="alert">
-                                    <?php echo $_GET['status']; ?>
-                                </div>
-                            <?php } ?>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="Nome">Nome</label>
-                                    <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Inserisci il nome">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Cognome">Cognome</label>
-                                    <input type="text" class="form-control" id="Cognome" name="Cognome" placeholder="Inserisci il cognome">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Matricola">Matricola</label>
-                                    <input type="number" class="form-control" id="Matricola" name="Matricola" placeholder="Inserisci la matricola">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Inserisci la email">
-                                </div>
-                                <?php
-                                include "../db_connector.php";
-
-                                // Query per ottenere tutti i risultati da sx_insegnamenti
-                                $query = "SELECT * FROM `sx_insegnamenti`";
-
-                                // Creazione della prepared statement
-                                $stmt = $conn->prepare($query);
-
-                                if ($stmt) {
-                                    // Esecuzione della prepared statement
-                                    $stmt->execute();
-
-                                    // Ottieni il risultato della query
-                                    $result = $stmt->get_result();
-
-                                    // Estrai i risultati come un array associativo
-                                    $risultati = $result->fetch_all(MYSQLI_ASSOC);
-
-                                    // Chiudi la prepared statement
-                                    $stmt->close();
-                                }
-
-                                // Chiudi la connessione al database
-                                $conn->close();
-                                ?>
-
-
-                                <div class="form-group">
-                                    <label for="Password">Password</label>
-                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="La prima password corrisponde alla matricola" disabled>
-                                </div>
-                                <div class="col-sm-6">
-                                    <!-- Select multiple-->
-                                    <div class="form-group" data-select2-id="43">
-                                        <label>Seleziona gli insegnamenti per cui si richiede la partecipazione</label>
-                                        <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="Seleziona gli insegnamenti" style="width: 100%;" tabindex="-1" aria-hidden="true" name="insegnamenti[]"> <!-- Nota l'aggiunta di "[]" dopo il nome dell'elemento -->
-                                            <?php foreach ($risultati as $row): ?>
-                                                <option value="<?php echo $row['id']; ?>"><?php echo $row['materia']; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox">
-                                        <label class="form-check-label"><strong>Estendere diritti di Superutente?</strong>
-                                            Questa persona avrà la possibilità di gestire la parte amministrativa delle sbobine.
-                                        La scelta è IRREVOCABILE, salvo modifica manuale in phpmyadmin</label>
-                                    </div>
-
-                                    <!-- Input nascosto per memorizzare il valore "admin" -->
-                                    <input type="hidden" id="adminInput" name="admin" value="0">
-
-                                </div>
-
-                            </div>
-                            <!-- /.card-body -->
-
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary" >Aggiungi Sbobinatore</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- end block content -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-
-            <!-- /.content -->
+                        <!-- end main content -->
+                    </div><!-- /.container-fluid -->
+                </div>
+            </div><!-- /.container-fluid -->
         </div>
-        <!-- /.content-wrapper -->
+        <!-- /.content-header -->
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-            <div class="p-3">
-                <h5>Title</h5>
-                <p>Sidebar content</p>
-            </div>
-        </aside>
-        <!-- /.control-sidebar -->
+        <!-- Main content -->
 
-        <!-- Main Footer -->
-        <footer class="main-footer">
-            <!-- To the right -->
-            <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.2 HT-res
-            </div>
-            <!-- Default to the left -->
-            <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
-        </footer>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            <h5>Title</h5>
+            <p>Sidebar content</p>
+        </div>
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            Sistema SbobinaX v2.2 HT-res
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
+    </footer>
     </div>
     <!-- ./wrapper -->
 
@@ -676,27 +618,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         }, 10 * 60 * 1000); // 10 minuti in millisecondi
     </script>
 
-    <script>
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-        })
 
-        $(document).ready(function() {
-            // Intercepisci il cambiamento dello stato della casella di controllo
-            $(".form-check-input").on("change", function() {
-                // Seleziona l'input nascosto
-                var adminInput = $("#adminInput");
+    <!-- ... Il resto del tuo codice HTML ... -->
 
-                if ($(this).is(":checked")) {
-                    adminInput.val("1");
-                } else {
-                    adminInput.val("0");
-                }
-            });
-        });
-
-    </script>
     </body>
     </html>
 
@@ -708,4 +632,3 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
     exit();
 }
 ?>
-

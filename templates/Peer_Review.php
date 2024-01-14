@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] == 0){
@@ -48,7 +49,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
         <!-- Brand Logo -->
         <a href="" class="brand-link">
             <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -471,6 +472,23 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         </div>
         <!-- /.sidebar -->
     </aside>
+    <div class="modal fade" id="avvisoModal" tabindex="-1" role="dialog" aria-labelledby="avvisoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avvisoModalLabel">Attenzione!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Il sistema di peer review è stato disabilitato a partire dal 12/11/2023.
+                    E' quindi sufficiente caricare la sbobina affinchè essa sia subito visibile.
+                   
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -804,7 +822,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-            Sistema SbobinaX v2.1
+            Sistema SbobinaX v2.2 HT-res
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
@@ -823,8 +841,15 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+           
+
+
+
 
 <script>
+	document.addEventListener('DOMContentLoaded', function () {
+            $('#avvisoModal').modal('show');
+        });
     // Avvia il timer di 10 minuti
     var timeout = setTimeout(function() {
         // Esegui una richiesta AJAX per eseguire il logout
@@ -952,6 +977,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         updateCharCount();
     });
 </script>
+
+      
 
 
 </body>

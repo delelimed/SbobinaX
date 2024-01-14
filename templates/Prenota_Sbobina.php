@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include '../db_connector.php';
@@ -52,7 +53,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -521,9 +522,9 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                 }
 
                                 // Query per ottenere i dati dalla tabella sx_sbobine_calendarizzate
-                                $sql = "SELECT id, insegnamento, num_sbobinatori, data_lezione, num_revisori 
-        FROM sx_sbobine_calendarizzate
-        WHERE insegnamento IN (SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = ?)";
+                                $sql = "SELECT id, insegnamento, num_sbobinatori, DATE_FORMAT(data_lezione, '%d-%m-%Y') as data_formattata, num_revisori 
+FROM sx_sbobine_calendarizzate
+WHERE insegnamento IN (SELECT id_insegnamento FROM sx_partecipazione_sbobine WHERE id_user = ?) ORDER BY data_lezione";
                                 $stmt = $conn->prepare($sql);
                                 $stmt->bind_param('i', $_SESSION['id']);
                                 $stmt->execute();
@@ -609,7 +610,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
                                             echo '<tr>
                     <td>' . $row['id'] . '</td>
                     <td>' . $materia . '</td>
-                    <td>' . $row['data_lezione'] . '</td>
+                    <td>' . $row['data_formattata'] . '</td>
+
                     <td>' . $sbobinatori_mancanti . '</td>
                     <td>' . $revisori_mancanti . '</td>
                     <td>
@@ -669,7 +671,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome'])){
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.1
+                Sistema SbobinaX v2.2 HT-res
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.

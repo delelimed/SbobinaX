@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 include '../db_connector.php';
 session_start();
@@ -68,7 +69,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -503,6 +504,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
                         <div class="col-sm-6">
                             <h1 class="m-0">Visualizza Sbobinatori Registrati</h1>
                             <button type="button" class="btn btn-primary" onclick="window.location.href='./Inserisci_Sbobinatori.php'">Nuovo Sbobinatore</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='./Reset_Password.php'">Reset Password</button>
 
                         </div><!-- /.col -->
                         <div class="col-sm-6">
@@ -744,7 +746,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['admin'] == 
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.1
+                Sistema SbobinaX v2.2 HT-res
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.

@@ -1,3 +1,4 @@
+<meta name="robots" content="noindex">
 <?php
 session_start();
 include "../db_connector.php";
@@ -49,7 +50,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: rgb(10,43,62);">
             <!-- Brand Logo -->
             <a href="" class="brand-link">
                 <span class="brand-text "><strong> SbobinaX </strong></span>
@@ -554,7 +555,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
             LEFT JOIN sx_sbobinatori_sbobine AS ss ON sc.id = ss.id_sbobina
             LEFT JOIN sx_users AS sb ON ss.id_sbobinatore = sb.id
             WHERE sc.revisione = 1 AND sc.caricata = 1
-            GROUP BY sc.id";
+            GROUP BY sc.id ORDER BY data_lezione" ;
 
                                         $result = $conn->query($query);
 
@@ -593,7 +594,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
                                             echo "<tr data-insegnamento=\"$insegnamentoId\">";
                                             echo "<td>$idLezione</td>";
                                             echo "<td>$insegnamento</td>";
-                                            echo "<td>$dataLezione</td>";
+                                            echo '<td>' . date("d-m-Y", strtotime($row['data_lezione'])) . '</td>';
                                             echo "<td>$sbobinatoriList</td>";
                                             echo "<td>$revisoriList</td>";
                                             echo "<td>$argomento</td>";
@@ -648,7 +649,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['nome']) && $_SESSION['locked'] ==
         <footer class="main-footer">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
-                Sistema SbobinaX v2.1
+                Sistema SbobinaX v2.2 HT-res
             </div>
             <!-- Default to the left -->
             <strong>Copyright &copy; 2023 <a href="https://delelimed.github.io/" target="_blank" rel="noopener noreferrer">DELELIMED</a>.</strong> All rights reserved.
